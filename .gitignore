@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.vercel
+.vercel
+.vercel
+
+# git remote add origin https://github.com/ronyislam502/eathub-server.git
