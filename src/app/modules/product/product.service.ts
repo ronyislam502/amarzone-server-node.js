@@ -119,7 +119,10 @@ const AllProductsFromDB = async (query: Record<string, unknown>) => {
 };
 
 const offeredProductsFromDB = async (query: Record<string, unknown>) => {
-  const offeredProductsQuery = new QueryBuilder(Product.find(), query)
+  const offeredProductsQuery = new QueryBuilder(
+    Product.find({ "createdBy.role": "ADMIN" }),
+    query
+  )
     .filter()
     .sort()
     .paginate()
