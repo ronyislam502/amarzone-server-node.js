@@ -77,6 +77,10 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
       type: Boolean,
       default: false,
     },
+    isCreateProduct: {
+      type: Boolean,
+      default: false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

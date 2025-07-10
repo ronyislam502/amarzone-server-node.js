@@ -84,7 +84,6 @@ const createVendorIntoDB = async (password: string, payload: TVendor) => {
     if (!newVendor.length) {
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to create vendor");
     }
-    console.log("new", newVendor);
 
     // 6. Commit transaction & end session
     await session.commitTransaction();

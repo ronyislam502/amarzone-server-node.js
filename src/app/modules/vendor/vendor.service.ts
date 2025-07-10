@@ -65,7 +65,6 @@ const deleteVendorFromDB = async (id: string) => {
 };
 
 const updateVendorIntoDB = async (id: string, payload: Partial<TVendor>) => {
-  console.log("payload", payload);
   const userData: Partial<TUser> = {
     name: payload.name,
     email: payload.email,
@@ -104,11 +103,15 @@ const updateVendorIntoDB = async (id: string, payload: Partial<TVendor>) => {
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to update user");
     }
 
-    const updateVendor = await Vendor.findByIdAndUpdate(id, modifiedData, {
-      new: true,
-      session,
-      runValidators: true,
-    });
+    const updateVendor = await Vendor.findByIdAndUpdate(
+      isVendor?._id,
+      modifiedData,
+      {
+        new: true,
+        session,
+        runValidators: true,
+      }
+    );
 
     await session.commitTransaction();
     await session.endSession();

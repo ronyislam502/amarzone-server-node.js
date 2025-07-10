@@ -25,9 +25,9 @@ const createVendorValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20).optional(),
     vendor: z.object({
-      name: z.string().min(1, "Seller name is required"),
-      email: z.string().email("Email is required"),
-      phone: z.string().min(6, "Phone is required"),
+      name: z.string().min(1, "vendor owner name is required"),
+      email: z.string().email("vendor owner email is required"),
+      phone: z.string().min(6, "vendor owner Phone is required"),
       address: createAddressValidationSchema,
     }),
   }),
@@ -40,12 +40,6 @@ export const updateAddressValidationSchema = z.object({
   area: z.string().optional(),
   postalCode: z.string().optional(),
   country: z.string().optional(),
-  coordinates: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-    })
-    .optional(),
 });
 
 const updateVendorValidationSchema = z.object({

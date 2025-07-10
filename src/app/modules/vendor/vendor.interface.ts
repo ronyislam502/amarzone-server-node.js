@@ -20,6 +20,7 @@ export type TVendor = {
   address: TAddress;
   avatar?: string;
   isShoped: boolean;
+  isCreateProduct: boolean;
   isDeleted: boolean;
 };
 
