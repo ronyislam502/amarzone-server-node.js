@@ -11,9 +11,9 @@ const createShopIntoDB = async (payload: TShop) => {
     throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
   }
 
-  const alreadyIsShoped = isVendor.isShoped;
+  const alreadyIsShopped = isVendor.isShoped;
 
-  if (alreadyIsShoped) {
+  if (alreadyIsShopped) {
     throw new AppError(httpStatus.BAD_REQUEST, "already created shop!");
   }
   const result = await Shop.create(payload);

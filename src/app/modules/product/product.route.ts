@@ -15,4 +15,10 @@ router.get("/", ProductControllers.allProducts);
 
 router.get("/offered-products", ProductControllers.offeredProducts);
 
+router.get(
+  "/my-created-products/:email",
+  // auth(USER_ROLE.ADMIN, USER_ROLE.VENDOR),
+  ProductControllers.myCreatedProducts
+);
+
 export const ProductRoutes = router;

@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { ProductServices } from "./product.service";
+import catchAsync from "./../../utilities/catchAsync";
 
 const createProduct = catchAsync(async (req, res) => {
   const result = await ProductServices.createProductIntoDB(req.user, req.body);
@@ -38,8 +38,25 @@ const offeredProducts = catchAsync(async (req, res) => {
   });
 });
 
+const myCreatedProducts = catchAsync(async (req, res) => {
+  const { email } = req.params;
+  const result = await ProductServices.myCreatedProductsFromDB(
+    email,
+    req.query
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "my products retrieved successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const ProductControllers = {
   createProduct,
   allProducts,
   offeredProducts,
+  myCreatedProducts,
 };

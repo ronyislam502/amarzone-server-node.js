@@ -3,7 +3,6 @@ import { Department } from "../department/department.model";
 import { TProduct } from "./product.interface";
 import { Category } from "../category/category.model";
 import { Product } from "./product.model";
-import { calculateDeliveryTime, generateASIN } from "./product.utiles";
 import httpStatus from "http-status";
 import QueryBuilder from "../../builder/queryBuilder";
 import { JwtPayload } from "jsonwebtoken";
@@ -11,6 +10,9 @@ import { Vendor } from "../vendor/vendor.model";
 import { USER_ROLE } from "../user/user.const";
 import { Shop } from "../shop/shop.model";
 import { Admin } from "../admin/admin.model";
+import { calculateDeliveryTime, generateASIN } from "./product.utilities";
+import { User } from "../user/user.model";
+import { Types } from "mongoose";
 
 const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
   console.log("user", user);
@@ -55,7 +57,7 @@ const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
       name: isShop?.shopName,
     };
 
-    const deliveryTime = await calculateDeliveryTime(
+    const deliveryTime = calculateDeliveryTime(
       payload.sellers?.[0]?.shippingTime
     );
 
@@ -134,8 +136,45 @@ const offeredProductsFromDB = async (query: Record<string, unknown>) => {
   return { meta, data };
 };
 
+const myCreatedProductsFromDB = async (
+  email: string,
+  query: Record<string, unknown>
+) => {
+  // console.log();
+  const isVendor = await Vendor.findOne({ email });
+  const isAdmin = await Admin.findOne({ email });
+
+  let user;
+
+  if (isVendor) {
+    user = { _id: isVendor._id, role: USER_ROLE.VENDOR, isCreateProduct: true };
+  } else if (isAdmin) {
+    user = { _id: isAdmin._id, role: USER_ROLE.ADMIN };
+  } else {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const myCreatedProductsQuery = new QueryBuilder(
+    Product.find({
+      "createdBy.id": user._id,
+      "createdBy.role": user.role,
+    }),
+    query
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await myCreatedProductsQuery.countTotal();
+  const data = await myCreatedProductsQuery.modelQuery;
+
+  return { meta, data };
+};
+
 export const ProductServices = {
   createProductIntoDB,
   AllProductsFromDB,
   offeredProductsFromDB,
+  myCreatedProductsFromDB,
 };
