@@ -6,7 +6,5 @@ export type TShop = {
   shopEmail: string;
   shopPhone: string;
   logo: string;
-  followers: Types.ObjectId[];
-  products: Types.ObjectId[];
   isSuspended: boolean;
 };

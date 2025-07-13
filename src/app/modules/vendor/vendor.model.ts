@@ -73,7 +73,7 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
       type: String,
       default: "",
     },
-    isShoped: {
+    isShopped: {
       type: Boolean,
       default: false,
     },

@@ -10,14 +10,10 @@ import { Vendor } from "../vendor/vendor.model";
 import { USER_ROLE } from "../user/user.const";
 import { Shop } from "../shop/shop.model";
 import { Admin } from "../admin/admin.model";
-import { calculateDeliveryTime, generateASIN } from "./product.utilities";
-import { User } from "../user/user.model";
-import { Types } from "mongoose";
+import { generateASIN } from "./product.utilities";
 
 const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
-  console.log("user", user);
   let createdBy: any;
-  let sellerEntry: TProduct["sellers"][0] | undefined;
 
   if (user?.role === USER_ROLE.ADMIN) {
     const isAdmin = await Admin.findOne({ email: user?.email });
@@ -56,20 +52,6 @@ const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
       id: isVendor?._id,
       name: isShop?.shopName,
     };
-
-    const deliveryTime = calculateDeliveryTime(
-      payload.sellers?.[0]?.shippingTime
-    );
-
-    sellerEntry = {
-      shop: isShop?._id,
-      price: payload?.sellers[0]?.price || 0,
-      quantity: payload?.sellers?.[0]?.quantity || 0,
-      isStock: payload?.sellers?.[0]?.isStock ?? true,
-      shippingTime: payload?.sellers?.[0]?.shippingTime,
-      deliveryTime: deliveryTime,
-      isBuyBoxWinner: true,
-    };
   } else {
     throw new Error("Unauthorized role");
   }
@@ -95,29 +77,13 @@ const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
   const newProduct: TProduct = {
     ...payload,
     createdBy,
-    isCreatedByVendor:
-      user.role === USER_ROLE.VENDOR || sellerEntry !== undefined,
+    isCreatedByVendor: user.role === USER_ROLE.VENDOR || false,
     isDeleted: false,
-    sellers: sellerEntry ? [sellerEntry] : (payload?.sellers ?? []),
   };
 
   const result = await Product.create(newProduct);
 
   return result;
-};
-
-const AllProductsFromDB = async (query: Record<string, unknown>) => {
-  const productQuery = new QueryBuilder(Product.find(), query)
-    .search(["title", "department", "category"])
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
-
-  const meta = await productQuery.countTotal();
-  const data = await productQuery.modelQuery;
-
-  return { meta, data };
 };
 
 const offeredProductsFromDB = async (query: Record<string, unknown>) => {
@@ -174,7 +140,6 @@ const myCreatedProductsFromDB = async (
 
 export const ProductServices = {
   createProductIntoDB,
-  AllProductsFromDB,
   offeredProductsFromDB,
   myCreatedProductsFromDB,
 };

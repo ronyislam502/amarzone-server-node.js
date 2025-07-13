@@ -8,6 +8,7 @@ import { ShopRoutes } from "../modules/shop/shop.route";
 import { DepartmentRoutes } from "../modules/department/department.route";
 import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
+import { ShopProductRoutes } from "../modules/shopProduct/shopProduct.route";
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: "/products",
     route: ProductRoutes,
+  },
+  {
+    path: "/shop-products",
+    route: ShopProductRoutes,
   },
 ];
 

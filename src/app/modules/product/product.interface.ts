@@ -1,15 +1,6 @@
 import { Types } from "mongoose";
 import { USER_ROLE } from "./../user/user.const";
-
-export type TSeller = {
-  shop: Types.ObjectId;
-  price: number;
-  quantity: number;
-  isStock: boolean;
-  shippingTime: number;
-  deliveryTime?: number;
-  isBuyBoxWinner?: boolean;
-};
+import { TSeller } from "../shopProduct/shopProduct.interface";
 
 export type TCreatedBy = {
   role: keyof typeof USER_ROLE;
@@ -26,7 +17,6 @@ export type TProduct = {
   description: string;
   images: string[];
   brand: string;
-  sellers: TSeller[];
   isCreatedByVendor: boolean;
   isDeleted: boolean;
 };

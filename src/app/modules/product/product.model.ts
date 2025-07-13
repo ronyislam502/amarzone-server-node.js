@@ -1,36 +1,6 @@
 import { model, Schema } from "mongoose";
-import { TCreatedBy, TProduct, TSeller } from "./product.interface";
+import { TCreatedBy, TProduct } from "./product.interface";
 import { USER_ROLE } from "../user/user.const";
-
-const SellerSchema = new Schema<TSeller>({
-  shop: {
-    type: Schema.Types.ObjectId,
-    ref: "Shop",
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  isStock: {
-    type: Boolean,
-    default: true,
-  },
-  shippingTime: {
-    type: Number,
-    required: true,
-  },
-  deliveryTime: {
-    type: Number,
-  },
-  isBuyBoxWinner: {
-    type: Boolean,
-    default: false,
-  },
-});
 
 const CreatedBySchema = new Schema<TCreatedBy>({
   role: {
@@ -87,10 +57,6 @@ const ProductSchema = new Schema<TProduct>(
     brand: {
       type: String,
       required: true,
-    },
-    sellers: {
-      type: [SellerSchema],
-      default: [],
     },
     isCreatedByVendor: {
       type: Boolean,

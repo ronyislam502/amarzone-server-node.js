@@ -19,7 +19,7 @@ export type TVendor = {
   phone: string;
   address: TAddress;
   avatar?: string;
-  isShoped: boolean;
+  isShopped: boolean;
   isCreateProduct: boolean;
   isDeleted: boolean;
 };

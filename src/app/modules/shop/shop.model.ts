@@ -12,13 +12,11 @@ const shopSchema = new Schema<TShop>(
       type: String,
       required: true,
       unique: true,
-      sparse: true,
     },
     shopEmail: {
       type: String,
       required: [true, "Email is required"],
       unique: true,
-      sparse: true,
       //validate email
       match: [
         /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/,
@@ -35,18 +33,6 @@ const shopSchema = new Schema<TShop>(
       type: String,
       default: "",
     },
-    followers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    products: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
     isSuspended: {
       type: Boolean,
       default: false,
