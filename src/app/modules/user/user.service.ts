@@ -155,11 +155,6 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const getSingleUserFromDB = async (email: string) => {
-  const user = await User.find({ email });
-  return user;
-};
-
 const shopStatusChangeFromDB = async (
   id: string,
   status: { isSuspended: boolean }
@@ -185,7 +180,47 @@ const shopStatusChangeFromDB = async (
     }
   );
 
-  console.log(result);
+  return result;
+};
+
+const giveProductCreatePermissionFromDB = async (
+  id: string,
+  status: { isCreateProduct: boolean }
+) => {
+  const isVendor = await Vendor.findById(id);
+
+  if (!isVendor) {
+    throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
+  }
+
+  const isShopExist = isVendor.isShopped;
+
+  if (!isShopExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This vendor not created shop");
+  }
+
+  const isShop = await Shop.findById(isVendor._id);
+
+  console.log("isShop", isShop);
+
+  if (!isShop) {
+    throw new AppError(httpStatus.NOT_FOUND, "Shop not found");
+  }
+
+  const isSuspended = isShop.isSuspended;
+
+  if (isSuspended) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Shop was suspended");
+  }
+
+  const result = await Vendor.findByIdAndUpdate(
+    isVendor?._id,
+    { isCreateProduct: status?.isCreateProduct },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   return result;
 };
@@ -195,6 +230,6 @@ export const UserServices = {
   createVendorIntoDB,
   createCustomerIntoDB,
   getAllUsersFromDB,
-  getSingleUserFromDB,
   shopStatusChangeFromDB,
+  giveProductCreatePermissionFromDB,
 };

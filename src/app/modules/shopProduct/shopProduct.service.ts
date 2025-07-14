@@ -111,9 +111,9 @@ const myShopByProductsFromDB = async (
     throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
   }
 
-  const isShopExists = isVendor.isShopped;
+  const isVendorShopExists = isVendor.isShopped;
 
-  if (!isShopExists) {
+  if (!isVendorShopExists) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       "this vendor shop not found ! please create your shopped and try again"

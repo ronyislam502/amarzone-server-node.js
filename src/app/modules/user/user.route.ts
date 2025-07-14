@@ -37,4 +37,9 @@ router.get("/", UserControllers.getAllUsers);
 
 router.patch("/shop-status/:id", UserControllers.shopStatusChange);
 
+router.patch(
+  "/product-create-permission/:id",
+  UserControllers.productCreatePermission
+);
+
 export const UserRoutes = router;

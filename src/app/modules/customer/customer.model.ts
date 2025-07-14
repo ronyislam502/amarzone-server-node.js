@@ -30,6 +30,7 @@ const customerSchema = new Schema<TCustomer, CustomerModel>(
     phone: {
       type: String,
       required: [true, "Phone is required"],
+      unique: true,
     },
     isDeleted: {
       type: Boolean,

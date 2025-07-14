@@ -1,8 +1,15 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
-import { TOrder } from "./order.interface";
+import { ORDER_STATUS, PAYMENT_STATUS, TOrder } from "./order.interface";
 import { Product } from "../product/product.model";
 import { ShopProduct } from "../shopProduct/shopProduct.model";
+import { generateOrderNo } from "./order.utilities";
+import { Order } from "./order.model";
+import QueryBuilder from "../../builder/queryBuilder";
+import { JwtPayload } from "jsonwebtoken";
+import { Vendor } from "../vendor/vendor.model";
+import { Shop } from "../shop/shop.model";
+import { Customer } from "../customer/customer.model";
 
 const createOrderIntoDB = async (payload: TOrder) => {
   const { customer, shop, products } = payload;
@@ -53,8 +60,6 @@ const createOrderIntoDB = async (payload: TOrder) => {
       const updatedQuantity = isShopProduct?.seller?.quantity - item.quantity;
       const isStock = updatedQuantity > 0;
 
-      console.log("isStock", isStock);
-
       // Update ShopProduct stock and quantity
       await ShopProduct.findByIdAndUpdate(
         isShopProduct._id,
@@ -73,7 +78,7 @@ const createOrderIntoDB = async (payload: TOrder) => {
     const tax = parseFloat((totalPrice * 0.1).toFixed(2));
     const grandAmount = totalPrice + tax;
 
-    // const orderNo = ;
+    const orderNo = await generateOrderNo();
 
     const today = new Date();
     const transactionId =
@@ -84,6 +89,22 @@ const createOrderIntoDB = async (payload: TOrder) => {
       +today.getHours() +
       +today.getMinutes() +
       +today.getSeconds();
+
+    const order = new Order({
+      customer,
+      shop,
+      orderNo,
+      products: productDetails,
+      totalQuantity,
+      tax,
+      totalPrice,
+      grandAmount,
+      status: ORDER_STATUS.PENDING,
+      paymentStatus: PAYMENT_STATUS.PENDING,
+      transactionId,
+    });
+
+    await order.save();
   } catch (error: any) {
     throw new AppError(
       httpStatus.FORBIDDEN,
@@ -92,4 +113,104 @@ const createOrderIntoDB = async (payload: TOrder) => {
   }
 };
 
-export const OrderServices = { createOrderIntoDB };
+const allOrdersFromDB = async (query: Record<string, unknown>) => {
+  const ordersQuery = new QueryBuilder(
+    Order.find()
+      .populate("customer", "name email phone address")
+      .populate("shop", "shopName shopEmail shopPhone"),
+    query
+  )
+    .search(["orderNo"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await ordersQuery.countTotal();
+  const data = await ordersQuery.modelQuery;
+
+  return { meta, data };
+};
+
+const vendorAllOrdersFromDB = async (
+  email: string,
+  query: Record<string, unknown>
+) => {
+  const isVendor = await Vendor.findOne({ email });
+
+  if (!isVendor) {
+    throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
+  }
+
+  const isVendorShopExists = isVendor.isShopped;
+
+  if (!isVendorShopExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "this vendor shop not found");
+  }
+
+  const isShopped = await Shop.findOne({ vendor: isVendor._id });
+
+  if (!isShopped) {
+    throw new AppError(httpStatus.NOT_FOUND, "shop not found ");
+  }
+
+  const vendorOrdersQuery = new QueryBuilder(
+    Order.find({ shop: isShopped?._id })
+      .populate("customer", "name email phone address")
+      .populate("shop", "shopName shopEmail shopPhone"),
+    query
+  )
+    .search(["orderNo"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await vendorOrdersQuery.countTotal();
+  const data = await vendorOrdersQuery.modelQuery;
+
+  return { meta, data };
+};
+
+const customerAllOrdersFromDB = async (
+  email: string,
+  query: Record<string, unknown>
+) => {
+  const isCustomer = await Customer.findOne({ email });
+
+  if (!isCustomer) {
+    throw new AppError(httpStatus.NOT_FOUND, "Customer not found");
+  }
+
+  const customerOrdersQuery = new QueryBuilder(
+    Order.find({ customer: isCustomer?._id }).populate(
+      "shop",
+      "shopName shopEmail shopPhone"
+    ),
+    query
+  )
+    .search(["orderNo"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await customerOrdersQuery.countTotal();
+  const data = await customerOrdersQuery.modelQuery;
+
+  return { meta, data };
+};
+
+const getSingleOrderFromDB = async (id: string) => {
+  const result = await Order.findById(id).populate("customer").populate("shop");
+
+  return result;
+};
+
+export const OrderServices = {
+  createOrderIntoDB,
+  allOrdersFromDB,
+  vendorAllOrdersFromDB,
+  customerAllOrdersFromDB,
+  getSingleOrderFromDB,
+};

@@ -8,6 +8,11 @@ const OrderSchema = new Schema<TOrder>(
       required: true,
       ref: "Customer",
     },
+    shop: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Shop",
+    },
     orderNo: {
       type: String,
       required: true,
@@ -51,7 +56,7 @@ const OrderSchema = new Schema<TOrder>(
     paymentStatus: {
       type: String,
       enum: Object.keys(PAYMENT_STATUS),
-      default: PAYMENT_STATUS.UNPAID,
+      default: PAYMENT_STATUS.PENDING,
     },
     transactionId: {
       type: String,

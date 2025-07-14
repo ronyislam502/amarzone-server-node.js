@@ -13,7 +13,7 @@ const findLastOrderNo = async (
   return lastOrder?.orderNo;
 };
 
-const generateOrderNo = async (): Promise<string> => {
+export const generateOrderNo = async (): Promise<string> => {
   const today = new Date();
 
   const year = today.getFullYear().toString();

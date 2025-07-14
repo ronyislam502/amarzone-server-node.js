@@ -34,7 +34,7 @@ const createVendor = catchAsync(async (req, res) => {
 
 const createCustomer = catchAsync(async (req, res) => {
   const { password, customer } = req.body;
-  const result = await UserServices.createVendorIntoDB(password, customer);
+  const result = await UserServices.createCustomerIntoDB(password, customer);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -56,21 +56,24 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
-const getSingleUser = catchAsync(async (req, res) => {
-  const { email } = req.params;
-  const result = await UserServices.getSingleUserFromDB(email);
+const shopStatusChange = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.shopStatusChangeFromDB(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User retrieved Successfully",
+    message: "Shop suspended Successfully",
     data: result,
   });
 });
 
-const shopStatusChange = catchAsync(async (req, res) => {
+const productCreatePermission = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await UserServices.shopStatusChangeFromDB(id, req.body);
+  const result = await UserServices.giveProductCreatePermissionFromDB(
+    id,
+    req.body
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -85,6 +88,6 @@ export const UserControllers = {
   createVendor,
   createCustomer,
   getAllUsers,
-  getSingleUser,
   shopStatusChange,
+  productCreatePermission,
 };

@@ -10,7 +10,7 @@ export const ORDER_STATUS = {
 } as const;
 
 export const PAYMENT_STATUS = {
-  UNPAID: "UNPAID",
+  PENDING: "PENDING",
   PAID: "PAID",
   REFUNDED: "REFUNDED",
 } as const;
