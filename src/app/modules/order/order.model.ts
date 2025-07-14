@@ -1,16 +1,17 @@
 import { model, Schema } from "mongoose";
-import { TOrder } from "./order.interface";
+import { ORDER_STATUS, PAYMENT_STATUS, TOrder } from "./order.interface";
 
 const OrderSchema = new Schema<TOrder>(
   {
     customer: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: "Customer",
     },
     orderNo: {
       type: String,
       required: true,
+      unique: true,
     },
     products: [
       {
@@ -44,23 +45,18 @@ const OrderSchema = new Schema<TOrder>(
     },
     status: {
       type: String,
-      enum: {
-        values: ["Pending", "unshipped", "Completed", "Cancelled"],
-        message: "{VALUE} is not a valid status",
-      },
-      default: "Pending",
+      enum: Object.keys(ORDER_STATUS),
+      default: ORDER_STATUS.PENDING,
     },
     paymentStatus: {
       type: String,
-      enum: {
-        values: ["Unpaid", "Paid", "Refunded"],
-        message: "{VALUE} is not a valid paymentStatus",
-      },
-      default: "Unpaid",
+      enum: Object.keys(PAYMENT_STATUS),
+      default: PAYMENT_STATUS.UNPAID,
     },
     transactionId: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   {
