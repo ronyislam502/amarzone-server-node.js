@@ -11,8 +11,6 @@ router.post(
   ProductControllers.createProduct
 );
 
-router.get("/", ProductControllers.allProducts);
-
 router.get("/offered-products", ProductControllers.offeredProducts);
 
 router.get(

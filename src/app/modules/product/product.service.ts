@@ -86,7 +86,10 @@ const createProductIntoDB = async (user: JwtPayload, payload: TProduct) => {
   return result;
 };
 
-const offeredProductsFromDB = async (query: Record<string, unknown>) => {
+const offeredProductsFromDB = async (
+  email: string,
+  query: Record<string, unknown>
+) => {
   const offeredProductsQuery = new QueryBuilder(
     Product.find({ "createdBy.role": "ADMIN" }),
     query

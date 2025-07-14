@@ -14,20 +14,9 @@ const createProduct = catchAsync(async (req, res) => {
   });
 });
 
-const allProducts = catchAsync(async (req, res) => {
-  const result = await ProductServices.AllProductsFromDB(req.query);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Products retrieved successfully",
-    meta: result.meta,
-    data: result.data,
-  });
-});
-
 const offeredProducts = catchAsync(async (req, res) => {
-  const result = await ProductServices.offeredProductsFromDB(req.query);
+  const { email } = req.params;
+  const result = await ProductServices.offeredProductsFromDB(email, req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -56,7 +45,6 @@ const myCreatedProducts = catchAsync(async (req, res) => {
 
 export const ProductControllers = {
   createProduct,
-  allProducts,
   offeredProducts,
   myCreatedProducts,
 };

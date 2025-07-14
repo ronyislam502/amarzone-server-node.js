@@ -57,9 +57,42 @@ const myShopByProducts = catchAsync(async (req, res) => {
   });
 });
 
+const productUpdateByShop = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await ShopProductServices.updateProductByShopFromDB(
+    req.user,
+    id,
+    req.body
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "update product by shop Successfully",
+    data: result,
+  });
+});
+
+const productDeleteByShop = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await ShopProductServices.deleteProductByShopFromDB(
+    req.user,
+    id
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "delete product by shop Successfully",
+    data: result,
+  });
+});
+
 export const ShopProductControllers = {
   addProductByShop,
   AllShopProducts,
   singleProductBySellersFromDB,
   myShopByProducts,
+  productUpdateByShop,
+  productDeleteByShop,
 };

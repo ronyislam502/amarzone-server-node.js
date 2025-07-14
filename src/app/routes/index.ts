@@ -9,6 +9,7 @@ import { DepartmentRoutes } from "../modules/department/department.route";
 import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
 import { ShopProductRoutes } from "../modules/shopProduct/shopProduct.route";
+import { OrderRoutes } from "../modules/order/order.route";
 
 const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: "/shop-products",
     route: ShopProductRoutes,
+  },
+  {
+    path: "/orders",
+    route: OrderRoutes,
   },
 ];
 

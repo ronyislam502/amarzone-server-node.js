@@ -32,6 +32,18 @@ const createVendor = catchAsync(async (req, res) => {
   });
 });
 
+const createCustomer = catchAsync(async (req, res) => {
+  const { password, customer } = req.body;
+  const result = await UserServices.createVendorIntoDB(password, customer);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customer Created successfully",
+    data: result,
+  });
+});
+
 const getAllUsers = catchAsync(async (req, res) => {
   const users = await UserServices.getAllUsersFromDB(req.query);
 
@@ -71,6 +83,7 @@ const shopStatusChange = catchAsync(async (req, res) => {
 export const UserControllers = {
   createAdmin,
   createVendor,
+  createCustomer,
   getAllUsers,
   getSingleUser,
   shopStatusChange,
