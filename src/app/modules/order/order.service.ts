@@ -10,102 +10,237 @@ import { JwtPayload } from "jsonwebtoken";
 import { Vendor } from "../vendor/vendor.model";
 import { Shop } from "../shop/shop.model";
 import { Customer } from "../customer/customer.model";
+import { initialPayment } from "../payment/payment.utilities";
+import { Payment } from "../payment/payment.model";
+import mongoose from "mongoose";
+
+// const createOrderIntoDB = async (payload: TOrder) => {
+//   const { customer, shop, products } = payload;
+
+//   try {
+//     const productDetails = [];
+//     let totalPrice = 0;
+//     let totalQuantity = 0;
+
+//     for (const item of products) {
+//       const isProduct = await Product.findById(item.product);
+//       if (!isProduct) {
+//         throw new AppError(httpStatus.NOT_FOUND, "Product not found");
+//       }
+
+//       const isShopProduct = await ShopProduct.findOne({
+//         product: isProduct?._id,
+//         "seller.shop": shop,
+//         "seller.isBuyBoxWinner": true,
+//       });
+
+//       if (!isShopProduct) {
+//         throw new AppError(
+//           httpStatus.NOT_FOUND,
+//           "this product not found any seller or shop"
+//         );
+//       }
+
+//       if (item.quantity > isShopProduct?.seller?.quantity) {
+//         throw new AppError(
+//           httpStatus.BAD_REQUEST,
+//           `${isProduct.title} is out of stock . Available: ${isShopProduct.seller.quantity}`
+//         );
+//       }
+
+//       productDetails.push({
+//         product: isProduct._id,
+//         quantity: item.quantity,
+//       });
+
+//       totalPrice += parseFloat(
+//         (isShopProduct.seller.price * item.quantity).toFixed(2)
+//       );
+//       totalQuantity += item.quantity;
+
+//       // console.log(totalPrice, totalQuantity);
+
+//       const updatedQuantity = isShopProduct?.seller?.quantity - item.quantity;
+//       const isStock = updatedQuantity > 0;
+
+//       // Update ShopProduct stock and quantity
+//       await ShopProduct.findByIdAndUpdate(
+//         isShopProduct._id,
+//         {
+//           $set: {
+//             "seller.quantity": updatedQuantity,
+//             isStock: isStock,
+//           },
+//         },
+//         { new: true, runValidators: true }
+//       );
+
+//       await isShopProduct.save();
+//     }
+
+//     const tax = parseFloat((totalPrice * 0.1).toFixed(2));
+//     const grandAmount = totalPrice + tax;
+
+//     const orderNo = await generateOrderNo();
+
+//     const today = new Date();
+//     const transactionId =
+//       "A2Z" +
+//       today.getFullYear() +
+//       +today.getMonth() +
+//       +today.getDay() +
+//       +today.getHours() +
+//       +today.getMinutes() +
+//       +today.getSeconds();
+
+//     const order = new Order({
+//       customer,
+//       shop,
+//       orderNo,
+//       products: productDetails,
+//       totalQuantity,
+//       tax,
+//       totalPrice,
+//       grandAmount,
+//       status: ORDER_STATUS.PENDING,
+//       paymentStatus: PAYMENT_STATUS.PENDING,
+//       transactionId,
+//     });
+
+//     await order.save();
+
+//     const paymentData = {
+//       transactionId,
+//       order: order?._id,
+//       user: customer?._id,
+//       amount: grandAmount,
+//       status: PAYMENT_STATUS.PENDING,
+//     };
+
+//     const payment = await Payment.create(paymentData);
+
+//     return payment;
+//   } catch (error: any) {
+//     throw new AppError(
+//       httpStatus.FORBIDDEN,
+//       `Order creation failed: ${error?.message}`
+//     );
+//   }
+// };
 
 const createOrderIntoDB = async (payload: TOrder) => {
   const { customer, shop, products } = payload;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const productDetails = [];
+    const productDetails: {
+      product: mongoose.Types.ObjectId;
+      quantity: number;
+    }[] = [];
     let totalPrice = 0;
     let totalQuantity = 0;
 
     for (const item of products) {
-      const isProduct = await Product.findById(item.product);
-      if (!isProduct) {
+      const isProduct = await Product.findById(item.product).session(session);
+      if (!isProduct)
         throw new AppError(httpStatus.NOT_FOUND, "Product not found");
-      }
 
       const isShopProduct = await ShopProduct.findOne({
-        product: isProduct?._id,
+        product: isProduct._id,
         "seller.shop": shop,
         "seller.isBuyBoxWinner": true,
-      });
+      }).session(session);
 
       if (!isShopProduct) {
         throw new AppError(
           httpStatus.NOT_FOUND,
-          "this product not found any seller or shop"
+          "This product not found from any seller/shop"
         );
       }
 
-      if (item.quantity > isShopProduct?.seller?.quantity) {
+      if (item.quantity > isShopProduct.seller.quantity) {
         throw new AppError(
           httpStatus.BAD_REQUEST,
-          `${isProduct.title} is out of stock . Available: ${isShopProduct.seller.quantity}`
+          `${isProduct.title} out of stock, available ${isShopProduct.seller.quantity}`
         );
       }
 
-      productDetails.push({
-        product: isProduct._id,
-        quantity: item.quantity,
-      });
+      productDetails.push({ product: isProduct._id, quantity: item.quantity });
 
-      totalPrice += parseFloat(
-        (isShopProduct.seller.price * item.quantity).toFixed(2)
-      );
+      totalPrice += +(isShopProduct.seller.price * item.quantity).toFixed(2);
       totalQuantity += item.quantity;
 
-      // console.log(totalPrice, totalQuantity);
+      //  Stock Update
+      const updatedQty = isShopProduct.seller.quantity - item.quantity;
+      const isStock = updatedQty > 0;
 
-      const updatedQuantity = isShopProduct?.seller?.quantity - item.quantity;
-      const isStock = updatedQuantity > 0;
-
-      // Update ShopProduct stock and quantity
       await ShopProduct.findByIdAndUpdate(
         isShopProduct._id,
         {
           $set: {
-            "seller.quantity": updatedQuantity,
-            isStock: isStock,
+            "seller.quantity": updatedQty,
+            isStock,
           },
         },
-        { new: true, runValidators: true }
+        { session }
       );
-
-      await isShopProduct.save();
     }
 
-    const tax = parseFloat((totalPrice * 0.1).toFixed(2));
+    const tax = +(totalPrice * 0.1).toFixed(2);
     const grandAmount = totalPrice + tax;
 
     const orderNo = await generateOrderNo();
-
     const today = new Date();
     const transactionId =
       "A2Z" +
       today.getFullYear() +
-      +today.getMonth() +
-      +today.getDay() +
-      +today.getHours() +
-      +today.getMinutes() +
-      +today.getSeconds();
+      (today.getMonth() + 1) +
+      today.getDate() +
+      today.getHours() +
+      today.getMinutes() +
+      today.getSeconds();
 
-    const order = new Order({
-      customer,
-      shop,
-      orderNo,
-      products: productDetails,
-      totalQuantity,
-      tax,
-      totalPrice,
-      grandAmount,
-      status: ORDER_STATUS.PENDING,
-      paymentStatus: PAYMENT_STATUS.PENDING,
-      transactionId,
-    });
+    const order = await Order.create(
+      [
+        {
+          customer,
+          shop,
+          orderNo,
+          products: productDetails,
+          totalQuantity,
+          tax,
+          totalPrice,
+          grandAmount,
+          status: "PENDING",
+          paymentStatus: "PENDING",
+          transactionId,
+        },
+      ],
+      { session }
+    );
 
-    await order.save();
+    await Payment.create(
+      [
+        {
+          order: order[0]._id,
+          user: customer,
+          amount: grandAmount,
+          transactionId,
+          status: "PENDING",
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return { orderId: order[0]._id, transactionId, grandAmount };
   } catch (error: any) {
+    await session.abortTransaction();
+    session.endSession();
     throw new AppError(
       httpStatus.FORBIDDEN,
       `Order creation failed: ${error?.message}`

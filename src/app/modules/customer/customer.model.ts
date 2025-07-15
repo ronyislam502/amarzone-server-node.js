@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { CustomerModel, TCustomer } from "./customer.interface";
+import { addressSchema } from "../vendor/vendor.model";
 
 const customerSchema = new Schema<TCustomer, CustomerModel>(
   {
@@ -31,6 +32,10 @@ const customerSchema = new Schema<TCustomer, CustomerModel>(
       type: String,
       required: [true, "Phone is required"],
       unique: true,
+    },
+    address: {
+      type: addressSchema,
+      required: [true, "address is required"],
     },
     isDeleted: {
       type: Boolean,

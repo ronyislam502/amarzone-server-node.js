@@ -35,6 +35,12 @@ const allShopsFromDB = async (query: Record<string, unknown>) => {
   return { meta, data };
 };
 
+const singleShopFromDB = async (id: string) => {
+  const result = await Shop.findById(id);
+
+  return result;
+};
+
 const myShopFromDB = async (email: string) => {
   const isVendor = await Vendor.findOne({ email });
   if (!isVendor) {
@@ -51,5 +57,6 @@ const myShopFromDB = async (email: string) => {
 export const ShopServices = {
   createShopIntoDB,
   allShopsFromDB,
+  singleShopFromDB,
   myShopFromDB,
 };

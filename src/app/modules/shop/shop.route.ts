@@ -9,4 +9,6 @@ router.get("/", ShopControllers.allShops);
 
 router.get("/my-shop/:email", ShopControllers.myShop);
 
+router.get("/shop/:id", ShopControllers.singleShop);
+
 export const ShopRoutes = router;

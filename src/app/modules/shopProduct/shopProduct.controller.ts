@@ -57,9 +57,9 @@ const myShopByProducts = catchAsync(async (req, res) => {
   });
 });
 
-const productUpdateByShop = catchAsync(async (req, res) => {
+const updateShopProductSellerInfo = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await ShopProductServices.updateProductByShopFromDB(
+  const result = await ShopProductServices.updateShopProductSellerInfoFromD(
     req.user,
     id,
     req.body
@@ -93,6 +93,6 @@ export const ShopProductControllers = {
   AllShopProducts,
   singleProductBySellersFromDB,
   myShopByProducts,
-  productUpdateByShop,
+  updateShopProductSellerInfo,
   productDeleteByShop,
 };

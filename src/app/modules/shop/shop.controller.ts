@@ -26,9 +26,20 @@ const allShops = catchAsync(async (req, res) => {
   });
 });
 
+const singleShop = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await ShopServices.myShopFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " Shop retrieved successfully",
+    data: result,
+  });
+});
+
 const myShop = catchAsync(async (req, res) => {
   const { email } = req.params;
-  console.log(req.params.email);
   const result = await ShopServices.myShopFromDB(email);
 
   sendResponse(res, {
@@ -43,4 +54,5 @@ export const ShopControllers = {
   createShop,
   allShops,
   myShop,
+  singleShop,
 };

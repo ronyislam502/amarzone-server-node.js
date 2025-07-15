@@ -143,7 +143,7 @@ const myShopByProductsFromDB = async (
   return { meta, data };
 };
 
-const updateProductByShopFromDB = async (
+const updateShopProductSellerInfoFromD = async (
   user: JwtPayload,
   id: string,
   payload: Partial<TSeller>
@@ -308,6 +308,6 @@ export const ShopProductServices = {
   AllProductsByShopFromDB,
   singleProductBySellersFromDB,
   myShopByProductsFromDB,
-  updateProductByShopFromDB,
+  updateShopProductSellerInfoFromD,
   deleteProductByShopFromDB,
 };

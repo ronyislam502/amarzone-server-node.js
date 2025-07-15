@@ -25,9 +25,9 @@ router.get(
 router.get("/", ShopProductControllers.AllShopProducts);
 
 router.patch(
-  "/update-product-by-shop/:id",
+  "/update-shop-selling-info/:id",
   auth(USER_ROLE.VENDOR),
-  ShopProductControllers.productUpdateByShop
+  ShopProductControllers.updateShopProductSellerInfo
 );
 
 router.delete(
