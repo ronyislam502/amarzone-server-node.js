@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
 import { AdminModel, TAdmin } from "./admin.interface";
-import { USER_STATUS } from "../user/user.const";
 
 const adminSchema = new Schema<TAdmin, AdminModel>(
   {

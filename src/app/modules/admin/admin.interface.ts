@@ -1,5 +1,4 @@
 import { Model, Types } from "mongoose";
-import { USER_STATUS } from "../user/user.const";
 
 export type TAdmin = {
   user: Types.ObjectId;

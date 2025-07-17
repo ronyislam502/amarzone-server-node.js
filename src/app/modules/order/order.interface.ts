@@ -1,19 +1,5 @@
 import { Types } from "mongoose";
-
-export const ORDER_STATUS = {
-  PENDING: "PENDING",
-  CONFIRMED: "CONFIRMED",
-  UNSHIPPED: "UNSHIPPED",
-  SHIPPED: "SHIPPED",
-  COMPLETED: "COMPLETED",
-  CANCELLED: "CANCELLED",
-} as const;
-
-export const PAYMENT_STATUS = {
-  PENDING: "PENDING",
-  PAID: "PAID",
-  REFUNDED: "REFUNDED",
-} as const;
+import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 
 export type TOrder = {
   customer: Types.ObjectId;
