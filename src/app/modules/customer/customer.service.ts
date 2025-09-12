@@ -1,49 +1,46 @@
 import mongoose from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
-import { adminSearchableFields } from "./admin.const";
-import { Admin } from "./admin.model";
+import { customerSearchableFields } from "./customer.const";
+import { Customer } from "./customer.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
 
-const allAdminsFromDB = async (query: Record<string, unknown>) => {
-  const adminQuery = new QueryBuilder(
-    Admin.find().populate("user", "role password status needsPasswordChange"),
-    query
-  )
-    .search(adminSearchableFields)
+const allCustomersFromDB = async (query: Record<string, unknown>) => {
+  const customerQuery = new QueryBuilder(Customer.find(), query)
+    .search(customerSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const meta = await adminQuery.countTotal();
-  const data = await adminQuery.modelQuery;
+  const meta = await customerQuery.countTotal();
+  const data = await customerQuery.modelQuery;
 
   return { meta, data };
 };
 
-const singleAdminFromDB = async (id: string) => {
-  const result = await Admin.findById(id);
+const singleCustomerFromDB = async (id: string) => {
+  const result = await Customer.findById(id);
 
   return result;
 };
 
-const deleteAdminFromDB = async (id: string) => {
+const deleteCustomerFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
   try {
-    const deletedAdmin = await Admin.findByIdAndUpdate(
+    const deletedCustomer = await Customer.findByIdAndUpdate(
       id,
       { isDeleted: true },
       { new: true, session }
     );
 
-    if (!deletedAdmin) {
-      throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete admin");
+    if (!deletedCustomer) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete customer");
     }
 
-    const userId = deletedAdmin.user;
+    const userId = deletedCustomer.user;
     const deletedUser = await User.findByIdAndUpdate(
       userId,
       { isDeleted: true },
@@ -57,7 +54,7 @@ const deleteAdminFromDB = async (id: string) => {
     await session.commitTransaction();
     await session.endSession();
 
-    return deletedAdmin;
+    return deletedCustomer;
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -65,8 +62,8 @@ const deleteAdminFromDB = async (id: string) => {
   }
 };
 
-export const AdminServices = {
-  allAdminsFromDB,
-  singleAdminFromDB,
-  deleteAdminFromDB,
+export const CustomerServices = {
+  allCustomersFromDB,
+  singleCustomerFromDB,
+  deleteCustomerFromDB,
 };

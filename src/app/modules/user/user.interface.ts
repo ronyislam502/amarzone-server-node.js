@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Model } from "mongoose";
-import { USER_ROLE, USER_STATUS } from "../../utilities/const";
+import { USER_ROLE, USER_STATUS } from "./user.const";
 
 export type TUser = {
   id: string;

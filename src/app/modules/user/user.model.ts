@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import { TUser, UserModel } from "./user.interface";
 import config from "../../config";
-import { USER_ROLE, USER_STATUS } from "../../utilities/const";
+import { USER_ROLE, USER_STATUS } from "./user.const";
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -27,7 +27,7 @@ const userSchema = new Schema<TUser, UserModel>(
     role: {
       type: String,
       enum: Object.keys(USER_ROLE),
-      default: USER_ROLE.USER,
+      default: USER_ROLE.CUSTOMER,
       required: [true, "Role is required"],
     },
     status: {

@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { USER_STATUS } from "../../utilities/const";
-
+import { USER_STATUS } from "./user.const";
 
 const userValidationSchema = z.object({
   password: z

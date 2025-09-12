@@ -7,7 +7,7 @@ import config from "../../config";
 import bcrypt from "bcrypt";
 import { JwtPayload } from "jsonwebtoken";
 import sendEmail from "../../utilities/sendEmail";
-import { USER_STATUS } from "../../utilities/const";
+import { USER_STATUS } from "../../interface/common";
 
 const loginUserFromDB = async (payload: TLoginUser) => {
   const isUser = await User.isUserExistsByEmail(payload?.email);

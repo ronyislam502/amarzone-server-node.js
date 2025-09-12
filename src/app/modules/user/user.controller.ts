@@ -2,12 +2,12 @@ import httpStatus from "http-status";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { UserServices } from "./user.service";
-import { TImageFile, TImageFiles } from "../../interface/image.interface";
+import { TImageFile } from "../../interface/image.interface";
 
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin } = req.body;
   const result = await UserServices.createAdminIntoDB(
-    req.files as TImageFiles,
+    req.file as TImageFile,
     password,
     admin
   );
@@ -20,18 +20,26 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const createStaff = catchAsync(async (req, res) => {
-  const { password, admin } = req.body;
-  const result = await UserServices.createStaffIntoDB(
-    req.files as TImageFiles,
-    password,
-    admin
-  );
+const createVendor = catchAsync(async (req, res) => {
+  const { password, vendor } = req.body;
+  const result = await UserServices.createVendorIntoDB(password, vendor);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Staff Created successfully",
+    message: "Vendor Created successfully",
+    data: result,
+  });
+});
+
+const createCustomer = catchAsync(async (req, res) => {
+  const { password, customer } = req.body;
+  const result = await UserServices.createCustomerIntoDB(password, customer);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customer Created successfully",
     data: result,
   });
 });
@@ -48,8 +56,38 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
+const shopStatusChange = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.shopStatusChangeFromDB(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Shop suspended Successfully",
+    data: result,
+  });
+});
+
+const productCreatePermission = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.giveProductCreatePermissionFromDB(
+    id,
+    req.body
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Shop suspended Successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createAdmin,
+  createVendor,
+  createCustomer,
   getAllUsers,
-  createStaff,
+  shopStatusChange,
+  productCreatePermission,
 };
