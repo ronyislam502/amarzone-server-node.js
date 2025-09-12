@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
-import { adminSearchableFields } from "./admin.const";
 import { Admin } from "./admin.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
+import { TImageFiles } from "../../interface/image.interface";
+import { TAdmin } from "./admin.interface";
+import { adminSearchableFields } from "../../utilities/const";
 
 const allAdminsFromDB = async (query: Record<string, unknown>) => {
   const adminQuery = new QueryBuilder(
@@ -65,8 +67,12 @@ const deleteAdminFromDB = async (id: string) => {
   }
 };
 
+const updateAdminIntoDB=async(id:string, images:TImageFiles, payload:Partial<TAdmin>)=>{
+}
+
 export const AdminServices = {
   allAdminsFromDB,
   singleAdminFromDB,
   deleteAdminFromDB,
+  updateAdminIntoDB
 };

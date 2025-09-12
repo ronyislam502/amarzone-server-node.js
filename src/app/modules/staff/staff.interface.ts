@@ -1,7 +1,7 @@
 import { Model, Types } from "mongoose";
 import { Gender, TAddress } from "../../utilities/const";
 
-export type TAdmin = {
+export type TStaff = {
   user: Types.ObjectId;
   name: string;
   email: string;
@@ -17,6 +17,6 @@ export type TAdmin = {
   isDeleted: boolean;
 };
 
-export interface AdminModel extends Model<TAdmin> {
-  isUserExists(email: string): Promise<TAdmin | null>;
+export interface StaffModel extends Model<TStaff> {
+  isUserExists(email: string): Promise<TStaff | null>;
 }

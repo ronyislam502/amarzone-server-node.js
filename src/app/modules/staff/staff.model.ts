@@ -1,39 +1,9 @@
 import { model, Schema } from "mongoose";
-import { AdminModel, TAdmin } from "./admin.interface";
 import { Gender, TAddress } from "../../utilities/const";
+import { StaffModel, TStaff } from "./staff.interface";
+import { addressSchema } from "../admin/admin.model";
 
-export  const addressSchema=new Schema<TAddress>({
- Village: {
-    type:String,
-    required:[true, "Village is required"]
-  },
-  postOffice:{
-    type: String,
-    required:[true, "Post Office is required"]
-  },
-  postalCode: {
-    type:String,
-  },
-  policeStation: {
-    type:String,
-    required:[true, "Police Station is required"]
-  },
-  district: {
-    type:String,
-    required:[true, "District is required"]
-  },
-  division:{
-    type:String,
-    required:[true, "Division is required"]
-  },
-  country: {
-    type:String,
-    required:[true, "Country is required"],
-    default: "Bangladesh"
-  }
-})
-
-const adminSchema=new Schema<TAdmin, AdminModel>({
+const staffSchema=new Schema<TStaff, StaffModel>({
     user: {
       type: Schema.Types.ObjectId,
       required: [true, "User id is required"],
@@ -93,25 +63,25 @@ const adminSchema=new Schema<TAdmin, AdminModel>({
     timestamps:true
 });
 
-adminSchema.pre("find", function (next) {
+staffSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-adminSchema.pre("findOne", function (next) {
+staffSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-adminSchema.pre("aggregate", function (next) {
+staffSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-adminSchema.statics.isUserExists = async function (email: string) {
-  const existingUser = await Admin.findOne({ email });
+staffSchema.statics.isUserExists = async function (email: string) {
+  const existingUser = await Staff.findOne({ email });
 
   return existingUser;
 };
 
-export const Admin = model<TAdmin, AdminModel>("Admin", adminSchema);
+export const Staff = model<TStaff, StaffModel>("Admin", staffSchema);
