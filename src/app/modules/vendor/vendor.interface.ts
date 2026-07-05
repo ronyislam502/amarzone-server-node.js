@@ -1,16 +1,7 @@
 import { Model, Types } from "mongoose";
+import { TAddress } from "../user/user.interface";
 
-export type TAddress = {
-  street: string;
-  house: string;
-  sector: string;
-  area: string;
-  postalCode: string;
-  district: string;
-  state: string;
-  city: string;
-  country: string;
-};
+
 
 export type TVendor = {
   user: Types.ObjectId;
@@ -19,8 +10,6 @@ export type TVendor = {
   phone: string;
   address: TAddress;
   avatar?: string;
-  isShopped: boolean;
-  isCreateProduct: boolean;
   isDeleted: boolean;
 };
 

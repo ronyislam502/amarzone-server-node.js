@@ -1,44 +1,7 @@
 import { model, Schema } from "mongoose";
-import { TAddress, TVendor, VendorModel } from "./vendor.interface";
+import { TVendor, VendorModel } from "./vendor.interface";
+import { addressSchema } from "../user/user.model";
 
-export const addressSchema = new Schema<TAddress>({
-  street: {
-    type: String,
-    required: true,
-  },
-  house: {
-    type: String,
-    required: true,
-  },
-  sector: {
-    type: String,
-    required: true,
-  },
-  area: {
-    type: String,
-    required: true,
-  },
-  postalCode: {
-    type: String,
-    required: true,
-  },
-  district: {
-    type: String,
-    required: true,
-  },
-  state: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-  },
-  country: {
-    type: String,
-    required: true,
-  },
-});
 
 const VendorSchema = new Schema<TVendor, VendorModel>(
   {
@@ -72,14 +35,6 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
     avatar: {
       type: String,
       default: "",
-    },
-    isShopped: {
-      type: Boolean,
-      default: false,
-    },
-    isCreateProduct: {
-      type: Boolean,
-      default: false,
     },
     isDeleted: {
       type: Boolean,

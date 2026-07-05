@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Model } from "mongoose";
-import { USER_ROLE, USER_STATUS } from "./user.const";
+import { USER_ROLE, USER_STATUS } from "../../interface/common";
+
+export type TAddress = {
+  street: string;
+  postalCode: string;
+  state: string;
+  country: string;
+};
 
 export type TUser = {
   id: string;
@@ -9,7 +16,6 @@ export type TUser = {
   password: string;
   role: keyof typeof USER_ROLE;
   status: keyof typeof USER_STATUS;
-  needsPasswordChange: boolean;
   passwordChangedAt?: Date;
   isDeleted: boolean;
 };

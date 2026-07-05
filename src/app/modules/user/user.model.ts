@@ -1,8 +1,28 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import { TUser, UserModel } from "./user.interface";
+import { TAddress, TUser, UserModel } from "./user.interface";
 import config from "../../config";
-import { USER_ROLE, USER_STATUS } from "./user.const";
+import { USER_ROLE, USER_STATUS } from "../../interface/common";
+
+export const addressSchema = new Schema<TAddress>({
+  street: {
+    type: String,
+    required: true,
+  },
+  postalCode: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+});
+
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -14,7 +34,6 @@ const userSchema = new Schema<TUser, UserModel>(
       type: String,
       required: true,
       unique: true,
-      //validate email
       match: [
         /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/,
         "Please fill a valid email address",
@@ -34,10 +53,6 @@ const userSchema = new Schema<TUser, UserModel>(
       type: String,
       enum: Object.keys(USER_STATUS),
       default: USER_STATUS.ACTIVE,
-    },
-    needsPasswordChange: {
-      type: Boolean,
-      default: true,
     },
     passwordChangedAt: {
       type: Date,

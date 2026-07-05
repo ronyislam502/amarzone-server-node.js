@@ -63,7 +63,7 @@ const createVendorIntoDB = async (password: string, payload: TVendor) => {
   const userData: Partial<TUser> = {
     name: payload?.name,
     email: payload?.email,
-    password: password || (config.default_password as string),
+    password: password,
     role: USER_ROLE?.VENDOR,
   };
 
@@ -155,49 +155,6 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-
-
-// const giveProductCreatePermissionFromDB = async (
-//   id: string,
-//   status: { isCreateProduct: boolean }
-// ) => {
-//   const isVendor = await Vendor.findById(id);
-
-//   if (!isVendor) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
-//   }
-
-//   const isShopExist = isVendor.isShopped;
-
-//   if (!isShopExist) {
-//     throw new AppError(httpStatus.BAD_REQUEST, "This vendor not created shop");
-//   }
-
-//   const isShop = await Shop.findById(isVendor._id);
-
-//   console.log("isShop", isShop);
-
-//   if (!isShop) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Shop not found");
-//   }
-
-//   const isSuspended = isShop.isSuspended;
-
-//   if (isSuspended) {
-//     throw new AppError(httpStatus.BAD_REQUEST, "Shop was suspended");
-//   }
-
-//   const result = await Vendor.findByIdAndUpdate(
-//     isVendor?._id,
-//     { isCreateProduct: status?.isCreateProduct },
-//     {
-//       new: true,
-//       runValidators: true,
-//     }
-//   );
-
-//   return result;
-// };
 
 export const UserServices = {
   createAdminIntoDB,
