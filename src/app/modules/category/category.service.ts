@@ -36,6 +36,7 @@ const allCategoriesByDepartmentFromDB = async (id: string) => {
   return result;
 };
 
+
 const updateCategoryIntoDB = async (
   id: string,
   payload: Partial<TCategory>
