@@ -1,3 +1,3 @@
 export type TDepartment = {
-    title: string;
+    name: string;
 };

@@ -8,7 +8,7 @@ const CategorySchema = new Schema<TCategory>(
       required: [true, "Department is required"],
       ref: "Department",
     },
-    title: {
+    name: {
       type: String,
       required: [true, "Title is required"],
       unique: true,

@@ -1,5 +1,6 @@
 import { Model, Types } from "mongoose";
-import { TAddress } from "../vendor/vendor.interface";
+import { TAddress } from "../user/user.interface";
+
 
 export type TCustomer = {
     user: Types.ObjectId;

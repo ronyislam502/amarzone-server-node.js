@@ -9,7 +9,8 @@ export type TVendor = {
   email: string;
   phone: string;
   address: TAddress;
-  avatar?: string;
+  logo?: string;
+  banner?: string;
   isDeleted: boolean;
 };
 

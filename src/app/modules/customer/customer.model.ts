@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 import { CustomerModel, TCustomer } from "./customer.interface";
-import { addressSchema } from "../vendor/vendor.model";
+import { addressSchema } from "../user/user.model";
 
 const customerSchema = new Schema<TCustomer, CustomerModel>(
     {

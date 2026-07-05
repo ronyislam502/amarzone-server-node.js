@@ -5,7 +5,7 @@ const createCategoryValidationSchema = z.object({
     department: z.string({
       invalid_type_error: "Department must be string",
     }),
-    title: z.string({
+    name: z.string({
       invalid_type_error: "title must be string",
     }),
   }),
@@ -14,7 +14,7 @@ const createCategoryValidationSchema = z.object({
 const updateCategoryValidationSchema = z.object({
   body: z.object({
     department: z.string().optional(),
-    title: z.string().optional(),
+    name: z.string().optional(),
   }),
 });
 

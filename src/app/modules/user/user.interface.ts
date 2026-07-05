@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { USER_ROLE, USER_STATUS } from "../../interface/common";
 
 export type TAddress = {
@@ -9,12 +9,15 @@ export type TAddress = {
   country: string;
 };
 
+export type TUserRole = keyof typeof USER_ROLE;
+
 export type TUser = {
+  _id?: Types.ObjectId;
   id: string;
   name: string;
   email: string;
   password: string;
-  role: keyof typeof USER_ROLE;
+  role: TUserRole;
   status: keyof typeof USER_STATUS;
   passwordChangedAt?: Date;
   isDeleted: boolean;
@@ -22,7 +25,7 @@ export type TUser = {
 
 export interface UserModel extends Model<TUser> {
   //instance methods for checking if the user exist
-  isUserExistsByEmail(email: string): Promise<TUser>;
+  isUserExistsByEmail(email: string): Promise<TUser | null>;
   //instance methods for checking if passwords are matched
   isPasswordMatched(
     plainTextPassword: string,
@@ -34,4 +37,3 @@ export interface UserModel extends Model<TUser> {
   ): boolean;
 }
 
-export type TUserRole = keyof typeof USER_ROLE;

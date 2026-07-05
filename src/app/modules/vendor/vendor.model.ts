@@ -18,7 +18,6 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
       type: String,
       required: [true, "Email is required"],
       unique: true,
-      //validate email
       match: [
         /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/,
         "Please fill a valid email address",
@@ -32,7 +31,11 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
       type: addressSchema,
       required: [true, "address is required"],
     },
-    avatar: {
+    logo: {
+      type: String,
+      default: "",
+    },
+    banner: {
       type: String,
       default: "",
     },
