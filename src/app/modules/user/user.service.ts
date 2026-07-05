@@ -13,7 +13,6 @@ import { Vendor } from "../vendor/vendor.model";
 import { Customer } from "../customer/customer.model";
 import { TCustomer } from "../customer/customer.interface";
 import { USER_ROLE } from "../../interface/common";
-import { UserSearchableFields } from "./user.const";
 
 const createAdminIntoDB = async (
   image: TImageFile,
@@ -138,27 +137,9 @@ const createCustomerIntoDB = async (password: string, payload: TCustomer) => {
   }
 };
 
-const getAllUsersFromDB = async (query: Record<string, unknown>) => {
-  const userQuery = new QueryBuilder(User.find(), query)
-    .search(UserSearchableFields)
-    .fields()
-    .paginate()
-    .sort()
-    .filter();
-
-  const meta = await userQuery.countTotal();
-  const data = await userQuery.modelQuery;
-
-  return {
-    meta,
-    data,
-  };
-};
-
 
 export const UserServices = {
   createAdminIntoDB,
   createVendorIntoDB,
   createCustomerIntoDB,
-  getAllUsersFromDB,
 };

@@ -1,11 +1,11 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
-import { Department } from "../department/department.model";
 import { TCategory } from "./category.interface";
 import { Category } from "./category.model";
+import { Department } from "../department/department.model";
 
 const createCategoryIntoDB = async (payload: TCategory) => {
-  const isDepartment = await Department.findById(payload?.department);
+  const isDepartment = await Category.findById(payload?.department);
 
   if (!isDepartment) {
     throw new AppError(httpStatus.NOT_FOUND, "Department not found");

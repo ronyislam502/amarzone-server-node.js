@@ -4,6 +4,7 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
+import { DepartmentRoutes } from "../modules/department/department.route";
 
 
 
@@ -29,6 +30,10 @@ const moduleRoutes = [
   {
     path: "/customers",
     route: CustomerRoutes,
+  },
+  {
+    path: "/departments",
+    route: DepartmentRoutes,
   },
 ];
 
