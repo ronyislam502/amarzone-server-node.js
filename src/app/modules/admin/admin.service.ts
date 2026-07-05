@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
-import { adminSearchableFields } from "./admin.const";
 import { Admin } from "./admin.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
+import { adminSearchableFields } from "../../utilities/constant";
 
 const allAdminsFromDB = async (query: Record<string, unknown>) => {
   const adminQuery = new QueryBuilder(

@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
 import QueryBuilder from "../../builder/queryBuilder";
-import { USER_ROLE, UserSearchableFields } from "./user.const";
 import { User } from "./user.model";
 import { TAdmin } from "../admin/admin.interface";
 import { TImageFile } from "../../interface/image.interface";
@@ -9,11 +8,12 @@ import config from "../../config";
 import mongoose from "mongoose";
 import AppError from "../../errors/AppError";
 import { Admin } from "../admin/admin.model";
-import { TCustomer } from "../customer/customer.interface";
-import { Customer } from "./../customer/customer.model";
 import { TVendor } from "../vendor/vendor.interface";
 import { Vendor } from "../vendor/vendor.model";
-import { Shop } from "../shop/shop.model";
+import { Customer } from "../customer/customer.model";
+import { TCustomer } from "../customer/customer.interface";
+import { USER_ROLE } from "../../interface/common";
+import { UserSearchableFields } from "./user.const";
 
 const createAdminIntoDB = async (
   image: TImageFile,
@@ -155,81 +155,53 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const shopStatusChangeFromDB = async (
-  id: string,
-  status: { isSuspended: boolean }
-) => {
-  const isShop = await Shop.findById(id);
 
-  if (!isShop) {
-    throw new AppError(httpStatus.NOT_FOUND, "Shop not found");
-  }
 
-  const isSuspended = isShop.isSuspended;
+// const giveProductCreatePermissionFromDB = async (
+//   id: string,
+//   status: { isCreateProduct: boolean }
+// ) => {
+//   const isVendor = await Vendor.findById(id);
 
-  if (isSuspended) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Shop already suspended");
-  }
+//   if (!isVendor) {
+//     throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
+//   }
 
-  const result = await Shop.findByIdAndUpdate(
-    isShop?.id,
-    { isSuspended: status?.isSuspended },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+//   const isShopExist = isVendor.isShopped;
 
-  return result;
-};
+//   if (!isShopExist) {
+//     throw new AppError(httpStatus.BAD_REQUEST, "This vendor not created shop");
+//   }
 
-const giveProductCreatePermissionFromDB = async (
-  id: string,
-  status: { isCreateProduct: boolean }
-) => {
-  const isVendor = await Vendor.findById(id);
+//   const isShop = await Shop.findById(isVendor._id);
 
-  if (!isVendor) {
-    throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
-  }
+//   console.log("isShop", isShop);
 
-  const isShopExist = isVendor.isShopped;
+//   if (!isShop) {
+//     throw new AppError(httpStatus.NOT_FOUND, "Shop not found");
+//   }
 
-  if (!isShopExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "This vendor not created shop");
-  }
+//   const isSuspended = isShop.isSuspended;
 
-  const isShop = await Shop.findById(isVendor._id);
+//   if (isSuspended) {
+//     throw new AppError(httpStatus.BAD_REQUEST, "Shop was suspended");
+//   }
 
-  console.log("isShop", isShop);
+//   const result = await Vendor.findByIdAndUpdate(
+//     isVendor?._id,
+//     { isCreateProduct: status?.isCreateProduct },
+//     {
+//       new: true,
+//       runValidators: true,
+//     }
+//   );
 
-  if (!isShop) {
-    throw new AppError(httpStatus.NOT_FOUND, "Shop not found");
-  }
-
-  const isSuspended = isShop.isSuspended;
-
-  if (isSuspended) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Shop was suspended");
-  }
-
-  const result = await Vendor.findByIdAndUpdate(
-    isVendor?._id,
-    { isCreateProduct: status?.isCreateProduct },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
-
-  return result;
-};
+//   return result;
+// };
 
 export const UserServices = {
   createAdminIntoDB,
   createVendorIntoDB,
   createCustomerIntoDB,
   getAllUsersFromDB,
-  shopStatusChangeFromDB,
-  giveProductCreatePermissionFromDB,
 };

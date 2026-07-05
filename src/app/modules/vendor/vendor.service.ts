@@ -1,12 +1,12 @@
 import mongoose, { FilterQuery, startSession } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
-import { sellerSearchableFields } from "./vendor.const";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
 import { TUser } from "../user/user.interface";
 import { TVendor } from "./vendor.interface";
 import { Vendor } from "./vendor.model";
+import { sellerSearchableFields } from "../../utilities/constant";
 
 const allVendorsFromDB = async (query: Record<string, unknown>) => {
   const vendorQuery = new QueryBuilder(Vendor.find(), query)
