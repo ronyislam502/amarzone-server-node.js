@@ -5,7 +5,7 @@ import { Category } from "./category.model";
 import { Department } from "../department/department.model";
 
 const createCategoryIntoDB = async (payload: TCategory) => {
-  const isDepartment = await Category.findById(payload?.department);
+  const isDepartment = await Department.findById(payload?.department);
 
   if (!isDepartment) {
     throw new AppError(httpStatus.NOT_FOUND, "Department not found");

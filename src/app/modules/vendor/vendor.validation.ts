@@ -4,13 +4,7 @@ export const createAddressValidationSchema = z.object({
   street: z.string({
     invalid_type_error: "street must be string",
   }),
-  city: z.string({
-    invalid_type_error: "city must be string",
-  }),
   state: z.string({
-    invalid_type_error: "city must be string",
-  }),
-  area: z.string({
     invalid_type_error: "city must be string",
   }),
   postalCode: z.string({
@@ -35,9 +29,7 @@ const createVendorValidationSchema = z.object({
 
 export const updateAddressValidationSchema = z.object({
   street: z.string().optional(),
-  city: z.string().optional(),
   state: z.string().optional(),
-  area: z.string().optional(),
   postalCode: z.string().optional(),
   country: z.string().optional(),
 });

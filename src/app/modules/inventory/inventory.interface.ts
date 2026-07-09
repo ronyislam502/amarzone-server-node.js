@@ -11,7 +11,7 @@ export type TSeller = {
 }
 
 
-export type TListProduct = {
+export type TInventoryProduct = {
     product: Types.ObjectId;
     asin: string;
     seller: TSeller;

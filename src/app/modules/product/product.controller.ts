@@ -5,7 +5,7 @@ import { ProductServices } from "./product.service";
 import { TImageFiles } from "../../interface/image.interface";
 
 const createProduct = catchAsync(async (req, res) => {
-    const result = await ProductServices.createProductIntoDB(req.files as TImageFiles, req.user, req.body)
+    const result = await ProductServices.createProductIntoDB(req.user, req.files as TImageFiles, req.body)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

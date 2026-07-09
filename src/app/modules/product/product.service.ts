@@ -15,6 +15,9 @@ import QueryBuilder from "../../builder/queryBuilder";
 
 
 const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload: TProduct) => {
+    console.log("payload", payload)
+    console.log("user", user)
+    console.log("files", files)
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
@@ -50,16 +53,16 @@ const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload
 
     const asin = await generateASIN(isDepartment?.name, isCategory?.name);
 
-    const thumbnail = files?.thumbnail[0];
-    const images = files?.images;
+    // const thumbnail = files?.thumbnail[0];
+    // const images = files?.images;
 
-    if (thumbnail && thumbnail.path) {
-        payload.thumbnail = thumbnail.path;
-    }
+    // if (thumbnail && thumbnail.path) {
+    //     payload.thumbnail = thumbnail.path;
+    // }
 
-    if (images) {
-        payload.images = images?.map((file) => file.path);
-    }
+    // if (images) {
+    //     payload.images = images?.map((file) => file.path);
+    // }
 
     const newProduct: TProduct = {
         ...payload,
@@ -113,16 +116,16 @@ const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFi
         payload.asin = await generateASIN(isDepartment.name, isCategory.name);
     }
 
-    const thumbnail = files?.thumbnail?.[0];
-    const images = files?.images;
+    // const thumbnail = files?.thumbnail?.[0];
+    // const images = files?.images;
 
-    if (thumbnail && thumbnail.path) {
-        payload.thumbnail = thumbnail.path;
-    }
+    // if (thumbnail && thumbnail.path) {
+    //     payload.thumbnail = thumbnail.path;
+    // }
 
-    if (images && images.length > 0) {
-        payload.images = images.map((file) => file.path);
-    }
+    // if (images && images.length > 0) {
+    //     payload.images = images.map((file) => file.path);
+    // }
 
     const result = await Product.findByIdAndUpdate(id, payload, {
         new: true,

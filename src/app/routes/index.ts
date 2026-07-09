@@ -6,6 +6,8 @@ import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
 import { DepartmentRoutes } from "../modules/department/department.route";
 import { CategoryRoutes } from "../modules/category/category.route";
+import { ProductRoutes } from "../modules/product/product.route";
+import { InventoryRoutes } from "../modules/inventory/inventory.route";
 
 
 
@@ -39,6 +41,14 @@ const moduleRoutes = [
   {
     path: "/categories",
     route: CategoryRoutes,
+  },
+  {
+    path: "/products",
+    route: ProductRoutes,
+  },
+  {
+    path: "/inventories",
+    route: InventoryRoutes,
   },
 ];
 

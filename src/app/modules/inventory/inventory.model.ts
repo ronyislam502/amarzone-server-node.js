@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { TListProduct, TSeller } from "./inventory.interface";
+import { TInventoryProduct, TSeller } from "./inventory.interface";
 
 
 const SellerSchema = new Schema<TSeller>({
@@ -34,7 +34,7 @@ const SellerSchema = new Schema<TSeller>({
     },
 });
 
-const listProductSchema = new Schema<TListProduct>(
+const inventoryProductSchema = new Schema<TInventoryProduct>(
     {
         product: {
             type: Schema.Types.ObjectId,
@@ -57,22 +57,22 @@ const listProductSchema = new Schema<TListProduct>(
     { timestamps: true }
 );
 
-listProductSchema.pre("find", function (next) {
+inventoryProductSchema.pre("find", function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
 
-listProductSchema.pre("findOne", function (next) {
+inventoryProductSchema.pre("findOne", function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
 
-listProductSchema.pre("aggregate", function (next) {
+inventoryProductSchema.pre("aggregate", function (next) {
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
     next();
 });
 
-export const ListProduct = model<TListProduct>(
-    "ListProduct",
-    listProductSchema
+export const InventoryProduct = model<TInventoryProduct>(
+    "InventoryProduct",
+    inventoryProductSchema
 );

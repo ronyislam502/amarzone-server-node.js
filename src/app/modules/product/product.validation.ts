@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { USER_ROLE } from "../../interface/common";
 
 const variantValidationSchema = z.object({
     type: z.string({
@@ -12,21 +11,8 @@ const variantValidationSchema = z.object({
     }),
 });
 
-const createdByValidationSchema = z.object({
-    role: z.nativeEnum(USER_ROLE, {
-        invalid_type_error: "Role must be one of SUPER_ADMIN, ADMIN, VENDOR, CUSTOMER",
-        required_error: "Role is required",
-    }),
-    id: z.string().optional(),
-    name: z.string({
-        invalid_type_error: "Name must be string",
-        required_error: "Name is required",
-    }),
-});
-
 const createProductValidationSchema = z.object({
     body: z.object({
-        createdBy: createdByValidationSchema,
         department: z.string({
             invalid_type_error: "department must be string",
             required_error: "department is required",
@@ -38,7 +24,7 @@ const createProductValidationSchema = z.object({
         asin: z.string({
             invalid_type_error: "asin must be string",
             required_error: "asin is required",
-        }),
+        }).optional(),
         title: z.string({
             invalid_type_error: "title must be string",
             required_error: "title is required",
@@ -62,15 +48,8 @@ const updateVariantValidationSchema = z.object({
     value: z.string().optional(),
 });
 
-const updateCreatedByValidationSchema = z.object({
-    role: z.nativeEnum(USER_ROLE).optional(),
-    id: z.string().optional(),
-    name: z.string().optional(),
-});
-
 const updateProductValidationSchema = z.object({
     body: z.object({
-        createdBy: updateCreatedByValidationSchema.optional(),
         department: z.string().optional(),
         category: z.string().optional(),
         asin: z.string().optional(),
@@ -87,3 +66,4 @@ export const ProductValidations = {
     createProductValidationSchema,
     updateProductValidationSchema,
 };
+

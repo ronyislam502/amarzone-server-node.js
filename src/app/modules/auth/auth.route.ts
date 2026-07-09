@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post(
   "/login",
-  auth(USER_ROLE.VENDOR, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER),
+  // auth(USER_ROLE.VENDOR, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER),
   validateRequest(AuthValidations.loginValidationSchema),
   AuthControllers.loginUser
 );
