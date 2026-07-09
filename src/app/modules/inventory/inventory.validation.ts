@@ -98,7 +98,27 @@ const updateInventoryValidationSchema = z.object({
   }),
 });
 
+const updatePriceValidationSchema = z.object({
+  body: z.object({
+    price: z.number({
+      invalid_type_error: "Price must be number",
+      required_error: "Price is required",
+    }),
+  }),
+});
+
+const updateQuantityValidationSchema = z.object({
+  body: z.object({
+    quantity: z.number({
+      invalid_type_error: "Quantity must be number",
+      required_error: "Quantity is required",
+    }),
+  }),
+});
+
 export const InventoryValidations = {
   createInventoryValidationSchema,
   updateInventoryValidationSchema,
+  updatePriceValidationSchema,
+  updateQuantityValidationSchema,
 };

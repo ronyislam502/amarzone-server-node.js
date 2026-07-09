@@ -59,12 +59,89 @@ const allInventoryProductsFromDB = async (query: Record<string, unknown>) => {
     const meta = await inventoryProductQuery.countTotal();
     const data = await inventoryProductQuery.modelQuery;
 
-    return { meta, data }
-}
+    return { meta, data };
+};
 
+const updatePriceIntoDB = async (
+    user: JwtPayload,
+    id: string,
+    payload: { price: number }
+) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
 
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found");
+    }
+    if (isUserExists.role !== USER_ROLE.VENDOR) {
+        throw new AppError(httpStatus.FORBIDDEN, "this user not authorized to update inventory");
+    }
+
+    const inventoryProduct = await InventoryProduct.findById(id);
+
+    if (!inventoryProduct) {
+        throw new AppError(httpStatus.NOT_FOUND, "Inventory product not found");
+    }
+
+    if (inventoryProduct.seller.vendor.toString() !== isUserExists._id?.toString()) {
+        throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            "You are not authorized to update this inventory product"
+        );
+    }
+
+    const result = await InventoryProduct.findByIdAndUpdate(
+        id,
+        { $set: { "seller.price": payload.price } },
+        { new: true, runValidators: true }
+    );
+
+    return result;
+};
+
+const updateQuantityIntoDB = async (
+    user: JwtPayload,
+    id: string,
+    payload: { quantity: number }
+) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found");
+    }
+    if (isUserExists.role !== USER_ROLE.VENDOR) {
+        throw new AppError(httpStatus.FORBIDDEN, "this user not authorized to update inventory");
+    }
+
+    const inventoryProduct = await InventoryProduct.findById(id);
+
+    if (!inventoryProduct) {
+        throw new AppError(httpStatus.NOT_FOUND, "Inventory product not found");
+    }
+
+    if (inventoryProduct.seller.vendor.toString() !== isUserExists._id?.toString()) {
+        throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            "You are not authorized to update this inventory product"
+        );
+    }
+
+    const result = await InventoryProduct.findByIdAndUpdate(
+        id,
+        {
+            $set: {
+                "seller.quantity": payload.quantity,
+                "seller.isStock": payload.quantity > 0,
+            },
+        },
+        { new: true, runValidators: true }
+    );
+
+    return result;
+};
 
 export const InventoryServices = {
     listProductIntoDB,
-    allInventoryProductsFromDB
-}
+    allInventoryProductsFromDB,
+    updatePriceIntoDB,
+    updateQuantityIntoDB,
+};

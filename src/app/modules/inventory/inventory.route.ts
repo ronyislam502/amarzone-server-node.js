@@ -16,8 +16,18 @@ router.post(
     InventoryControllers.listProduct
 );
 
+router.patch(
+    "/update-price/:id",
+    auth(USER_ROLE.VENDOR),
+    validateRequest(InventoryValidations.updatePriceValidationSchema),
+    InventoryControllers.updatePrice
+);
 
-
-
+router.patch(
+    "/update-quantity/:id",
+    auth(USER_ROLE.VENDOR),
+    validateRequest(InventoryValidations.updateQuantityValidationSchema),
+    InventoryControllers.updateQuantity
+);
 
 export const InventoryRoutes = router; 
