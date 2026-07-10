@@ -55,7 +55,7 @@ const orderSchema = new Schema<TOrder>(
             },
         ],
 
-        serviceFee: {
+        commission: {
             type: Number,
             required: true,
             default: 0,

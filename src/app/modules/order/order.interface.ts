@@ -11,7 +11,7 @@ export type TOrder = {
     vendor: Types.ObjectId;
     orderNo: string;
     products: { product: Types.ObjectId; quantity: number }[];
-    serviceFee: number;
+    commission: number;
     tax: number;
     totalPrice: number;
     totalQuantity: number;
