@@ -10,8 +10,7 @@ import { Product } from "../product/product.model";
 import QueryBuilder from "../../builder/queryBuilder";
 
 const listProductIntoDB = async (user: JwtPayload, payload: TInventoryProduct) => {
-    console.log("payload", payload)
-    console.log("user", user)
+
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
@@ -139,9 +138,32 @@ const updateQuantityIntoDB = async (
     return result;
 };
 
+const inventoryProductsByVendorFromDB = async (user: JwtPayload, query: Record<string, unknown>) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found")
+    }
+    const invenProductQuery = new QueryBuilder(InventoryProduct.find().populate("product")
+        .populate("user", "name avatar"), query)
+        .search([])
+        .filter()
+        .sort()
+        .paginate()
+        .fields()
+
+
+    const meta = await invenProductQuery.countTotal();
+    const data = await invenProductQuery.modelQuery;
+
+    return { meta, data };
+
+}
+
 export const InventoryServices = {
     listProductIntoDB,
     allInventoryProductsFromDB,
     updatePriceIntoDB,
     updateQuantityIntoDB,
+    inventoryProductsByVendorFromDB
 };

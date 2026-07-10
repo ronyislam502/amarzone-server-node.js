@@ -14,6 +14,17 @@ const listProduct = catchAsync(async (req, res) => {
     })
 })
 
+const inventoryProducts = catchAsync(async (req, res) => {
+    const result = await InventoryServices.allInventoryProductsFromDB(req.query)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "inventory products retrieved successfully",
+        data: result
+    })
+})
+
 const updatePrice = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await InventoryServices.updatePriceIntoDB(req.user, id, req.body)
@@ -38,8 +49,21 @@ const updateQuantity = catchAsync(async (req, res) => {
     })
 })
 
+
+const inventoryProductsByVendor = catchAsync(async (req, res) => {
+    const result = await InventoryServices.inventoryProductsByVendorFromDB(req.user, req.query)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "inventory products by vendor retrieved successfully",
+        data: result
+    })
+})
+
 export const InventoryControllers = {
     listProduct,
     updatePrice,
-    updateQuantity
+    updateQuantity,
+    inventoryProductsByVendor
 }
