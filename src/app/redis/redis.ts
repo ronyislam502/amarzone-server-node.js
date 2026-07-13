@@ -10,3 +10,11 @@ export const redisConnectionOptions = {
 
 // Reusable connection instance
 export const redisConnection = new Redis(redisConnectionOptions);
+
+redisConnection.on("connect", () => {
+  console.log("✅ Redis Connected");
+});
+
+redisConnection.on("error", (err) => {
+  console.error("Redis Error:", err);
+});
