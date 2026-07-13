@@ -155,7 +155,7 @@ const getAllReviewsFromDB = async (query: Record<string, unknown>) => {
   return { meta, data };
 };
 
-const getReviewsByVendorFromDB = async (vendorId: string, query: Record<string, unknown>) => {
+const allReviewsByVendorFromDB = async (vendorId: string, query: Record<string, unknown>) => {
   const reviewQuery = new QueryBuilder(
     ServiceReview.find({ vendor: vendorId }).populate("customer").populate("order"),
     query
@@ -167,6 +167,10 @@ const getReviewsByVendorFromDB = async (vendorId: string, query: Record<string, 
 
   const meta = await reviewQuery.countTotal();
   const data = await reviewQuery.modelQuery;
+
+  const totalRatings = data?.reduce((sum, review) => sum + review.rating, 0);
+  const averageRating =
+    data.length > 0 ? (totalRatings / data.length).toFixed(2) : "0.00";
 
   return { meta, data };
 };
@@ -199,6 +203,6 @@ export const ReviewServices = {
   deleteReviewFromDB,
   getSingleReviewFromDB,
   getAllReviewsFromDB,
-  getReviewsByVendorFromDB,
+  allReviewsByVendorFromDB,
   getMyReviewsFromDB,
 };

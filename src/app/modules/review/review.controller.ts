@@ -64,7 +64,7 @@ const getAllReviews = catchAsync(async (req, res) => {
 
 const getReviewsByVendor = catchAsync(async (req, res) => {
   const { vendorId } = req.params;
-  const result = await ReviewServices.getReviewsByVendorFromDB(vendorId, req.query);
+  const result = await ReviewServices.allReviewsByVendorFromDB(vendorId, req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
