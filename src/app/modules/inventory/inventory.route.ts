@@ -16,6 +16,8 @@ router.post(
     InventoryControllers.listProduct
 );
 
+router.get("/", InventoryControllers.inventoryProducts)
+
 router.patch(
     "/update-price/:id",
     auth(USER_ROLE.VENDOR),

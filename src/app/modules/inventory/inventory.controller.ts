@@ -65,5 +65,6 @@ export const InventoryControllers = {
     listProduct,
     updatePrice,
     updateQuantity,
+    inventoryProducts,
     inventoryProductsByVendor
 }

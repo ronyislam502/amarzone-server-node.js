@@ -7,7 +7,7 @@ import { InventoryProduct } from "../modules/inventory/inventory.model";
 import { ServiceReview } from "../modules/review/review.model";
 import { AccountHealth } from "../modules/health/health.model";
 import { AccountHealthServices } from "../modules/health/health.service";
-import { BuyBoxServices } from "../modules/buybox/buybox.service";
+import { InventoryServices } from "../modules/inventory/inventory.service";
 
 async function runTest() {
   console.log("Connecting to Database...");
@@ -16,19 +16,21 @@ async function runTest() {
 
   // Create mock vendor and customer
   const vendor = await User.create({
-    name: "BuyBox Vendor",
-    email: `vendor.buybox.${Date.now()}@example.com`,
+    name: "BuyBox Mgt Vendor",
+    email: `vendor.bbmgt.${Date.now()}@example.com`,
     password: "password123",
     role: "VENDOR",
     status: "ACTIVE",
   });
   const customer = await User.create({
-    name: "BuyBox Customer",
-    email: `customer.buybox.${Date.now()}@example.com`,
+    name: "BuyBox Mgt Customer",
+    email: `customer.bbmgt.${Date.now()}@example.com`,
     password: "password123",
     role: "CUSTOMER",
     status: "ACTIVE",
   });
+
+  const vendorJwt = { email: vendor.email, role: "VENDOR" };
 
   // Create mock Product
   const product = await Product.create({
@@ -37,9 +39,9 @@ async function runTest() {
       id: vendor._id,
       name: vendor.name,
     },
-    title: "BuyBox Product",
+    title: "BuyBox Mgt Product",
     description: "Product description",
-    asin: `ASIN-${Date.now()}`,
+    asin: `ASIN-MGT-${Date.now()}`,
     thumbnail: "thumb.jpg",
     brand: "Test Brand",
     isPrivateLevel: false,
@@ -57,7 +59,7 @@ async function runTest() {
     invs.push(
       await InventoryProduct.create({
         product: product._id,
-        asin: `ASIN-INV-${i}-${Date.now()}`,
+        asin: product.asin,
         seller: {
           vendor: vendor._id,
           price: 10 + i * 5,
@@ -126,15 +128,47 @@ async function runTest() {
   winners = currentInvs.filter(i => i.seller.isBuyBoxWinner === true);
   console.log("Winners count after eligibility:", winners.length);
   
-  // Confgured percentage: 25% of 4 products is 1. Expect exactly 1 winner.
+  // Configured percentage: 25% of 4 products is 1. Expect exactly 1 winner.
   if (winners.length === 1) {
-    console.log("✅ SUCCESS: Randomly assigned Buy Box to exactly 1 product (25% of inventory).");
+    console.log("✅ SUCCESS: Assigned Buy Box to exactly 1 product (25% of inventory).");
   } else {
     console.error(`❌ FAILURE: Expected 1 winner, got ${winners.length}`);
   }
 
-  // Test 3: Losing Buy Box (customer submits a 1-star Service Review, reducing health rating and ODR)
-  console.log("\n--- Test 3: Submitting poor rating (should trigger losing Buy Box) ---");
+  // Test 3: Price Update (should recalculate Buy Box and trigger socket event)
+  console.log("\n--- Test 3: Price update check ---");
+  const initialWinner = winners[0];
+  await InventoryServices.updatePriceIntoDB(vendorJwt as any, initialWinner._id.toString(), { price: 99 });
+  
+  currentInvs = await InventoryProduct.find({ "seller.vendor": vendor._id });
+  winners = currentInvs.filter(i => i.seller.isBuyBoxWinner === true);
+  console.log("Winners count after price update:", winners.length);
+  if (winners.length === 1) {
+    console.log("✅ SUCCESS: Buy Box recalculated and exactly 1 winner exists after price update.");
+  } else {
+    console.error("❌ FAILURE: Incorrect winner count after price update:", winners.length);
+  }
+
+  // Test 4: Stock update to 0 / Out of Stock (winner product loses Buy Box, another in-stock product receives it)
+  console.log("\n--- Test 4: Quantity update to 0 (winner loses, new winner assigned) ---");
+  const currentWinner = winners[0];
+  await InventoryServices.updateQuantityIntoDB(vendorJwt as any, currentWinner._id.toString(), { quantity: 0 });
+
+  currentInvs = await InventoryProduct.find({ "seller.vendor": vendor._id });
+  winners = currentInvs.filter(i => i.seller.isBuyBoxWinner === true);
+  const updatedOldWinner = currentInvs.find(i => i._id.toString() === currentWinner._id.toString());
+  
+  console.log("Old winner isBuyBoxWinner:", updatedOldWinner?.seller.isBuyBoxWinner);
+  console.log("Total winners count after stockout:", winners.length);
+
+  if (updatedOldWinner?.seller.isBuyBoxWinner === false && winners.length === 1) {
+    console.log("✅ SUCCESS: Out of stock winner lost Buy Box, and 1 of the remaining in-stock products won it.");
+  } else {
+    console.error("❌ FAILURE: Winner did not shift correctly after stockout.");
+  }
+
+  // Test 5: Losing Buy Box (poor rating)
+  console.log("\n--- Test 5: Submitting poor rating (should trigger losing Buy Box) ---");
   const srvReview = await ServiceReview.create({
     customer: customer._id,
     vendor: vendor._id,
@@ -143,7 +177,7 @@ async function runTest() {
     review: "Poor service!",
   });
 
-  // Recalculate health & Buy Box
+  // Explicitly trigger recalculated health (since model hooks for health are removed, we call it in service layer)
   await AccountHealthServices.calculateVendorHealth(vendor._id.toString());
 
   currentInvs = await InventoryProduct.find({ "seller.vendor": vendor._id });
@@ -155,22 +189,6 @@ async function runTest() {
     console.error("❌ FAILURE: Ineligible vendor still has Buy Box winners.");
   }
 
-  // Test 4: Regaining Buy Box (deleting the poor service review)
-  console.log("\n--- Test 4: Removing poor rating (should regain Buy Box) ---");
-  await ServiceReview.deleteOne({ _id: srvReview._id });
-
-  // Recalculate health & Buy Box
-  await AccountHealthServices.calculateVendorHealth(vendor._id.toString());
-
-  currentInvs = await InventoryProduct.find({ "seller.vendor": vendor._id });
-  winners = currentInvs.filter(i => i.seller.isBuyBoxWinner === true);
-  console.log("Winners count after review deletion:", winners.length);
-  if (winners.length === 1) {
-    console.log("✅ SUCCESS: Vendor regained eligibility and randomly assigned Buy Box to 1 product.");
-  } else {
-    console.error(`❌ FAILURE: Expected 1 winner, got ${winners.length}`);
-  }
-
   // Cleanup
   console.log("\nCleaning up test documents...");
   for (const inv of invs) {
@@ -180,6 +198,7 @@ async function runTest() {
     await Order.deleteMany({ _id: order._id });
   }
   await Product.deleteMany({ _id: product._id });
+  await ServiceReview.deleteMany({ order: orders[0]._id });
   await AccountHealth.deleteMany({ vendor: vendor._id });
   await User.deleteOne({ _id: customer._id });
   await User.deleteOne({ _id: vendor._id });

@@ -221,8 +221,8 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
     }
 
     try {
-        const { BuyBoxServices } = await import("../buybox/buybox.service");
-        await BuyBoxServices.calculateBuyBox(vendorId, session);
+        const { InventoryServices } = await import("../inventory/inventory.service");
+        await InventoryServices.calculateBuyBox(vendorId, session);
     } catch (error) {
         console.error(`[Health Service Buy Box trigger] Failed to calculate Buy Box for vendor ${vendorId}:`, error);
     }

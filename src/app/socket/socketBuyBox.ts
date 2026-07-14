@@ -1,6 +1,6 @@
 import { getIO } from "./socket";
 
-export const emitBuyBoxUpdated = (productId: string, data: any) => {
+export const emitBuyBoxUpdated = (productId: string, data: Record<string, unknown>) => {
   try {
     const io = getIO();
     io.emit("buy-box-updated", { productId, ...data });
