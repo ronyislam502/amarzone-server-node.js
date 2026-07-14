@@ -13,6 +13,7 @@ import { PaymentRoutes } from "../modules/payment/payment.route";
 import { ReviewRoutes } from "../modules/review/review.route";
 import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
 import { AccountHealthRoutes } from "../modules/health/health.route";
+import { SlaViolationRoutes } from "../modules/violation/violation.route";
 
 const router = Router();
 
@@ -72,6 +73,10 @@ const moduleRoutes = [
   {
     path: "/account-health",
     route: AccountHealthRoutes,
+  },
+  {
+    path: "/sla-violations",
+    route: SlaViolationRoutes,
   },
 ];
 

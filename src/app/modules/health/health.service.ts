@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Order } from "../order/order.model";
 import { User } from "../user/user.model";
 import { AccountHealth } from "./health.model";
+import { ServiceReview } from "../review/review.model";
 
 const calculateVendorHealth = async (vendorId: string, session?: mongoose.ClientSession) => {
     const statsQuery = Order.aggregate([
@@ -9,17 +10,16 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
         {
             $lookup: {
                 from: "servicereviews",
-                localField: "_id",
-                foreignField: "order",
+                let: { orderId: "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ["$order", "$$orderId"] },
+                            isDeleted: { $ne: true },
+                        },
+                    },
+                ],
                 as: "serviceReviews",
-            },
-        },
-        {
-            $lookup: {
-                from: "productreviews",
-                localField: "_id",
-                foreignField: "order",
-                as: "productReviews",
             },
         },
         {
@@ -36,20 +36,6 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
                                             $size: {
                                                 $filter: {
                                                     input: "$serviceReviews",
-                                                    as: "r",
-                                                    cond: { $lte: ["$$r.rating", 2] },
-                                                },
-                                            },
-                                        },
-                                        0,
-                                    ],
-                                },
-                                {
-                                    $gt: [
-                                        {
-                                            $size: {
-                                                $filter: {
-                                                    input: "$productReviews",
                                                     as: "r",
                                                     cond: { $lte: ["$$r.rating", 2] },
                                                 },
@@ -156,25 +142,54 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
         lateShipmentRate = shipped > 0 ? +((stats.lateShipments / shipped) * 100).toFixed(2) : 0;
         cancellationRate = total > 0 ? +((stats.cancelledOrders / total) * 100).toFixed(2) : 0;
         validTrackingRate = shipped > 0 ? +((stats.validTrackingOrders / shipped) * 100).toFixed(2) : 100;
+    }
 
-        // Score deduction
-        score -= orderDefectRate * 30;
-        score -= lateShipmentRate * 5;
-        score -= cancellationRate * 20;
-        score -= (100 - validTrackingRate) * 5;
+    // Query average rating and count of Service Reviews
+    const reviewStatsQuery = ServiceReview.aggregate([
+        { $match: { vendor: new mongoose.Types.ObjectId(vendorId), isDeleted: { $ne: true } } },
+        {
+            $group: {
+                _id: "$vendor",
+                averageRating: { $avg: "$rating" },
+                reviewCount: { $sum: 1 },
+            },
+        },
+    ]);
 
-        score = Math.max(0, Math.min(1000, Math.round(score)));
+    if (session) {
+        reviewStatsQuery.session(session);
+    }
+    const reviewStats = await reviewStatsQuery;
 
-        // Status mapping
-        if (score >= 850) {
-            status = "HEALTHY";
-        } else if (score >= 700) {
-            status = "AT_RISK";
-        } else if (score >= 500) {
-            status = "CRITICAL";
-        } else {
-            status = "SUSPENDED";
-        }
+    let averageRating = 5;
+    let reviewCount = 0;
+
+    if (reviewStats.length > 0) {
+        averageRating = reviewStats[0].averageRating;
+        reviewCount = reviewStats[0].reviewCount;
+    }
+
+    // Score deduction
+    score -= orderDefectRate * 30;
+    score -= lateShipmentRate * 5;
+    score -= cancellationRate * 20;
+    score -= (100 - validTrackingRate) * 5;
+
+    // Service review rating deduction
+    const ratingDeduction = (5 - averageRating) * 40 * Math.min(5, reviewCount);
+    score -= ratingDeduction;
+
+    score = Math.max(0, Math.min(1000, Math.round(score)));
+
+    // Status mapping
+    if (score >= 850) {
+        status = "HEALTHY";
+    } else if (score >= 700) {
+        status = "AT_RISK";
+    } else if (score >= 500) {
+        status = "CRITICAL";
+    } else {
+        status = "SUSPENDED";
     }
 
     const updatedHealth = await AccountHealth.findOneAndUpdate(
@@ -192,6 +207,25 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
         },
         { new: true, upsert: true, session }
     );
+
+    try {
+        const { SlaViolationServices } = await import("../violation/violation.service");
+        await SlaViolationServices.evaluateSla(vendorId, {
+            orderDefectRate,
+            lateShipmentRate,
+            cancellationRate,
+            validTrackingRate,
+        }, session);
+    } catch (error) {
+        console.error(`[Health Service SLA trigger] Failed to evaluate SLA for vendor ${vendorId}:`, error);
+    }
+
+    try {
+        const { BuyBoxServices } = await import("../buybox/buybox.service");
+        await BuyBoxServices.calculateBuyBox(vendorId, session);
+    } catch (error) {
+        console.error(`[Health Service Buy Box trigger] Failed to calculate Buy Box for vendor ${vendorId}:`, error);
+    }
 
     return updatedHealth;
 };

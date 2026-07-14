@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
-import { Types } from "mongoose";
 import AppError from "../../errors/AppError";
 import { ORDER_STATUS } from "../../interface/common";
 import { Order } from "../order/order.model";
@@ -8,6 +7,7 @@ import { User } from "../user/user.model";
 import { TServiceReview } from "./review.interface";
 import QueryBuilder from "../../builder/queryBuilder";
 import { ServiceReview } from "./review.model";
+import { AccountHealthServices } from "../health/health.service";
 
 
 
@@ -60,6 +60,14 @@ const createReviewIntoDB = async (user: JwtPayload, payload: Partial<TServiceRev
     review,
   });
 
+  if (reviewResult.vendor) {
+    try {
+      await AccountHealthServices.calculateVendorHealth(reviewResult.vendor.toString());
+    } catch (error) {
+      console.error("[Review Service Create] Failed to recalculate vendor health:", error);
+    }
+  }
+
   return reviewResult;
 };
 
@@ -95,6 +103,14 @@ const updateReviewInDB = async (
     { new: true, runValidators: true }
   );
 
+  if (result && result.vendor) {
+    try {
+      await AccountHealthServices.calculateVendorHealth(result.vendor.toString());
+    } catch (error) {
+      console.error("[Review Service Update] Failed to recalculate vendor health:", error);
+    }
+  }
+
   return result;
 };
 
@@ -122,6 +138,14 @@ const deleteReviewFromDB = async (user: JwtPayload, id: string) => {
     { $set: { isDeleted: true } },
     { new: true }
   );
+
+  if (result && result.vendor) {
+    try {
+      await AccountHealthServices.calculateVendorHealth(result.vendor.toString());
+    } catch (error) {
+      console.error("[Review Service Delete] Failed to recalculate vendor health:", error);
+    }
+  }
 
   return result;
 };
@@ -172,7 +196,7 @@ const allReviewsByVendorFromDB = async (vendorId: string, query: Record<string, 
   const averageRating =
     data.length > 0 ? (totalRatings / data.length).toFixed(2) : "0.00";
 
-  return { meta, data };
+  return { meta, data, averageRating };
 };
 
 const getMyReviewsFromDB = async (user: JwtPayload, query: Record<string, unknown>) => {

@@ -56,42 +56,4 @@ serviceReviewSchema.pre("aggregate", function (next) {
   next();
 });
 
-
-
-
-serviceReviewSchema.post("save", async function (doc) {
-    if (doc.vendor) {
-        try {
-            const { AccountHealthServices } = await import("../health/health.service");
-            await AccountHealthServices.calculateVendorHealth(doc.vendor.toString());
-        } catch (error) {
-            console.error(`[ServiceReview Post Save Hook] Failed to recalculate vendor health for ${doc.vendor}:`, error);
-        }
-    }
-});
-
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-serviceReviewSchema.post(["findOneAndUpdate", "updateOne", "updateMany"], async function (this: any, doc) {
-    let vendorId = doc?.vendor;
-    if (!vendorId) {
-        try {
-            const filter = this.getFilter ? this.getFilter() : {};
-            const ServiceReviewModel = this.model;
-            const reviewDoc = await ServiceReviewModel.findOne(filter);
-            vendorId = reviewDoc?.vendor;
-        } catch (err) {
-            // Ignore if we can't retrieve
-        }
-    }
-
-    if (vendorId) {
-        try {
-            const { AccountHealthServices } = await import("../health/health.service");
-            await AccountHealthServices.calculateVendorHealth(vendorId.toString());
-        } catch (error) {
-            console.error(`[ServiceReview Post Update Hook] Failed to recalculate vendor health for ${vendorId}:`, error);
-        }
-    }
-});
-
 export const ServiceReview = model<TServiceReview>("ServiceReview", serviceReviewSchema);
