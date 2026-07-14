@@ -59,6 +59,10 @@ const ProductSchema = new Schema<TProduct>(
             type: String,
             required: [true, "Description must be string"],
         },
+        thumbnail: {
+            type: String,
+          default:"",  
+        },
         images: [
             {
                 type: String,

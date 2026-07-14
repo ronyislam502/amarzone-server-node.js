@@ -28,8 +28,10 @@ export const PAYMENT_STATUS = {
   REFUNDED: "REFUNDED",
 } as const;
 
-export const SHOP_HEALTH = {
-  PERFECT: "PERFECT",
-  GOOD: "GOOD",
-  POOR: "POOR",
+export const VENDOR_HEALTH = {
+  HEALTHY: "HEALTHY",
+  AT_RISK: "AT_RISK",
+  CRITICAL: "CRITICAL",
+  SUSPENDED: "SUSPENDED",
 } as const;
+

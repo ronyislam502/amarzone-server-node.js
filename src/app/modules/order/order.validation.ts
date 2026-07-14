@@ -22,6 +22,32 @@ const createOrderValidationSchema = z.object({
   }),
 });
 
+const updateOrderTrackingValidationSchema = z.object({
+  body: z.object({
+    trackingNumber: z.string({
+      required_error: "Tracking number is required",
+    }),
+    courier: z.string({
+      required_error: "Courier ID is required",
+    }),
+    shippedAt: z.string().optional(),
+    estimatedDelivery: z.string().optional(),
+    deliveredAt: z.string().optional(),
+    notes: z.string().optional(),
+  }),
+});
+
+const updateOrderShippingValidationSchema = z.object({
+  body: z.object({
+    courier: z.string().optional(),
+    trackingNumber: z.string().optional(),
+    estimatedDelivery: z.string().optional(),
+    notes: z.string().optional(),
+  }),
+});
+
 export const OrderValidations = {
   createOrderValidationSchema,
+  updateOrderTrackingValidationSchema,
+  updateOrderShippingValidationSchema,
 };

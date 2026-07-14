@@ -1,6 +1,66 @@
-import { model, Schema } from "mongoose";
-import { TDateRange, TOrder } from "./order.interface";
+import mongoose, { model, Schema } from "mongoose";
+import { TDateRange, TOrder, TTracking } from "./order.interface";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
+
+const courierSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        logo: {
+            type: String,
+            required: false,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+export const Courier = mongoose.models.Courier || model("Courier", courierSchema);
+
+export const trackingSchema = new Schema<TTracking>(
+    {
+        trackingNumber: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        courier: {
+            type: Schema.Types.ObjectId,
+            ref: "Courier",
+            required: true,
+        },
+        shippedBy: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: false,
+        },
+        shippedAt: {
+            type: Date,
+            required: false,
+        },
+        estimatedDelivery: {
+            type: Date,
+            required: false,
+        },
+        deliveredAt: {
+            type: Date,
+            required: false,
+        },
+        notes: {
+            type: String,
+            trim: true,
+            required: false,
+        },
+    },
+    {
+        _id: false,
+    }
+);
+
 
 export const dateRangeSchema = new Schema<TDateRange>(
     {
@@ -29,7 +89,7 @@ const orderSchema = new Schema<TOrder>(
 
         vendor: {
             type: Schema.Types.ObjectId,
-            ref: "user",
+            ref: "User",
             required: true,
         },
 
@@ -110,6 +170,10 @@ const orderSchema = new Schema<TOrder>(
             required: true,
             trim: true,
         },
+        tracking: {
+            type: trackingSchema,
+            required: false,
+        },
         isDeleted: {
             type: Boolean,
             default: false,
@@ -135,6 +199,41 @@ orderSchema.pre("aggregate", function (next) {
     next();
 });
 
+
+orderSchema.post("save", async function (doc) {
+    if (doc.vendor) {
+        try {
+            const { AccountHealthServices } = await import("../health/health.service");
+            await AccountHealthServices.calculateVendorHealth(doc.vendor.toString());
+        } catch (error) {
+            console.error(`[Order Schema Post Save Hook] Failed to recalculate vendor health for ${doc.vendor}:`, error);
+        }
+    }
+});
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+orderSchema.post(["findOneAndUpdate", "updateOne", "updateMany"], async function (this: any, doc) {
+    let vendorId = doc?.vendor;
+    if (!vendorId) {
+        try {
+            const filter = this.getFilter ? this.getFilter() : {};
+            const OrderModel = this.model;
+            const orderDoc = await OrderModel.findOne(filter);
+            vendorId = orderDoc?.vendor;
+        } catch (err) {
+            // Ignore if we can't retrieve
+        }
+    }
+
+    if (vendorId) {
+        try {
+            const { AccountHealthServices } = await import("../health/health.service");
+            await AccountHealthServices.calculateVendorHealth(vendorId.toString());
+        } catch (error) {
+            console.error(`[Order Schema Post Update Hook] Failed to recalculate vendor health for ${vendorId}:`, error);
+        }
+    }
+});
 
 export const Order = model<TOrder>(
     "Order",

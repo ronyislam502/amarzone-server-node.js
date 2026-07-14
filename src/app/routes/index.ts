@@ -12,6 +12,7 @@ import { OrderRoutes } from "../modules/order/order.route";
 import { PaymentRoutes } from "../modules/payment/payment.route";
 import { ReviewRoutes } from "../modules/review/review.route";
 import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
+import { AccountHealthRoutes } from "../modules/health/health.route";
 
 const router = Router();
 
@@ -67,6 +68,10 @@ const moduleRoutes = [
   {
     path: "/product-reviews",
     route: ProductReviewRoutes,
+  },
+  {
+    path: "/account-health",
+    route: AccountHealthRoutes,
   },
 ];
 

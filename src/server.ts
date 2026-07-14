@@ -6,6 +6,7 @@ import { initSocket } from "./app/socket/socket";
 
 // Import BullMQ workers to start processing jobs
 import "./app/workers/invoice.worker";
+import "./app/workers/shipping.worker";
 
 let server: Server;
 
