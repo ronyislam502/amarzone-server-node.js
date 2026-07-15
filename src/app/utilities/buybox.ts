@@ -22,13 +22,13 @@ const disableAllBuyBoxForVendor = async (
     session?: mongoose.ClientSession
 ) => {
     const products = await InventoryProduct.find({
-        "seller.vendor": new mongoose.Types.ObjectId(vendorId),
+        "seller.vendor": vendorId,
         isDeleted: { $ne: true },
     }).session(session || null);
 
     await InventoryProduct.updateMany(
         {
-            "seller.vendor": new mongoose.Types.ObjectId(vendorId),
+            "seller.vendor": vendorId,
             isDeleted: { $ne: true },
         },
         { $set: { "seller.isBuyBoxWinner": false } }
@@ -47,17 +47,15 @@ export const calculateBuyBox = async (
     vendorId: string,
     session?: mongoose.ClientSession
 ) => {
-    const vendorObjectId = new mongoose.Types.ObjectId(vendorId);
-
     // 1. Count completed/delivered orders
     const completedOrdersCount = await Order.countDocuments({
-        vendor: vendorObjectId,
+        vendor: vendorId,
         status: { $in: ["COMPLETE", "DELIVERED"] },
     }).session(session || null);
 
     // 2. Fetch Account Health record
     const health = await AccountHealth.findOne({
-        vendor: vendorObjectId,
+        vendor: vendorId,
     }).session(session || null);
 
     if (!health) {
@@ -69,7 +67,7 @@ export const calculateBuyBox = async (
     const reviewStats = await ServiceReview.aggregate([
         {
             $match: {
-                vendor: vendorObjectId,
+                vendor: new mongoose.Types.ObjectId(vendorId),
                 isDeleted: { $ne: true },
             },
         },
@@ -112,7 +110,7 @@ export const calculateBuyBox = async (
 
     // 6. Randomly assign Buy Box to a configured percentage of in-stock inventory
     const allProducts = await InventoryProduct.find({
-        "seller.vendor": vendorObjectId,
+        "seller.vendor": vendorId,
         isDeleted: { $ne: true },
     }).session(session || null);
 

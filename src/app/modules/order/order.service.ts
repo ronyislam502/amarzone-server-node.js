@@ -11,6 +11,10 @@ import { JwtPayload } from "jsonwebtoken";
 import QueryBuilder from "../../builder/queryBuilder";
 import { emitNotification } from "../../socket/socket";
 import { shippingQueue } from "../../queues/shipping.queue";
+import { AccountHealthServices } from "../health/health.service";
+import { calculateBuyBox } from "../../utilities/buybox";
+import { recalculateBestSellers } from "../product/product.service";
+import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -123,8 +127,8 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
                     grandAmount,
                     shippedDate,
                     deliveryDate,
-                    status: "PENDING",
-                    paymentStatus: "PENDING",
+                    status: ORDER_STATUS.PENDING,
+                    paymentStatus: PAYMENT_STATUS.PENDING,
                     transactionId,
                     commission,
                 },
@@ -134,6 +138,10 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
 
         await session.commitTransaction();
         session.endSession();
+
+        if (order[0]) {
+            await triggerPostOrderOperations(order[0]._id.toString());
+        }
 
         return order[0];
     } catch (error) {
@@ -265,6 +273,10 @@ const updateOrderTrackingIntoDB = async (
         { new: true, runValidators: true }
     );
 
+    if (result) {
+        await triggerPostOrderOperations(result._id.toString());
+    }
+
     return result;
 };
 
@@ -272,7 +284,7 @@ const updateOrderShippingIntoDB = async (
     user: JwtPayload,
     orderId: string,
     payload: {
-        courier?: string;
+        courierName?: string;
         trackingNumber?: string;
         estimatedDelivery?: string | Date;
         notes?: string;
@@ -323,7 +335,7 @@ const updateOrderShippingIntoDB = async (
 
         // When status is UNSHIPPED
         if (isOrderExists.status === "UNSHIPPED") {
-            if (!payload.courier || !payload.trackingNumber) {
+            if (!payload.courierName || !payload.trackingNumber) {
                 throw new AppError(
                     httpStatus.BAD_REQUEST,
                     "Courier and Tracking Number are required for shipping"
@@ -331,7 +343,7 @@ const updateOrderShippingIntoDB = async (
             }
 
             const trackingObj: Record<string, unknown> = {
-                courier: new mongoose.Types.ObjectId(payload.courier),
+                courierName: payload.courierName,
                 trackingNumber: payload.trackingNumber,
                 shippedBy: isUserExists._id,
                 shippedAt: new Date(),
@@ -347,15 +359,15 @@ const updateOrderShippingIntoDB = async (
             updateFields = {
                 $set: {
                     tracking: trackingObj,
-                    status: "SHIPPED",
+                    status: ORDER_STATUS.SHIPPED,
                 },
             };
-        } else if (isOrderExists.status === "SHIPPED") {
+        } else if (isOrderExists.status === ORDER_STATUS.SHIPPED) {
             // When status is SHIPPED
             // If they attempt to update courier or trackingNumber, only Admin can force it
             const attemptsToChangeTrackingOrCourier =
                 (payload.trackingNumber !== undefined && payload.trackingNumber !== isOrderExists.tracking?.trackingNumber) ||
-                (payload.courier !== undefined && payload.courier.toString() !== isOrderExists.tracking?.courier?.toString());
+                (payload.courierName !== undefined && payload.courierName !== isOrderExists.tracking?.courierName);
 
             if (attemptsToChangeTrackingOrCourier && !isAdmin) {
                 throw new AppError(
@@ -375,8 +387,8 @@ const updateOrderShippingIntoDB = async (
 
             // Admin forces tracking or courier change
             if (isAdmin) {
-                if (payload.courier !== undefined) {
-                    updateSet["tracking.courier"] = new mongoose.Types.ObjectId(payload.courier);
+                if (payload.courierName !== undefined) {
+                    updateSet["tracking.courierName"] = payload.courierName;
                 }
                 if (payload.trackingNumber !== undefined) {
                     updateSet["tracking.trackingNumber"] = payload.trackingNumber;
@@ -400,8 +412,7 @@ const updateOrderShippingIntoDB = async (
             { new: true, runValidators: true, session }
         )
             .populate("customer")
-            .populate("vendor")
-            .populate("tracking.courier");
+            .populate("vendor");
 
         if (!result) {
             throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to update order shipping");
@@ -433,11 +444,43 @@ const updateOrderShippingIntoDB = async (
             console.error(`[Order Service] BullMQ queue add failed for shipping confirmation email:`, queueError);
         }
 
+        if (result) {
+            await triggerPostOrderOperations(result._id.toString());
+        }
+
         return result;
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
         throw error;
+    }
+};
+
+const triggerPostOrderOperations = async (orderId: string) => {
+    try {
+        const order = await Order.findById(orderId).populate("products.product");
+        if (!order) return;
+
+        const vendorId = order.vendor.toString();
+
+        // 1. Recalculate Vendor Account Health
+        await AccountHealthServices.calculateVendorHealth(vendorId);
+
+        // 2. Recalculate Buy Box eligibility
+        await calculateBuyBox(vendorId);
+
+        // 3. Recalculate Best Seller
+        if (order.products && order.products.length > 0) {
+            const categoryIds = order.products
+                .map((p: any) => p.product?.category?.toString())
+                .filter(Boolean);
+            const uniqueCategoryIds = [...new Set(categoryIds)];
+            if (uniqueCategoryIds.length > 0) {
+                await recalculateBestSellers(uniqueCategoryIds);
+            }
+        }
+    } catch (error) {
+        console.error(`[Order Service Post Operations] Error triggering post-order actions for order ${orderId}:`, error);
     }
 };
 
@@ -448,4 +491,5 @@ export const OrderServices = {
     allOrdersByCustomerFromDB,
     updateOrderTrackingIntoDB,
     updateOrderShippingIntoDB,
+    triggerPostOrderOperations,
 };

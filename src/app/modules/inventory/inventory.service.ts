@@ -10,11 +10,11 @@ import { InventoryProduct } from "./inventory.model";
 import { Product } from "../product/product.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import {
-
     emitPriceUpdated,
     emitInventoryUpdated,
 } from "../../socket/socketBuyBox";
 import { calculateBuyBox } from "../../utilities/buybox";
+import { recalculateBestSellers } from "../product/product.service";
 
 
 
@@ -49,11 +49,18 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventoryProduct) =
 
     const result = await InventoryProduct.create(data);
 
-    if (result?.seller?.vendor) {
+    if (result) {
         try {
-            await calculateBuyBox(result.seller.vendor.toString());
+            await recalculateBestSellers([isProduct.category.toString()]);
         } catch (error) {
-            console.error("[Inventory Service] Buy Box recalculation failed on listing:", error);
+            console.error("[Inventory Service] Bestseller recalculation failed on listing:", error);
+        }
+        if (result.seller?.vendor) {
+            try {
+                await calculateBuyBox(result.seller.vendor.toString());
+            } catch (error) {
+                console.error("[Inventory Service] Buy Box recalculation failed on listing:", error);
+            }
         }
     }
 
@@ -164,17 +171,27 @@ const updateQuantityIntoDB = async (
         { new: true, runValidators: true }
     );
 
-    if (result?.seller?.vendor) {
+    if (result) {
         try {
-            await calculateBuyBox(result.seller.vendor.toString());
-            emitInventoryUpdated(
-                result.product.toString(),
-                result.seller.vendor.toString(),
-                result.seller.quantity,
-                result.seller.isStock
-            );
+            const prod = await Product.findById(result.product);
+            if (prod) {
+                await recalculateBestSellers([prod.category.toString()]);
+            }
         } catch (error) {
-            console.error("[Inventory Service] Buy Box or socket failed for quantity update:", error);
+            console.error("[Inventory Service] Bestseller recalculation failed for quantity update:", error);
+        }
+        if (result.seller?.vendor) {
+            try {
+                await calculateBuyBox(result.seller.vendor.toString());
+                emitInventoryUpdated(
+                    result.product.toString(),
+                    result.seller.vendor.toString(),
+                    result.seller.quantity,
+                    result.seller.isStock
+                );
+            } catch (error) {
+                console.error("[Inventory Service] Buy Box or socket failed for quantity update:", error);
+            }
         }
     }
 

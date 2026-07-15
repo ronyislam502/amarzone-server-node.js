@@ -27,8 +27,8 @@ const updateOrderTrackingValidationSchema = z.object({
     trackingNumber: z.string({
       required_error: "Tracking number is required",
     }),
-    courier: z.string({
-      required_error: "Courier ID is required",
+    courierName: z.string({
+      required_error: "Courier name is required",
     }),
     shippedAt: z.string().optional(),
     estimatedDelivery: z.string().optional(),
@@ -39,7 +39,7 @@ const updateOrderTrackingValidationSchema = z.object({
 
 const updateOrderShippingValidationSchema = z.object({
   body: z.object({
-    courier: z.string().optional(),
+    courierName: z.string().optional(),
     trackingNumber: z.string().optional(),
     estimatedDelivery: z.string().optional(),
     notes: z.string().optional(),

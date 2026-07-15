@@ -11,6 +11,7 @@ import { invoiceQueue } from "../../queues/invoice.queue";
 import { emitNotification } from "../../socket/socket";
 import mongoose from "mongoose";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
+import { OrderServices } from "../order/order.service";
 
 const stripe = new Stripe(config.stripe_secret_key as string, {
   apiVersion: "2023-10-02" as any,
@@ -149,6 +150,13 @@ const processWebhook = async (rawBody: Buffer, signature: string, secret: string
         await dbSession.commitTransaction();
         dbSession.endSession();
 
+        // Explicitly trigger post order operations
+        try {
+          await OrderServices.triggerPostOrderOperations(orderId.toString());
+        } catch (opError) {
+          console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+        }
+
         // Emit notifications via Socket.IO (wrapped in try/catch to isolate errors)
         try {
           emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
@@ -255,6 +263,13 @@ const processWebhook = async (rawBody: Buffer, signature: string, secret: string
         await dbSession.commitTransaction();
         dbSession.endSession();
 
+        // Explicitly trigger post order operations
+        try {
+          await OrderServices.triggerPostOrderOperations(orderId.toString());
+        } catch (opError) {
+          console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+        }
+
         // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)
         try {
           emitNotification(`customer:${orderData.customer}`, "payment_failed", {
@@ -325,6 +340,13 @@ const processWebhook = async (rawBody: Buffer, signature: string, secret: string
 
         await dbSession.commitTransaction();
         dbSession.endSession();
+
+        // Explicitly trigger post order operations
+        try {
+          await OrderServices.triggerPostOrderOperations(orderId.toString());
+        } catch (opError) {
+          console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+        }
 
         if (updatedOrder) {
           // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)

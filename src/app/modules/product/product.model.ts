@@ -87,6 +87,10 @@ const ProductSchema = new Schema<TProduct>(
             type: Boolean,
             default: false,
         },
+        isBestSeller: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

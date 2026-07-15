@@ -72,6 +72,7 @@ inventoryProductSchema.pre("aggregate", function (next) {
     next();
 });
 
+
 export const InventoryProduct = model<TInventoryProduct>(
     "InventoryProduct",
     inventoryProductSchema

@@ -9,7 +9,7 @@ export const shippingWorker = new Worker(
     const { orderId } = job.data;
     console.log(`[ShippingWorker] Processing shipping confirmation for Order ID: ${orderId}`);
 
-    const orderData = await Order.findById(orderId).populate("customer").populate("tracking.courier");
+    const orderData = await Order.findById(orderId).populate("customer");
     if (!orderData) {
       throw new Error(`Order not found: ${orderId}`);
     }
@@ -20,8 +20,7 @@ export const shippingWorker = new Worker(
       return;
     }
 
-    const courierObj = orderData.tracking?.courier as unknown as { name?: string; _id: string };
-    const courierName = courierObj && typeof courierObj === "object" ? (courierObj.name || "Courier") : "N/A";
+    const courierName = orderData.tracking?.courierName || "N/A";
     const trackingNumber = orderData.tracking?.trackingNumber || "N/A";
     
     const shippedAt = orderData.tracking?.shippedAt;

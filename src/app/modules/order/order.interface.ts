@@ -3,7 +3,7 @@ import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 
 export type TTracking = {
     trackingNumber: string;
-    courier: Types.ObjectId; // Courier collection reference
+    courierName: string;
     shippedBy?: Types.ObjectId; // Admin/Vendor
     shippedAt?: Date;
     estimatedDelivery?: Date;

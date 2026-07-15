@@ -91,7 +91,6 @@ async function runTest() {
 
   // Test 2: Build sales history (create 20 completed orders with valid tracking to trigger eligibility)
   console.log("\n--- Test 2: Building sales history to 20 completed orders ---");
-  const courierId = new mongoose.Types.ObjectId();
   const orders = [];
   for (let i = 0; i < 20; i++) {
     orders.push(
@@ -111,7 +110,7 @@ async function runTest() {
         paymentStatus: "PAID",
         transactionId: `TX-BB-${i}-${Date.now()}`,
         tracking: {
-          courier: courierId,
+          courierName: "Pathao",
           trackingNumber: `TRK-BB-${i}`,
           shippedBy: vendor._id,
           shippedAt: new Date(),

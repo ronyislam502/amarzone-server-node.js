@@ -27,4 +27,5 @@ export type TProduct = {
     tags: string[];
     isPrivateLevel: boolean;
     isDeleted: boolean;
+    isBestSeller?: boolean;
 };

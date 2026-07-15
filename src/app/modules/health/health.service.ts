@@ -3,6 +3,8 @@ import { Order } from "../order/order.model";
 import { User } from "../user/user.model";
 import { AccountHealth } from "./health.model";
 import { ServiceReview } from "../review/review.model";
+import { SlaViolationServices } from "../violation/violation.service";
+import { calculateBuyBox } from "../../utilities/buybox";
 
 const calculateVendorHealth = async (vendorId: string, session?: mongoose.ClientSession) => {
     const statsQuery = Order.aggregate([
@@ -99,7 +101,7 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
                             $and: [
                                 { $in: ["$status", ["SHIPPED", "DELIVERED", "COMPLETE", "OUT_OF_DELIVERY"]] },
                                 { $gt: [{ $strLenCP: { $ifNull: ["$tracking.trackingNumber", ""] } }, 0] },
-                                { $ne: ["$tracking.courier", null] },
+                                { $gt: [{ $strLenCP: { $ifNull: ["$tracking.courierName", ""] } }, 0] },
                             ],
                         },
                         then: 1,
@@ -209,7 +211,6 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
     );
 
     try {
-        const { SlaViolationServices } = await import("../violation/violation.service");
         await SlaViolationServices.evaluateSla(vendorId, {
             orderDefectRate,
             lateShipmentRate,
@@ -221,8 +222,7 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
     }
 
     try {
-        const { InventoryServices } = await import("../inventory/inventory.service");
-        await InventoryServices.calculateBuyBox(vendorId, session);
+        await calculateBuyBox(vendorId, session);
     } catch (error) {
         console.error(`[Health Service Buy Box trigger] Failed to calculate Buy Box for vendor ${vendorId}:`, error);
     }
