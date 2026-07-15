@@ -14,7 +14,7 @@ import { shippingQueue } from "../../queues/shipping.queue";
 import { AccountHealthServices } from "../health/health.service";
 import { calculateBuyBox } from "../../utilities/buybox";
 import { recalculateBestSellers } from "../product/product.service";
-import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
+import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../interface/common";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -305,8 +305,8 @@ const updateOrderShippingIntoDB = async (
         }
 
         // Verify role permissions: Vendor must own the order, Admin can update any
-        const isVendor = isUserExists.role === "VENDOR";
-        const isAdmin = isUserExists.role === "ADMIN" || isUserExists.role === "SUPER_ADMIN";
+        const isVendor = isUserExists.role === USER_ROLE.VENDOR;
+        const isAdmin = isUserExists.role === USER_ROLE.ADMIN || isUserExists.role === USER_ROLE.SUPER_ADMIN;
 
         if (isVendor && isOrderExists.vendor.toString() !== isUserExists._id?.toString()) {
             throw new AppError(
@@ -324,7 +324,11 @@ const updateOrderShippingIntoDB = async (
 
         // Do not allow updating tracking information if:
         // the order is CANCELLED, the order is REFUNDED, or the order is already DELIVERED.
-        if (["CANCELLED", "REFUNDED", "DELIVERED"].includes(isOrderExists.status)) {
+        if (
+            isOrderExists.status === ORDER_STATUS.CANCELLED ||
+            isOrderExists.status === ORDER_STATUS.REFUNDED ||
+            isOrderExists.status === ORDER_STATUS.DELIVERED
+        ) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 `Cannot update tracking details for an order that is ${isOrderExists.status}`
@@ -334,7 +338,7 @@ const updateOrderShippingIntoDB = async (
         let updateFields: Record<string, unknown> = {};
 
         // When status is UNSHIPPED
-        if (isOrderExists.status === "UNSHIPPED") {
+        if (isOrderExists.status === ORDER_STATUS.UNSHIPPED) {
             if (!payload.courierName || !payload.trackingNumber) {
                 throw new AppError(
                     httpStatus.BAD_REQUEST,
