@@ -10,7 +10,7 @@ const app: Application = express();
 
 // Stripe webhook route registered with raw body parsing before express.json()
 app.post(
-  "/api/v1/payments/webhook",
+  "/webhook",
   express.raw({ type: "application/json" }),
   PaymentControllers.handleWebhook
 );
