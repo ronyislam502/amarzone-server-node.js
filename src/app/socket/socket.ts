@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
+import { registerChatHandlers, socketAuthMiddleware } from "./socketChat";
 
 let io: Server | null = null;
 
@@ -11,6 +12,9 @@ export const initSocket = (server: HttpServer) => {
     },
   });
 
+  // Authenticate all connections using JWT
+  io.use(socketAuthMiddleware);
+
   io.on("connection", (socket) => {
     console.log(`Socket client connected: ${socket.id}`);
 
@@ -18,6 +22,9 @@ export const initSocket = (server: HttpServer) => {
       socket.join(roomName);
       console.log(`Socket ${socket.id} joined room: ${roomName}`);
     });
+
+    // Register all chat socket event handlers
+    registerChatHandlers(io as Server, socket);
 
     socket.on("disconnect", () => {
       console.log(`Socket client disconnected: ${socket.id}`);
@@ -41,3 +48,4 @@ export const emitNotification = (room: string, event: string, data: any) => {
     console.warn("Socket.IO not initialized. Skipping real-time notification.");
   }
 };
+

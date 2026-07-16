@@ -14,6 +14,9 @@ import { ReviewRoutes } from "../modules/review/review.route";
 import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
 import { AccountHealthRoutes } from "../modules/health/health.route";
 import { SlaViolationRoutes } from "../modules/violation/violation.route";
+import { ChatRoutes } from "../modules/chat/chat.route";
+import { DisputeRoutes } from "../modules/dispute/dispute.route";
+import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
 
 const router = Router();
 
@@ -78,8 +81,21 @@ const moduleRoutes = [
     path: "/sla-violations",
     route: SlaViolationRoutes,
   },
+  {
+    path: "/chats",
+    route: ChatRoutes,
+  },
+  {
+    path: "/disputes",
+    route: DisputeRoutes,
+  },
+  {
+    path: "/dispute-decisions",
+    route: DisputeDecisionRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
 export default router;
+

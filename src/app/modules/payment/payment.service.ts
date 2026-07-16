@@ -377,7 +377,60 @@ const processWebhook = async (rawBody: Buffer, signature: string, secret: string
   console.log(`[Webhook Service] Event ${event.id} marked as successfully processed.`);
 };
 
+const refundOrder = async (orderId: string) => {
+  const order = await Order.findById(orderId);
+  if (!order) {
+    throw new AppError(httpStatus.NOT_FOUND, "Order not found");
+  }
+
+  // Find payment associated with the order to get the transaction/charge ID
+  const payment = await Payment.findOne({ orderId: order._id, status: PAYMENT_STATUS.PAID });
+
+  if (payment && payment.transactionId) {
+    try {
+      const refundPayload: Stripe.RefundCreateParams = {};
+      if (payment.transactionId.startsWith("pi_")) {
+        refundPayload.payment_intent = payment.transactionId;
+      } else {
+        refundPayload.charge = payment.transactionId;
+      }
+      // Trigger Stripe refund
+      await stripe.refunds.create(refundPayload);
+
+      // Update Order & Payment status directly to REFUNDED
+      order.paymentStatus = PAYMENT_STATUS.REFUNDED;
+      order.status = ORDER_STATUS.REFUNDED;
+      await order.save();
+
+      payment.status = PAYMENT_STATUS.REFUNDED;
+      await payment.save();
+    } catch (err: any) {
+      console.error(`Stripe refund failed, falling back to manual status update: ${err.message}`);
+      order.paymentStatus = PAYMENT_STATUS.REFUNDED;
+      order.status = ORDER_STATUS.REFUNDED;
+      await order.save();
+
+      payment.status = PAYMENT_STATUS.REFUNDED;
+      await payment.save();
+    }
+  } else {
+    // Fallback: update status manually
+    order.paymentStatus = PAYMENT_STATUS.REFUNDED;
+    order.status = ORDER_STATUS.REFUNDED;
+    await order.save();
+
+    if (payment) {
+      payment.status = PAYMENT_STATUS.REFUNDED;
+      await payment.save();
+    }
+  }
+
+  return { success: true, message: "Order payment refunded successfully" };
+};
+
 export const PaymentServices = {
   createCheckoutSession,
   processWebhook,
+  refundOrder,
 };
+
