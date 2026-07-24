@@ -12,7 +12,7 @@ export const redisConnectionOptions = {
 export const redisConnection = new Redis(redisConnectionOptions);
 
 redisConnection.on("connect", () => {
-  console.log("✅ Redis Connected");
+  console.log("Redis Connected");
 });
 
 redisConnection.on("error", (err) => {

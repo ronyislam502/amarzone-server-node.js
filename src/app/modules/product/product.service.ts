@@ -56,16 +56,16 @@ const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload
 
     const asin = await generateASIN(isDepartment?.name, isCategory?.name);
 
-    // const thumbnail = files?.thumbnail[0];
-    // const images = files?.images;
+    const thumbnail = files?.thumbnail[0];
+    const images = files?.images;
 
-    // if (thumbnail && thumbnail.path) {
-    //     payload.thumbnail = thumbnail.path;
-    // }
+    if (thumbnail && thumbnail.path) {
+        payload.thumbnail = thumbnail.path;
+    }
 
-    // if (images) {
-    //     payload.images = images?.map((file) => file.path);
-    // }
+    if (images) {
+        payload.images = images?.map((file) => file.path);
+    }
 
     const newProduct: TProduct = {
         ...payload,
