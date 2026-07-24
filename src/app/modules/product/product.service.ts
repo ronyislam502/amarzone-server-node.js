@@ -18,9 +18,7 @@ import { emitBestSellerUpdated, emitCategoryBestSellerUpdated } from "../../sock
 
 
 const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload: TProduct) => {
-    console.log("payload", payload)
-    console.log("user", user)
-    console.log("files", files)
+
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
@@ -123,16 +121,16 @@ const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFi
         payload.asin = await generateASIN(isDepartment.name, isCategory.name);
     }
 
-    // const thumbnail = files?.thumbnail?.[0];
-    // const images = files?.images;
+    const thumbnail = files?.thumbnail?.[0];
+    const images = files?.images;
 
-    // if (thumbnail && thumbnail.path) {
-    //     payload.thumbnail = thumbnail.path;
-    // }
+    if (thumbnail && thumbnail.path) {
+        payload.thumbnail = thumbnail.path;
+    }
 
-    // if (images && images.length > 0) {
-    //     payload.images = images.map((file) => file.path);
-    // }
+    if (images && images.length > 0) {
+        payload.images = images.map((file) => file.path);
+    }
 
     const result = await Product.findByIdAndUpdate(id, payload, {
         new: true,
@@ -173,7 +171,7 @@ const myCreatedProductsFromDB = async (user: JwtPayload, query: Record<string, u
     return { meta, data };
 };
 
-export const recalculateBestSellers = async (categoryIds?: string[]) => {
+const recalculateBestSellers = async (categoryIds?: string[]) => {
     try {
         // 1. Determine categories to process
         let targetCategoryIds: string[] = [];
@@ -316,9 +314,28 @@ export const recalculateBestSellers = async (categoryIds?: string[]) => {
     }
 };
 
+
+const allProductsFromDB = async (query: Record<string, unknown>) => {
+    const productQuery = new QueryBuilder(Product.find(), query)
+        .search([])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const meta = await productQuery.countTotal();
+    const data = await productQuery.modelQuery;
+
+    return {
+        meta,
+        data
+    }
+}
+
 export const ProductServices = {
     createProductIntoDB,
     updateProductIntoDB,
     myCreatedProductsFromDB,
     recalculateBestSellers,
+    allProductsFromDB
 };

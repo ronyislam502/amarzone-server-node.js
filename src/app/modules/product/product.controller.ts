@@ -35,7 +35,21 @@ const myCreatedProducts = catchAsync(async (req, res) => {
         statusCode: httpStatus.OK,
         success: true,
         message: "my created products retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data
+    })
+})
+
+
+const allProducts = catchAsync(async (req, res) => {
+    const result = await ProductServices.allProductsFromDB(req.query)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Products retrieved successfully",
+        meta: result.meta,
+        data: result.data
     })
 })
 
@@ -43,5 +57,6 @@ const myCreatedProducts = catchAsync(async (req, res) => {
 export const ProductControllers = {
     createProduct,
     updateProduct,
-    myCreatedProducts
+    myCreatedProducts,
+    allProducts
 }
