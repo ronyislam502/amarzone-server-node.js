@@ -8,7 +8,7 @@ import { Category } from "../modules/category/category.model";
 import { Department } from "../modules/department/department.model";
 import { InventoryProduct } from "../modules/inventory/inventory.model";
 import { initSocket } from "../socket/socket";
-import { recalculateBestSellers } from "../modules/product/product.service";
+import { recalculateBestSellers } from "../utilities/calculate";
 
 async function runTest() {
   console.log("Connecting to Database...");
@@ -19,7 +19,7 @@ async function runTest() {
   const dummyServer = createServer();
   const io = initSocket(dummyServer);
   const emittedEvents: { event: string; payload: any }[] = [];
-  
+
   // Intercept io.emit to capture events
   io.emit = (event: string, data: any) => {
     emittedEvents.push({ event, payload: data });
@@ -183,7 +183,7 @@ async function runTest() {
 
   console.log("\n--- TEST 2: Single completed sale for Product A ---");
   emittedEvents.length = 0;
-  
+
   // Create a completed order for Product A
   const order1 = await Order.create({
     customer: customer._id,

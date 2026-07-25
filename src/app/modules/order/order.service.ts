@@ -13,7 +13,7 @@ import { emitNotification } from "../../socket/socket";
 import { shippingQueue } from "../../queues/shipping.queue";
 import { AccountHealthServices } from "../health/health.service";
 import { calculateBuyBox } from "../../utilities/buybox";
-import { recalculateBestSellers } from "../product/product.service";
+import { recalculateBestSellers } from "../../utilities/calculate";
 import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../interface/common";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {

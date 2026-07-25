@@ -14,7 +14,7 @@ import {
     emitInventoryUpdated,
 } from "../../socket/socketBuyBox";
 import { calculateBuyBox } from "../../utilities/buybox";
-import { recalculateBestSellers } from "../product/product.service";
+import { recalculateBestSellers } from "../../utilities/calculate";
 
 
 
@@ -67,22 +67,22 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventoryProduct) =
     return result;
 };
 
-const allInventoryProductsFromDB = async (query: Record<string, unknown>) => {
-    const inventoryProductQuery = new QueryBuilder(
-        InventoryProduct.find().populate("product").populate("user", "name avatar"),
-        query
-    )
-        .search([""])
-        .filter()
-        .sort()
-        .paginate()
-        .fields();
+// const allInventoryProductsFromDB = async (query: Record<string, unknown>) => {
+//     const inventoryProductQuery = new QueryBuilder(
+//         InventoryProduct.find().populate("product").populate("user", "name avatar"),
+//         query
+//     )
+//         .search([""])
+//         .filter()
+//         .sort()
+//         .paginate()
+//         .fields();
 
-    const meta = await inventoryProductQuery.countTotal();
-    const data = await inventoryProductQuery.modelQuery;
+//     const meta = await inventoryProductQuery.countTotal();
+//     const data = await inventoryProductQuery.modelQuery;
 
-    return { meta, data };
-};
+//     return { meta, data };
+// };
 
 const updatePriceIntoDB = async (
     user: JwtPayload,
@@ -225,7 +225,7 @@ const inventoryProductsByVendorFromDB = async (
 
 export const InventoryServices = {
     listProductIntoDB,
-    allInventoryProductsFromDB,
+    // allInventoryProductsFromDB,
     updatePriceIntoDB,
     updateQuantityIntoDB,
     inventoryProductsByVendorFromDB,
