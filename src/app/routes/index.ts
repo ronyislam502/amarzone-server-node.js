@@ -4,7 +4,7 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
-import { DepartmentRoutes } from "../modules/department/department.route";
+
 import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
@@ -18,6 +18,7 @@ import { ChatRoutes } from "../modules/chat/chat.route";
 import { DisputeRoutes } from "../modules/dispute/dispute.route";
 import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
 import { FraudRoutes } from "../modules/fraud/fraud.route";
+import { DepartmentRoutes } from "../modules/department/department.route";
 
 const router = Router();
 

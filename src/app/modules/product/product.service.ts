@@ -3,7 +3,6 @@ import { TProduct } from "./product.interface";
 import { USER_ROLE } from "../../interface/common";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
-import { Department } from "../department/department.model";
 import { User } from "../user/user.model";
 import { Category } from "../category/category.model";
 import { recalculateBestSellers } from "../../utilities/calculate";
@@ -11,12 +10,15 @@ import { Product } from "./product.model";
 import { generateASIN } from "../../utilities/generateAsin";
 import { TImageFiles } from "../../interface/image.interface";
 import QueryBuilder from "../../builder/queryBuilder";
+import { Department } from "../department/department.model";
+
 
 const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload: TProduct) => {
+
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found");
     }
 
     const author = {
@@ -27,7 +29,8 @@ const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload
             : isUserExists.role === USER_ROLE.SUPER_ADMIN
                 ? "Super Admin"
                 : "Admin",
-    };
+    }
+
 
     const isDepartment = await Department.findById(payload?.department);
 
@@ -47,7 +50,7 @@ const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload
 
     const asin = await generateASIN(isDepartment?.name, isCategory?.name);
 
-    const thumbnail = files?.thumbnail?.[0];
+    const thumbnail = files?.thumbnail[0];
     const images = files?.images;
 
     if (thumbnail && thumbnail.path) {
@@ -75,29 +78,18 @@ const createProductIntoDB = async (user: JwtPayload, files: TImageFiles, payload
     return result;
 };
 
-const getSingleProductFromDB = async (id: string) => {
-    const product = await Product.findById(id)
-        .populate("department")
-        .populate("category");
-
-    if (!product || product.isDeleted) {
-        throw new AppError(httpStatus.NOT_FOUND, "Product not found");
-    }
-
-    return product;
-};
 
 const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFiles, payload: Partial<TProduct>) => {
     const isProductExists = await Product.findById(id);
 
-    if (!isProductExists || isProductExists.isDeleted) {
-        throw new AppError(httpStatus.NOT_FOUND, "Product not found");
+    if (!isProductExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "This product not found");
     }
 
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found");
     }
 
     if (isUserExists.role === USER_ROLE.VENDOR && isProductExists.author.id?.toString() !== isUserExists._id?.toString()) {
@@ -118,7 +110,7 @@ const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFi
     }
 
     if (isDepartment._id.toString() !== isCategory?.department?.toString()) {
-        throw new AppError(httpStatus.BAD_REQUEST, "Selected category does not belong to the selected department.");
+        throw new AppError(httpStatus.BAD_REQUEST, "department do not match");
     }
 
     if (payload.department || payload.category) {
@@ -139,7 +131,7 @@ const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFi
     const result = await Product.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
-    }).populate("department").populate("category");
+    });
 
     if (result && result.category) {
         const categoryIdsToRecalculate = [result.category.toString()];
@@ -152,50 +144,18 @@ const updateProductIntoDB = async (user: JwtPayload, id: string, files: TImageFi
     return result;
 };
 
-const deleteProductFromDB = async (user: JwtPayload, id: string) => {
-    const isProductExists = await Product.findById(id);
-
-    if (!isProductExists || isProductExists.isDeleted) {
-        throw new AppError(httpStatus.NOT_FOUND, "Product not found");
-    }
-
-    const isUserExists = await User.isUserExistsByEmail(user.email);
-
-    if (!isUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "User not found");
-    }
-
-    if (isUserExists.role === USER_ROLE.VENDOR && isProductExists.author.id?.toString() !== isUserExists._id?.toString()) {
-        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this product");
-    }
-
-    const deletedProduct = await Product.findByIdAndUpdate(
-        id,
-        { isDeleted: true },
-        { new: true }
-    );
-
-    if (isProductExists.category) {
-        await recalculateBestSellers([isProductExists.category.toString()]);
-    }
-
-    return deletedProduct;
-};
-
 const myCreatedProductsFromDB = async (user: JwtPayload, query: Record<string, unknown>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found");
     }
 
     const productQuery = new QueryBuilder(
-        Product.find({ "author.id": isUserExists._id, isDeleted: false })
-            .populate("department")
-            .populate("category"),
+        Product.find({ "author.id": isUserExists._id }),
         query
     )
-        .search(["title", "description", "brand", "asin", "tags"])
+        .search(["title", "description", "brand"])
         .filter()
         .sort()
         .paginate()
@@ -207,14 +167,10 @@ const myCreatedProductsFromDB = async (user: JwtPayload, query: Record<string, u
     return { meta, data };
 };
 
+
 const allProductsFromDB = async (query: Record<string, unknown>) => {
-    const productQuery = new QueryBuilder(
-        Product.find({ isDeleted: false })
-            .populate("department")
-            .populate("category"),
-        query
-    )
-        .search(["title", "description", "brand", "asin", "tags"])
+    const productQuery = new QueryBuilder(Product.find(), query)
+        .search([])
         .filter()
         .sort()
         .paginate()
@@ -225,15 +181,13 @@ const allProductsFromDB = async (query: Record<string, unknown>) => {
 
     return {
         meta,
-        data,
-    };
-};
+        data
+    }
+}
 
 export const ProductServices = {
     createProductIntoDB,
-    getSingleProductFromDB,
     updateProductIntoDB,
-    deleteProductFromDB,
     myCreatedProductsFromDB,
-    allProductsFromDB,
+    allProductsFromDB
 };
