@@ -115,7 +115,7 @@ const evaluateUserFraudRisk = async (user: JwtPayload) => {
     } else {
       // Create new unresolved alert
       const newAlert = await Fraud.create({
-        user: userObjId,
+        user: isUserExist._id,
         score,
         reasons,
         status: calculatedStatus,
@@ -177,7 +177,7 @@ const getAllFraudAlertsFromDB = async (query: Record<string, unknown>) => {
  */
 const getFraudAlertsByUserIdFromDB = async (userId: string) => {
   const alerts = await Fraud.find({
-    user: new Types.ObjectId(userId),
+    user: userId,
     isDeleted: false,
   })
     .populate("user", "name email role status")
@@ -204,7 +204,7 @@ const updateFraudStatusInDB = async (
   if (payload.notes) {
     alert.notes = payload.notes;
   }
-  alert.reviewedBy = new Types.ObjectId(adminId);
+  alert.reviewedBy = adminId as any;
 
   if (payload.status === FRAUD_STATUS.SAFE || payload.status === FRAUD_STATUS.CLEARED) {
     alert.isResolved = true;

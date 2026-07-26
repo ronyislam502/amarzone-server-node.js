@@ -1,10 +1,11 @@
 import { getIO } from "./socket";
 import { IViolation } from "../modules/violation/violation.interface";
+import { SOCKET_EVENTS } from "../interface/common";
 
 export const emitVendorWarning = (vendorId: string, violation: IViolation) => {
   try {
     const io = getIO();
-    io.to(vendorId).emit("sla-warning", {
+    io.to(vendorId).emit(SOCKET_EVENTS.SLA_WARNING, {
       message: `Your account health has violated an SLA requirement for metric: ${violation.metric}. Severity: Warning.`,
       violation,
     });
@@ -16,7 +17,7 @@ export const emitVendorWarning = (vendorId: string, violation: IViolation) => {
 export const emitVendorSuspended = (vendorId: string, violation: IViolation) => {
   try {
     const io = getIO();
-    io.to(vendorId).emit("sla-suspended", {
+    io.to(vendorId).emit(SOCKET_EVENTS.SLA_SUSPENDED, {
       message: `Your account has been suspended due to severe SLA violation on metric: ${violation.metric}.`,
       violation,
     });
@@ -28,7 +29,7 @@ export const emitVendorSuspended = (vendorId: string, violation: IViolation) => 
 export const emitViolationResolved = (vendorId: string, violation: IViolation) => {
   try {
     const io = getIO();
-    io.to(vendorId).emit("sla-resolved", {
+    io.to(vendorId).emit(SOCKET_EVENTS.SLA_RESOLVED, {
       message: `The SLA violation on metric: ${violation.metric} has been resolved. Your account is compliant.`,
       violation,
     });

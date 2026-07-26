@@ -1,37 +1,39 @@
 import mongoose from "mongoose";
 import { SlaViolation } from "./violation.model";
 import { User } from "../user/user.model";
+import { AccountHealth } from "../health/health.model";
 import sendEmail from "../../utilities/sendEmail";
 import {
   emitVendorWarning,
   emitVendorSuspended,
   emitViolationResolved,
 } from "../../socket/socketViolation";
+import { USER_STATUS, SLA_SEVERITY, SLA_METRIC, VENDOR_HEALTH } from "../../interface/common";
 import QueryBuilder from "../../builder/queryBuilder";
 
 const SLA_CONFIG = {
-  "Order Defect Rate": {
+  [SLA_METRIC.ORDER_DEFECT_RATE]: {
     checkViolation: (val: number) => val >= 1.0,
     checkSuspension: (val: number) => val >= 5.0,
     allowed: "< 1.0%",
     explanation: "Your Order Defect Rate (ODR) is higher than the allowed threshold. ODR is calculated as the percentage of orders with defects (cancellations, refunds, low ratings).",
     recommendation: "Please focus on customer service, ensuring orders are delivered without damage, and customer complaints/refunds are minimized.",
   },
-  "Late Shipment Rate": {
+  [SLA_METRIC.LATE_SHIPMENT_RATE]: {
     checkViolation: (val: number) => val >= 4.0,
     checkSuspension: (val: number) => val >= 10.0,
     allowed: "< 4.0%",
     explanation: "Your Late Shipment Rate (LSR) has exceeded the acceptable limit. LSR is the percentage of orders shipped after the expected ship date.",
     recommendation: "Ensure you ship all orders on or before the expected shipping date. Update shipping carrier tracking numbers promptly.",
   },
-  "Cancellation Rate": {
+  [SLA_METRIC.CANCELLATION_RATE]: {
     checkViolation: (val: number) => val >= 2.5,
     checkSuspension: (val: number) => val >= 5.0,
     allowed: "< 2.5%",
     explanation: "Your Cancellation Rate is above the required threshold. Cancellation Rate measures vendor-initiated cancellations prior to shipment.",
     recommendation: "Maintain accurate inventory levels in your product catalog to prevent cancelling orders due to stock issues.",
   },
-  "Valid Tracking Rate": {
+  [SLA_METRIC.VALID_TRACKING_RATE]: {
     checkViolation: (val: number) => val < 95.0,
     checkSuspension: (val: number) => val < 80.0,
     allowed: ">= 95.0%",
@@ -56,10 +58,10 @@ const evaluateSla = async (
   const emailAddress = vendor.email;
 
   const evaluations = [
-    { name: "Order Defect Rate", val: metrics.orderDefectRate },
-    { name: "Late Shipment Rate", val: metrics.lateShipmentRate },
-    { name: "Cancellation Rate", val: metrics.cancellationRate },
-    { name: "Valid Tracking Rate", val: metrics.validTrackingRate },
+    { name: SLA_METRIC.ORDER_DEFECT_RATE, val: metrics.orderDefectRate },
+    { name: SLA_METRIC.LATE_SHIPMENT_RATE, val: metrics.lateShipmentRate },
+    { name: SLA_METRIC.CANCELLATION_RATE, val: metrics.cancellationRate },
+    { name: SLA_METRIC.VALID_TRACKING_RATE, val: metrics.validTrackingRate },
   ];
 
   for (const evalItem of evaluations) {
@@ -68,7 +70,9 @@ const evaluateSla = async (
 
     if (isViolated) {
       const isSuspended = config.checkSuspension(evalItem.val);
-      const severity: "Warning" | "Suspension" = isSuspended ? "Suspension" : "Warning";
+      const severity: typeof SLA_SEVERITY[keyof typeof SLA_SEVERITY] = isSuspended
+        ? SLA_SEVERITY.SUSPENSION
+        : SLA_SEVERITY.WARNING;
 
       const existing = await SlaViolation.findOne({
         vendor: vendorId,
@@ -92,7 +96,7 @@ const evaluateSla = async (
         );
 
         // Send Email & Emit Socket
-        if (severity === "Warning") {
+        if (severity === SLA_SEVERITY.WARNING) {
           sendWarningEmail(emailAddress, evalItem.name, evalItem.val, config.allowed, config.explanation, config.recommendation);
           emitVendorWarning(vendorId, newViolation);
         } else {
@@ -103,15 +107,15 @@ const evaluateSla = async (
         // Unresolved violation already exists
         const oldSeverity = existing.severity;
         if (oldSeverity !== severity) {
-          existing.severity = severity;
+          existing.severity = severity as any;
           existing.actualValue = evalItem.val;
           await existing.save({ session });
 
           // Send Email & Socket if severity escalated
-          if (severity === "Suspension" && oldSeverity === "Warning") {
+          if (severity === SLA_SEVERITY.SUSPENSION && oldSeverity === SLA_SEVERITY.WARNING) {
             sendSuspensionEmail(emailAddress, evalItem.name, evalItem.val, config.allowed, config.explanation, config.recommendation);
             emitVendorSuspended(vendorId, existing);
-          } else if (severity === "Warning" && oldSeverity === "Suspension") {
+          } else if (severity === SLA_SEVERITY.WARNING && oldSeverity === SLA_SEVERITY.SUSPENSION) {
             // De-escalated, warning emit/email optionally triggerable
             emitVendorWarning(vendorId, existing);
           }
@@ -135,6 +139,27 @@ const evaluateSla = async (
         // Emit Socket Resolution
         emitViolationResolved(vendorId, existing);
       }
+    }
+  }
+
+  const activeSuspensionViolation = await SlaViolation.findOne({
+    vendor: vendorId,
+    severity: SLA_SEVERITY.SUSPENSION,
+    isResolved: false,
+  }).session(session || null);
+
+  const currentHealth = await AccountHealth.findOne({ vendor: vendorId }).session(session || null);
+  const isHealthSuspended = currentHealth?.status === VENDOR_HEALTH.SUSPENDED;
+
+  if (activeSuspensionViolation || isHealthSuspended) {
+    if (vendor.status !== USER_STATUS.SUSPENDED && vendor.status !== USER_STATUS.BLOCKED) {
+      vendor.status = USER_STATUS.SUSPENDED as any;
+      await vendor.save({ session });
+    }
+  } else {
+    if (vendor.status === USER_STATUS.SUSPENDED) {
+      vendor.status = USER_STATUS.ACTIVE as any;
+      await vendor.save({ session });
     }
   }
 };
@@ -218,7 +243,7 @@ const sendSuspensionEmail = (
 };
 
 const getVendorViolationsFromDB = async (vendorId: string) => {
-  return await SlaViolation.find({ vendor: new mongoose.Types.ObjectId(vendorId) }).sort({ createdAt: -1 });
+  return await SlaViolation.find({ vendor: vendorId }).sort({ createdAt: -1 });
 };
 
 const getAllViolationsFromDB = async (query: Record<string, unknown>) => {

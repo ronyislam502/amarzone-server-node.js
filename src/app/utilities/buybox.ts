@@ -4,6 +4,9 @@ import { emitBuyBoxUpdated } from "../socket/socketBuyBox";
 import { Order } from "../modules/order/order.model";
 import { AccountHealth } from "../modules/health/health.model";
 import { ServiceReview } from "../modules/review/review.model";
+import { User } from "../modules/user/user.model";
+import { Vendor } from "../modules/vendor/vendor.model";
+import { USER_STATUS } from "../interface/common";
 
 const BUY_BOX_CONFIG = {
     minCompletedOrders: 20,
@@ -47,6 +50,20 @@ export const calculateBuyBox = async (
     vendorId: string,
     session?: mongoose.ClientSession
 ) => {
+    // 0. Check if vendor account is suspended
+    const vendorDoc = await Vendor.findById(vendorId).populate("user").session(session || null);
+    let vendorStatus = (vendorDoc?.user as any)?.status;
+    if (!vendorDoc) {
+        const directUser = await User.findById(vendorId).session(session || null);
+        if (directUser) {
+            vendorStatus = directUser.status;
+        }
+    }
+
+    if (vendorStatus === USER_STATUS.SUSPENDED) {
+        await disableAllBuyBoxForVendor(vendorId, session);
+        return { eligible: false, message: "Vendor account is currently suspended." };
+    }
     // 1. Count completed/delivered orders
     const completedOrdersCount = await Order.countDocuments({
         vendor: vendorId,

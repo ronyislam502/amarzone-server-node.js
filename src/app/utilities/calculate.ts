@@ -2,10 +2,19 @@ import { Category } from "../modules/category/category.model";
 import { InventoryProduct } from "../modules/inventory/inventory.model";
 import { Order } from "../modules/order/order.model";
 import { Product } from "../modules/product/product.model";
+import { User } from "../modules/user/user.model";
+import { Vendor } from "../modules/vendor/vendor.model";
+import { USER_STATUS } from "../interface/common";
 import { emitBestSellerUpdated, emitCategoryBestSellerUpdated } from "../socket/socketBestSeller";
 
 export const recalculateBestSellers = async (categoryIds?: string[]) => {
     try {
+        // 0. Fetch suspended vendor IDs
+        const suspendedUsers = await User.find({ status: USER_STATUS.SUSPENDED }, { _id: 1 });
+        const suspendedUserIds = suspendedUsers.map((u) => u._id);
+        const suspendedVendors = await Vendor.find({ user: { $in: suspendedUserIds } }, { _id: 1 });
+        const suspendedVendorIds = [...suspendedUserIds, ...suspendedVendors.map((v) => v._id)];
+
         // 1. Determine categories to process
         let targetCategoryIds: string[] = [];
         if (categoryIds && categoryIds.length > 0) {
@@ -57,11 +66,12 @@ export const recalculateBestSellers = async (categoryIds?: string[]) => {
             }
         }
 
-        // 3. Fetch stock levels for all products
+        // 3. Fetch stock levels for all products (excluding suspended vendors)
         const stockData = await InventoryProduct.aggregate([
             {
                 $match: {
                     isDeleted: { $ne: true },
+                    "seller.vendor": { $nin: suspendedVendorIds },
                 },
             },
             {

@@ -5,6 +5,7 @@ import { AccountHealth } from "./health.model";
 import { ServiceReview } from "../review/review.model";
 import { SlaViolationServices } from "../violation/violation.service";
 import { calculateBuyBox } from "../../utilities/buybox";
+import { VENDOR_HEALTH } from "../../interface/common";
 
 const calculateVendorHealth = async (vendorId: string, session?: mongoose.ClientSession) => {
     const statsQuery = Order.aggregate([
@@ -185,17 +186,17 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
 
     // Status mapping
     if (score >= 850) {
-        status = "HEALTHY";
+        status = VENDOR_HEALTH.HEALTHY;
     } else if (score >= 700) {
-        status = "AT_RISK";
+        status = VENDOR_HEALTH.AT_RISK;
     } else if (score >= 500) {
-        status = "CRITICAL";
+        status = VENDOR_HEALTH.CRITICAL;
     } else {
-        status = "SUSPENDED";
+        status = VENDOR_HEALTH.SUSPENDED;
     }
 
     const updatedHealth = await AccountHealth.findOneAndUpdate(
-        { vendor: new mongoose.Types.ObjectId(vendorId) },
+        { vendor: vendorId },
         {
             $set: {
                 orderDefectRate,
@@ -231,7 +232,7 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
 };
 
 const getVendorHealthFromDB = async (vendorId: string) => {
-    let health = await AccountHealth.findOne({ vendor: new mongoose.Types.ObjectId(vendorId) });
+    let health = await AccountHealth.findOne({ vendor: vendorId });
     if (!health) {
         health = await calculateVendorHealth(vendorId);
     }

@@ -14,7 +14,8 @@ import { shippingQueue } from "../../queues/shipping.queue";
 import { AccountHealthServices } from "../health/health.service";
 import { calculateBuyBox } from "../../utilities/buybox";
 import { recalculateBestSellers } from "../../utilities/calculate";
-import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../interface/common";
+import { Vendor } from "../vendor/vendor.model";
+import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLE, USER_STATUS } from "../../interface/common";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -31,6 +32,21 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
     session.startTransaction();
 
     try {
+        const vendorDoc = await Vendor.findById(vendor).populate("user").session(session);
+        let vendorStatus = (vendorDoc?.user as any)?.status;
+        if (!vendorDoc) {
+            const directUser = await User.findById(vendor).session(session);
+            if (directUser) {
+                vendorStatus = directUser.status;
+            }
+        }
+
+        if (vendorStatus === USER_STATUS.SUSPENDED) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "This vendor is currently suspended and cannot accept new orders."
+            );
+        }
         const productDetails: {
             product: mongoose.Types.ObjectId;
             quantity: number;

@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { getIO } from "./socket";
 import { IFraud } from "../modules/fraud/fraud.interface";
-import { FRAUD_STATUS } from "../interface/common";
+import { FRAUD_STATUS, SOCKET_EVENTS, USER_ROLE } from "../interface/common";
 
 /**
  * Register fraud-related socket connection handlers.
@@ -9,8 +9,8 @@ import { FRAUD_STATUS } from "../interface/common";
  */
 export const registerFraudHandlers = (io: Server, socket: Socket) => {
   const user = socket.data?.user;
-  if (user && (user.role === "ADMIN" || user.role === "SUPER_ADMIN")) {
-    socket.join("ADMIN");
+  if (user && (user.role === USER_ROLE.ADMIN || user.role === USER_ROLE.SUPER_ADMIN)) {
+    socket.join(SOCKET_EVENTS.ADMIN_ROOM);
     console.log(`[Socket Fraud] Admin ${user._id} (${user.email}) joined ADMIN room`);
   }
 };
@@ -29,7 +29,7 @@ const getUserIdString = (user: any): string | null => {
 export const emitFraudAlertCreated = (fraudAlert: IFraud) => {
   try {
     const io = getIO();
-    io.to("ADMIN").emit("fraudAlertCreated", {
+    io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_ALERT_CREATED, {
       message: "New fraud alert created",
       fraudAlert,
     });
@@ -39,7 +39,7 @@ export const emitFraudAlertCreated = (fraudAlert: IFraud) => {
       fraudAlert.status === FRAUD_STATUS.INVESTIGATING ||
       fraudAlert.status === FRAUD_STATUS.CONFIRMED
     ) {
-      io.to("ADMIN").emit("fraudStatusChanged", {
+      io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_STATUS_CHANGED, {
         message: `High risk fraud alert created for user status: ${fraudAlert.status}`,
         fraudAlert,
       });
@@ -55,7 +55,7 @@ export const emitFraudAlertCreated = (fraudAlert: IFraud) => {
 export const emitFraudAlertUpdated = (fraudAlert: IFraud) => {
   try {
     const io = getIO();
-    io.to("ADMIN").emit("fraudAlertUpdated", {
+    io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_ALERT_UPDATED, {
       message: "Fraud alert updated",
       fraudAlert,
     });
@@ -65,7 +65,7 @@ export const emitFraudAlertUpdated = (fraudAlert: IFraud) => {
       fraudAlert.status === FRAUD_STATUS.INVESTIGATING ||
       fraudAlert.status === FRAUD_STATUS.CONFIRMED
     ) {
-      io.to("ADMIN").emit("fraudStatusChanged", {
+      io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_STATUS_CHANGED, {
         message: `Fraud alert updated with status: ${fraudAlert.status}`,
         fraudAlert,
       });
@@ -81,14 +81,14 @@ export const emitFraudAlertUpdated = (fraudAlert: IFraud) => {
 export const emitFraudStatusChanged = (fraudAlert: IFraud) => {
   try {
     const io = getIO();
-    io.to("ADMIN").emit("fraudStatusChanged", {
+    io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_STATUS_CHANGED, {
       message: `Fraud status changed to ${fraudAlert.status}`,
       fraudAlert,
     });
 
     const userIdStr = getUserIdString(fraudAlert.user);
     if (userIdStr) {
-      io.to(`user:${userIdStr}`).emit("fraudStatusChanged", {
+      io.to(`user:${userIdStr}`).emit(SOCKET_EVENTS.FRAUD_STATUS_CHANGED, {
         message: `Your account fraud status is currently: ${fraudAlert.status}`,
         status: fraudAlert.status,
       });
@@ -104,14 +104,14 @@ export const emitFraudStatusChanged = (fraudAlert: IFraud) => {
 export const emitFraudResolved = (fraudAlert: IFraud) => {
   try {
     const io = getIO();
-    io.to("ADMIN").emit("fraudResolved", {
+    io.to(SOCKET_EVENTS.ADMIN_ROOM).emit(SOCKET_EVENTS.FRAUD_RESOLVED, {
       message: "Fraud alert resolved",
       fraudAlert,
     });
 
     const userIdStr = getUserIdString(fraudAlert.user);
     if (userIdStr) {
-      io.to(`user:${userIdStr}`).emit("fraudResolved", {
+      io.to(`user:${userIdStr}`).emit(SOCKET_EVENTS.FRAUD_RESOLVED, {
         message: "Your account fraud risk has been cleared/resolved.",
         status: FRAUD_STATUS.SAFE,
       });
