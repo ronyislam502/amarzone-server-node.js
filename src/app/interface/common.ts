@@ -35,3 +35,12 @@ export const VENDOR_HEALTH = {
   SUSPENDED: "SUSPENDED",
 } as const;
 
+
+export const FRAUD_STATUS = {
+  SAFE: "SAFE",
+  PENDING: "PENDING",
+  INVESTIGATING: "INVESTIGATING",
+  CONFIRMED: "CONFIRMED",
+  CLEARED: "CLEARED",
+} as const;
+

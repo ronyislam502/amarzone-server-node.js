@@ -1,7 +1,5 @@
 import express from "express";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { multerUpload } from "../../config/multer.config";
-import { parseBody } from "../../middlewares/bodyParser";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "../../interface/common";
 import { InventoryValidations } from "./inventory.validation";
@@ -15,8 +13,6 @@ router.post(
     validateRequest(InventoryValidations.createInventoryValidationSchema),
     InventoryControllers.listProduct
 );
-
-router.get("/", InventoryControllers.inventoryProducts)
 
 router.patch(
     "/update-price/:id",
