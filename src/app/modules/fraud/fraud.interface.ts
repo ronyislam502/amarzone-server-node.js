@@ -2,10 +2,13 @@ import { Types } from "mongoose";
 import { FRAUD_STATUS } from "../../interface/common";
 
 export interface IFraud {
-    user: Types.ObjectId;
+    _id?: Types.ObjectId;
+    user: Types.ObjectId | any;
     score: number; // 0 - 100
     reasons: string[];
     status: keyof typeof FRAUD_STATUS;
-    isDeleted: boolean;
-
+    reviewedBy?: Types.ObjectId | any;
+    notes?: string;
+    isResolved: boolean;
+    isDeleted?: boolean;
 }

@@ -17,6 +17,7 @@ import { SlaViolationRoutes } from "../modules/violation/violation.route";
 import { ChatRoutes } from "../modules/chat/chat.route";
 import { DisputeRoutes } from "../modules/dispute/dispute.route";
 import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
+import { FraudRoutes } from "../modules/fraud/fraud.route";
 
 const router = Router();
 
@@ -92,6 +93,10 @@ const moduleRoutes = [
   {
     path: "/dispute-decisions",
     route: DisputeDecisionRoutes,
+  },
+  {
+    path: "/fraud",
+    route: FraudRoutes,
   },
 ];
 

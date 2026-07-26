@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
 import { registerChatHandlers, socketAuthMiddleware } from "./socketChat";
+import { registerFraudHandlers } from "./socketFraud";
 
 let io: Server | null = null;
 
@@ -23,8 +24,9 @@ export const initSocket = (server: HttpServer) => {
       console.log(`Socket ${socket.id} joined room: ${roomName}`);
     });
 
-    // Register all chat socket event handlers
+    // Register all chat & fraud socket event handlers
     registerChatHandlers(io as Server, socket);
+    registerFraudHandlers(io as Server, socket);
 
     socket.on("disconnect", () => {
       console.log(`Socket client disconnected: ${socket.id}`);
