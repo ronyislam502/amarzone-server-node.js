@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IViolation } from "./violation.interface";
+import { SLA_SEVERITY } from "../../interface/common";
 
 const violationSchema = new Schema<IViolation>(
   {
@@ -18,7 +19,7 @@ const violationSchema = new Schema<IViolation>(
     },
     severity: {
       type: String,
-      enum: ["Warning", "Suspension"],
+      enum: Object.values(SLA_SEVERITY),
       required: true,
     },
     isResolved: {
@@ -31,8 +32,5 @@ const violationSchema = new Schema<IViolation>(
     timestamps: true,
   }
 );
-
-// Compound index for quick lookup of unresolved violations by vendor and metric
-violationSchema.index({ vendor: 1, metric: 1, isResolved: 1 });
 
 export const SlaViolation = model<IViolation>("SlaViolation", violationSchema);

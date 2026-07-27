@@ -19,6 +19,7 @@ import { DisputeRoutes } from "../modules/dispute/dispute.route";
 import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
 import { FraudRoutes } from "../modules/fraud/fraud.route";
 import { DepartmentRoutes } from "../modules/department/department.route";
+import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 
 const router = Router();
 
@@ -98,6 +99,10 @@ const moduleRoutes = [
   {
     path: "/fraud",
     route: FraudRoutes,
+  },
+  {
+    path: "/dashboard",
+    route: DashboardRoutes,
   },
 ];
 
