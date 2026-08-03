@@ -4,7 +4,6 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
-
 import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
@@ -105,6 +104,8 @@ const moduleRoutes = [
     route: DashboardRoutes,
   },
 ];
+
+
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 

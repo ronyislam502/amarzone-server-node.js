@@ -28,7 +28,8 @@ export default {
   stripe_publishable_key: process.env.STRIPE_PUBLISHABLE_KEY,
   stripe_secret_key: process.env.STRIPE_SECRET_KEY,
   stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
-  redis_host: process.env.REDIS_HOST || "127.0.0.1",
-  redis_port: Number(process.env.REDIS_PORT) || 6379,
-  redis_password: process.env.REDIS_PASSWORD || "",
+  redis_host: process.env.REDIS_HOST,
+  redis_port: Number(process.env.REDIS_PORT),
+  redis_password: process.env.REDIS_PASSWORD,
 };
+

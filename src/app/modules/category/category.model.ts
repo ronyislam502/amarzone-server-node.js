@@ -13,6 +13,10 @@ const CategorySchema = new Schema<TCategory>(
       required: [true, "Title is required"],
       unique: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );

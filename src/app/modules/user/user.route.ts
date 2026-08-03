@@ -27,8 +27,8 @@ router.post(
 
 router.post(
   "/create-customer",
-  // multerUpload.single("image"),
-  // parseBody,
+  multerUpload.single("image"),
+  parseBody,
   validateRequest(CustomerValidations.createCustomerValidationSchema),
   UserControllers.createCustomer
 );
