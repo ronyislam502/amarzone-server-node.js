@@ -2,3 +2,8 @@ node_modules
 dist
 .env
 .vercel
+
+
+
+
+# git remote add origin https://github.com/ronyislam502/amarzone-server-node.js.git
