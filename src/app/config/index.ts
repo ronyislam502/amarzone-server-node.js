@@ -29,7 +29,10 @@ export default {
   stripe_secret_key: process.env.STRIPE_SECRET_KEY,
   stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
   redis_host: process.env.REDIS_HOST,
-  redis_port: Number(process.env.REDIS_PORT),
+  redis_port: process.env.REDIS_PORT,
   redis_password: process.env.REDIS_PASSWORD,
-};
+  openai_api_key: process.env.OPENAI_API_KEY,
+  openai_model: process.env.OPENAI_MODEL,
+  openai_base_url: process.env.OPENAI_BASE_URL
 
+}

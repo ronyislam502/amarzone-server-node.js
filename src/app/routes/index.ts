@@ -1,24 +1,19 @@
 import { Router } from "express";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { UserRoutes } from "../modules/user/user.route";
-import { AdminRoutes } from "../modules/admin/admin.route";
-import { VendorRoutes } from "../modules/vendor/vendor.route";
-import { CustomerRoutes } from "../modules/customer/customer.route";
-import { CategoryRoutes } from "../modules/category/category.route";
-import { ProductRoutes } from "../modules/product/product.route";
-import { InventoryRoutes } from "../modules/inventory/inventory.route";
-import { OrderRoutes } from "../modules/order/order.route";
-import { PaymentRoutes } from "../modules/payment/payment.route";
-import { ReviewRoutes } from "../modules/review/review.route";
-import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
-import { AccountHealthRoutes } from "../modules/health/health.route";
-import { SlaViolationRoutes } from "../modules/violation/violation.route";
+import { FriendRoutes } from "../modules/friend/friend.route";
+import { PostRoutes } from "../modules/post/post.route";
+import { PageRoutes } from "../modules/page/page.route";
 import { ChatRoutes } from "../modules/chat/chat.route";
-import { DisputeRoutes } from "../modules/dispute/dispute.route";
-import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
-import { FraudRoutes } from "../modules/fraud/fraud.route";
-import { DepartmentRoutes } from "../modules/department/department.route";
-import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
+import { NotificationRoutes } from "../modules/notification/notification.route";
+import { WalletRoutes } from "../modules/wallet/wallet.route";
+import { VerificationRoutes } from "../modules/wallet/verification.route";
+import { AdRoutes } from "../modules/ad/ad.route";
+import { StoryRoutes } from "../modules/story/story.route";
+import { GroupRoutes } from "../modules/group/group.route";
+import { CommerceRoutes } from "../modules/commerce/commerce.route";
+import { ModerationRoutes } from "../modules/moderation/moderation.route";
+import { PollRoutes } from "../modules/poll/poll.route";
 
 const router = Router();
 
@@ -32,82 +27,59 @@ const moduleRoutes = [
     route: UserRoutes,
   },
   {
-    path: "/admins",
-    route: AdminRoutes,
+    path: "/friends",
+    route: FriendRoutes,
   },
   {
-    path: "/vendors",
-    route: VendorRoutes,
+    path: "/posts",
+    route: PostRoutes,
   },
   {
-    path: "/customers",
-    route: CustomerRoutes,
-  },
-  {
-    path: "/departments",
-    route: DepartmentRoutes,
-  },
-  {
-    path: "/categories",
-    route: CategoryRoutes,
-  },
-  {
-    path: "/products",
-    route: ProductRoutes,
-  },
-  {
-    path: "/inventories",
-    route: InventoryRoutes,
-  },
-  {
-    path: "/orders",
-    route: OrderRoutes,
-  },
-  {
-    path: "/payments",
-    route: PaymentRoutes,
-  },
-  {
-    path: "/reviews",
-    route: ReviewRoutes,
-  },
-  {
-    path: "/product-reviews",
-    route: ProductReviewRoutes,
-  },
-  {
-    path: "/account-health",
-    route: AccountHealthRoutes,
-  },
-  {
-    path: "/sla-violations",
-    route: SlaViolationRoutes,
+    path: "/pages",
+    route: PageRoutes,
   },
   {
     path: "/chats",
     route: ChatRoutes,
   },
   {
-    path: "/disputes",
-    route: DisputeRoutes,
+    path: "/notifications",
+    route: NotificationRoutes,
   },
   {
-    path: "/dispute-decisions",
-    route: DisputeDecisionRoutes,
+    path: "/wallet",
+    route: WalletRoutes,
   },
   {
-    path: "/fraud",
-    route: FraudRoutes,
+    path: "/verification",
+    route: VerificationRoutes,
   },
   {
-    path: "/dashboard",
-    route: DashboardRoutes,
+    path: "/ads",
+    route: AdRoutes,
+  },
+  {
+    path: "/stories",
+    route: StoryRoutes,
+  },
+  {
+    path: "/groups",
+    route: GroupRoutes,
+  },
+  {
+    path: "/marketplace",
+    route: CommerceRoutes,
+  },
+  {
+    path: "/admin",
+    route: ModerationRoutes,
+  },
+  {
+    path: "/polls",
+    route: PollRoutes,
   },
 ];
-
-
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
 export default router;
-
