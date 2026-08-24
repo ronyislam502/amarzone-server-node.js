@@ -33,6 +33,60 @@ const adminFromDB = async (id: string) => {
     return result;
 };
 
+const updateAdminIntoDB = async (
+    id: string,
+    image: TImageFile,
+    payload: Partial<TAdmin>
+) => {
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        // check admin existence
+        const isAdminExists = await Admin.findById(id).session(session);
+        if (!isAdminExists) {
+            throw new AppError(httpStatus.NOT_FOUND, "Admin not found");
+        }
+
+        // image set
+        if (image && image.path) {
+            payload.avatar = image.path;
+        }
+
+        // update related user
+        const updatedUser = await User.findByIdAndUpdate(
+            isAdminExists.user,
+            payload,
+            { new: true, session }
+        );
+
+        if (!updatedUser) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Failed to update user");
+        }
+
+        // update admin
+        const updatedAdmin = await Admin.findByIdAndUpdate(
+            isAdminExists._id,
+            payload,
+            { new: true, session }
+        );
+
+        if (!updatedAdmin) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Failed to update admin");
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return updatedAdmin;
+    } catch (error: any) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw new Error(error);
+    }
+};
+
 const deleteAdminFromDB = async (id: string) => {
     const session = await mongoose.startSession();
 

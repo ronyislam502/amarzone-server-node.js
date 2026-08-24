@@ -9,16 +9,14 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", router);
+app.use("/api/v1", router);
 
 const getController = (req: Request, res: Response) => {
-  res.send("Welcome to Friendora API");
+  res.send("Welcome to Amarzone API");
 };
 
 app.get("/", getController);
 app.use(globalErrorHandler);
 app.use(notFound);
-
-// console.log(process.cwd());
 
 export default app;
