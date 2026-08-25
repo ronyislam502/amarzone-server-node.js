@@ -3,6 +3,8 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
+import { DepartmentRoutes } from "../modules/department/department.route";
+import { CategoryRoutes } from "../modules/category/category.route";
 
 
 const router = Router();
@@ -23,7 +25,15 @@ const moduleRoutes = [
   {
     path: "/customers",
     route: CustomerRoutes
-  }
+  },
+  {
+    path: "/departments",
+    route: DepartmentRoutes
+  },
+  {
+    path: "/categories",
+    route: CategoryRoutes
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
