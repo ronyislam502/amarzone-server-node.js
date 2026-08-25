@@ -28,8 +28,21 @@ const createVendor = catchAsync(async (req, res) => {
     })
 })
 
+const createCustomer = catchAsync(async (req, res) => {
+    const { password, customer } = req.body;
+    const result = await UserServices.createCustomerIntoDB(req.file as TImageFile, password, customer);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Customer created successfully",
+        data: result
+    })
+})
+
 
 export const UserControllers = {
     createAdmin,
-    createVendor
+    createVendor,
+    createCustomer
 }

@@ -9,6 +9,8 @@ import { Admin } from "../admin/admin.model"
 import { TVendor } from "../vendor/vendor.interface"
 import { TUser } from "./user.interface"
 import { Vendor } from "../vendor/vendor.model"
+import { Customer } from "../customer/customer.model"
+import { TCustomer } from "../customer/customer.interface"
 
 const createAdminIntoDB = async (image: TImageFile, password: string, payload: TAdmin) => {
     const userData: Partial<TUser> = {
@@ -102,7 +104,49 @@ const createVendorIntoDB = async (images: TImageFiles, password: string, payload
 
 }
 
+const createCustomerIntoDB = async (image: TImageFile, password: string, payload: TCustomer) => {
+    const userData: Partial<TUser> = {
+        name: payload.name,
+        email: payload.email,
+        password: password,
+        role: USER_ROLE?.CUSTOMER,
+    };
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+        if (image && image.path) {
+            payload.avatar = image.path;
+        }
+
+        const newUser = await User.create([userData], { session });
+
+        if (!newUser?.length) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Failed to create user");
+        }
+
+        payload.user = newUser[0]._id;
+
+        const newCustomer = await Customer.create([payload], { session });
+
+        if (!newCustomer.length) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Failed to create customer");
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return newCustomer;
+    } catch (error: any) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw new Error(error);
+    }
+};
+
 export const UserServices = {
     createAdminIntoDB,
-    createVendorIntoDB
+    createVendorIntoDB,
+    createCustomerIntoDB
 }
