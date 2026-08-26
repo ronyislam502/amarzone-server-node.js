@@ -9,6 +9,8 @@ import { CustomerValidations } from "../customer/customer.validation";
 
 const router = Router();
 
+// router.get("/", UserControllers.getAllUsers);
+
 router.post("/create-admin", multerUpload.single('image'), parseBody, validateRequest(AdminValidations.createAdminValidationSchema), UserControllers.createAdmin);
 
 router.post("/create-vendor", multerUpload.fields([

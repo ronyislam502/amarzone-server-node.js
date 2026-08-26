@@ -2,12 +2,14 @@ import { Router } from "express";
 import { CategoryControllers } from "./category.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { CategoryValidations } from "./category.validation";
+import { multerUpload } from "../../config/multer.config";
+import { parseBody } from "../../middlewares/bodyParser";
 
 
 const router = Router();
 
 router.post(
-  "/create-category",
+  "/create-category", multerUpload.single('icon'), parseBody,
   validateRequest(CategoryValidations.createCategoryValidationSchema),
   CategoryControllers.createCategory
 );

@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
-import { USER_ROLE } from "../../interface/common"
+import QueryBuilder from "../../builder/queryBuilder"
+import { USER_ROLE, USER_STATUS } from "../../interface/common"
 import { TImageFile, TImageFiles } from "../../interface/image.interface"
 import { TAdmin } from "../admin/admin.interface"
 import { User } from "./user.model"
@@ -11,6 +12,7 @@ import { TUser } from "./user.interface"
 import { Vendor } from "../vendor/vendor.model"
 import { Customer } from "../customer/customer.model"
 import { TCustomer } from "../customer/customer.interface"
+import { JwtPayload } from "jsonwebtoken"
 
 const createAdminIntoDB = async (image: TImageFile, password: string, payload: TAdmin) => {
     const userData: Partial<TUser> = {
@@ -145,8 +147,75 @@ const createCustomerIntoDB = async (image: TImageFile, password: string, payload
     }
 };
 
+// const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+//     const userQuery = new QueryBuilder(User.find(), query)
+//         .search(["name", "email"])
+//         .filter()
+//         .sort()
+//         .paginate()
+//         .fields();
+
+//     const result = await userQuery.modelQuery;
+//     const meta = await userQuery.countTotal();
+
+//     const usersWithDetails = await Promise.all(
+//         result.map(async (user) => {
+//             const userObj = user.toObject();
+//             let details = null;
+
+//             if (userObj.role === USER_ROLE.ADMIN || userObj.role === USER_ROLE.SUPER_ADMIN) {
+//                 details = await Admin.findOne({ user: userObj._id }).lean();
+//             } else if (userObj.role === USER_ROLE.VENDOR) {
+//                 details = await Vendor.findOne({ user: userObj._id }).lean();
+//             } else if (userObj.role === USER_ROLE.CUSTOMER) {
+//                 details = await Customer.findOne({ user: userObj._id }).lean();
+//             }
+
+//             return {
+//                 ...userObj,
+//                 details
+//             };
+//         })
+//     );
+
+//     return {
+//         meta,
+//         result: usersWithDetails
+//     };
+// };
+
+const getMyProfileFromDB = async (user: JwtPayload) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    if (isUserExists.status === USER_STATUS.BLOCKED || isUserExists.status === USER_STATUS.SUSPENDED) {
+        throw new AppError(httpStatus.FORBIDDEN, `This user is ${isUserExists.status.toLowerCase()}!`);
+    }
+
+    if (isUserExists.isDeleted) {
+        throw new AppError(httpStatus.FORBIDDEN, "This user account is deleted!");
+    }
+
+    let profileInfo = null;
+
+    if (isUserExists.role === USER_ROLE.SUPER_ADMIN || user.role === USER_ROLE.ADMIN) {
+        profileInfo = await Admin.findOne({ email: isUserExists.email }).populate("user");
+    } else if (isUserExists.role === USER_ROLE.VENDOR) {
+        profileInfo = await Vendor.findOne({ email: isUserExists.email }).populate("user");
+    } else if (isUserExists.role === USER_ROLE.CUSTOMER) {
+        profileInfo = await Customer.findOne({ email: isUserExists.email }).populate("user");
+    }
+
+    return profileInfo
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createVendorIntoDB,
-    createCustomerIntoDB
+    createCustomerIntoDB,
+    // getAllUsersFromDB,
+    getMyProfileFromDB
 }
