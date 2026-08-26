@@ -15,6 +15,7 @@ const createProductIntoDB = async (
     payload: TProduct
 ) => {
     const isUserExists = await User.isUserExistsByEmail(user?.email);
+    console.log("user", isUserExists)
 
     if (!isUserExists) {
         throw new AppError(httpStatus.NOT_FOUND, "This user not found");

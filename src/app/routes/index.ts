@@ -6,11 +6,17 @@ import { CustomerRoutes } from "../modules/customer/customer.route";
 import { DepartmentRoutes } from "../modules/department/department.route";
 import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
+import { VariantRoutes } from "../modules/variant/variant.route";
+import { AuthRoutes } from "../modules/auth/auth.route";
 
 
 const router = Router();
 
 const moduleRoutes = [
+  {
+    path: "/auth",
+    route: AuthRoutes,
+  },
   {
     path: "/users",
     route: UserRoutes,
@@ -38,6 +44,10 @@ const moduleRoutes = [
   {
     path: "/products",
     route: ProductRoutes
+  },
+  {
+    path: "/variants",
+    route: VariantRoutes
   },
 ];
 

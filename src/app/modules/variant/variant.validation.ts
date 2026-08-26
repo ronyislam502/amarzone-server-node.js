@@ -6,19 +6,16 @@ const variantAttributeSchema = z.object({
 });
 
 export const createVariantValidationSchema = z.object({
-  asin: z.string({ required_error: "ASIN is required" }),
-  sku: z.string({ required_error: "SKU is required" }),
-  attributes: z.array(variantAttributeSchema).min(1, "At least one attribute is required"),
-  thumbnail: z.string({ required_error: "Thumbnail is required" }),
-  images: z.array(z.string()).min(1, "At least one image is required"),
-  isPrivateLevel: z.boolean({ required_error: "isPrivateLevel is required" }),
+  body: z.object({
+    product: z.string({ required_error: "Product ID is required" }),
+    attributes: z.array(variantAttributeSchema).min(1, "At least one attribute is required"),
+    isPrivateLevel: z.boolean({ required_error: "isPrivateLevel is required" }).optional().default(false),
+  })
 });
 
 export const updateVariantValidationSchema = z.object({
-  asin: z.string().optional(),
-  sku: z.string().optional(),
+  product: z.string().optional(),
   attributes: z.array(variantAttributeSchema).optional(),
-  thumbnail: z.string().optional(),
   images: z.array(z.string()).optional(),
   isPrivateLevel: z.boolean().optional(),
 });
