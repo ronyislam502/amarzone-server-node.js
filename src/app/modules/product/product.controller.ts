@@ -17,7 +17,7 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const updateProduct = catchAsync(async (req, res) => {
-    const result = await ProductServices.updateProductIntoDB(req.params.id, req.file as TImageFile, req.body);
+    const result = await ProductServices.updateProductIntoDB(req.user as JwtPayload, req.params.id, req.file as TImageFile, req.body);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

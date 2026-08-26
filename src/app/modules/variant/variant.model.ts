@@ -46,4 +46,19 @@ const variantSchema = new Schema<TVariants>(
   }
 );
 
+variantSchema.pre("find", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+variantSchema.pre("findOne", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+variantSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
 export const Variant = model<TVariants>("Variant", variantSchema);

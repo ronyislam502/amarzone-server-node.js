@@ -6,12 +6,14 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { AdminValidations } from "../admin/admin.validation";
 import { VendorValidations } from "../vendor/vendor.validation";
 import { CustomerValidations } from "../customer/customer.validation";
+import auth from "../../middlewares/auth";
+import { USER_ROLE } from "../../interface/common";
 
 const router = Router();
 
 // router.get("/", UserControllers.getAllUsers);
 
-router.post("/create-admin", multerUpload.single('image'), parseBody, validateRequest(AdminValidations.createAdminValidationSchema), UserControllers.createAdmin);
+router.post("/create-admin", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), multerUpload.single('image'), parseBody, validateRequest(AdminValidations.createAdminValidationSchema), UserControllers.createAdmin);
 
 router.post("/create-vendor", multerUpload.fields([
     { name: "logo", maxCount: 1 },
