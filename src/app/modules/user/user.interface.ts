@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { USER_ROLE, USER_STATUS } from "../../interface/common";
 
 export type TUserRole = keyof typeof USER_ROLE;
@@ -24,7 +24,7 @@ export type TUser = {
 
 export interface UserModel extends Model<TUser> {
     //instance methods for checking if the user exist
-    isUserExistsByEmail(email: string): Promise<TUser | null>;
+    isUserExistsByEmail(email: string): Promise<TUser>;
     //instance methods for checking if passwords are matched
     isPasswordMatched(
         plainTextPassword: string,
