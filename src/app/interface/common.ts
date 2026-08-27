@@ -10,3 +10,21 @@ export const USER_STATUS = {
     BLOCKED: "BLOCKED",
     SUSPENDED: "SUSPENDED",
 } as const;
+
+export const ORDER_STATUS = {
+    PENDING: "PENDING",
+    UNSHIPPED: "UNSHIPPED",
+    SHIPPED: "SHIPPED",
+    IN_TRANSIT: "IN_TRANSIT",
+    DELIVERED: "DELIVERED",
+    CANCELLED: "CANCELLED",
+    OUT_OF_DELIVERY: "OUT_OF_DELIVERY",
+    REFUNDED: "REFUNDED",
+} as const;
+
+export const PAYMENT_STATUS = {
+    PENDING: "PENDING",
+    PAID: "PAID",
+    UNPAID: "UNPAID",
+    REFUNDED: "REFUNDED",
+} as const;

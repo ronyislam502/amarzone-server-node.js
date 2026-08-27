@@ -32,6 +32,8 @@ const SellerSchema = new Schema<TSeller>({
         type: Boolean,
         default: false,
     },
+}, {
+    _id: false,
 });
 
 const inventoryProductSchema = new Schema<TInventory>(

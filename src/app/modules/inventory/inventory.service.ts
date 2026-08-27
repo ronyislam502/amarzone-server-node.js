@@ -40,6 +40,21 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
         );
     }
 
+    if (isVariantProduct.isPrivateLevel) {
+        const product = await Product.findById(isVariantProduct.product);
+
+        if (!product) {
+            throw new AppError(httpStatus.NOT_FOUND, "Associated product not found");
+        }
+
+        if (product.author.name !== isUserExists.name) {
+            throw new AppError(
+                httpStatus.UNAUTHORIZED,
+                "You are not authorized to add this private-level product to your inventory"
+            );
+        }
+    }
+
     const isAlreadyListed = await Inventory.findById(isVariantProduct?._id);
 
     console.log('is', isAlreadyListed)
