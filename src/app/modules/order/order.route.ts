@@ -19,4 +19,10 @@ router.get(
     OrderControllers.getAllOrders
 );
 
+router.get(
+    "/my-orders",
+    auth(USER_ROLE.CUSTOMER, USER_ROLE.VENDOR),
+    OrderControllers.allOrdersByUser
+);
+
 export const OrderRoutes = router;

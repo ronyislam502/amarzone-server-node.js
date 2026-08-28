@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
-import { ORDER_STATUS, PAYMENT_STATUS, USER_STATUS } from "../../interface/common";
+import { ORDER_STATUS, PAYMENT_STATUS, USER_STATUS, USER_ROLE } from "../../interface/common";
 import { Order } from "./order.model";
 import { generateOrderNo } from "../../utilities/generateOrderNo";
 import { Inventory } from "../inventory/inventory.model";
@@ -10,6 +10,7 @@ import { TOrder } from "./order.interface";
 import { User } from "../user/user.model";
 import mongoose from "mongoose";
 import { Vendor } from "../vendor/vendor.model";
+import QueryBuilder from "../../builder/queryBuilder";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
 
@@ -174,7 +175,49 @@ const getAllOrdersFromDB = async () => {
     return orders;
 };
 
+const allOrdersByUserFromDB = async (user: JwtPayload, query: Record<string, unknown>) => {
+    const isUserExists = await User.isUserExistsByEmail(user?.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "this user not found")
+    }
+
+    let userQuery = {};
+    if (isUserExists.role === USER_ROLE.CUSTOMER) {
+        userQuery = { customer: isUserExists._id };
+    } else if (isUserExists.role === USER_ROLE.VENDOR) {
+        userQuery = { vendor: isUserExists._id };
+    } else {
+        throw new AppError(httpStatus.FORBIDDEN, "Access denied");
+    }
+
+    const ordersQuery = new QueryBuilder(
+        Order.find(userQuery)
+            .populate("customer", "name email")
+            .populate("vendor", "name email")
+            .populate({
+                path: "products.variant",
+                populate: {
+                    path: "product",
+                    select: "title thumbnail",
+                },
+            }),
+        query
+    )
+        .search(["orderNo"])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const meta = await ordersQuery.countTotal();
+    const result = await ordersQuery.modelQuery;
+
+    return { meta, result };
+}
+
 export const OrderServices = {
     createOrderIntoDB,
-    getAllOrdersFromDB
+    getAllOrdersFromDB,
+    allOrdersByUserFromDB
 }
