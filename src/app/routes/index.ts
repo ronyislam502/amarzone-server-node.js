@@ -10,6 +10,7 @@ import { VariantRoutes } from "../modules/variant/variant.route";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
 import { OrderRoutes } from "../modules/order/order.route";
+import { ServiceReviewRoutes } from "../modules/serviceReview/serviceReview.route";
 
 
 const router = Router();
@@ -58,6 +59,10 @@ const moduleRoutes = [
   {
     path: "/orders",
     route: OrderRoutes
+  },
+  {
+    path: "/service-reviews",
+    route: ServiceReviewRoutes
   },
 ];
 
