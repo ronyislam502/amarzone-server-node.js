@@ -6,12 +6,12 @@ const serviceReviewSchema = new Schema<TServiceReview>(
     customer: {
       type: Schema.Types.ObjectId,
       required: [true, "Customer is required"],
-      ref: "Customer",
+      ref: "User",
     },
     vendor: {
       type: Schema.Types.ObjectId,
       required: [true, "Vendor is required"],
-      ref: "Vendor",
+      ref: "User",
     },
     order: {
       type: Schema.Types.ObjectId,

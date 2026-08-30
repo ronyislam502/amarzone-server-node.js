@@ -21,7 +21,7 @@ const allServiceReviewsByVendorFromDB = async (
   }
 
   const serviceReviewQuery = new QueryBuilder(
-    ServiceReview.find({ vendor: isVendor._id }).populate("customer").populate("vendor").populate("order"),
+    ServiceReview.find({ vendor: isVendor._id }).populate("user").populate("user").populate("order"),
     query
   )
     .search(["title", "review"])
