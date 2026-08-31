@@ -67,20 +67,17 @@ const orderSchema = new Schema<TOrder>(
             ref: "User",
             required: true,
         },
-
         vendor: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
-
         orderNo: {
             type: String,
             required: true,
             unique: true,
             trim: true,
         },
-
         products: [
             {
                 _id: false,

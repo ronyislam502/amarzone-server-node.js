@@ -1,17 +1,24 @@
-import { Request, Response } from "express";
+
 import { PaymentServices } from "./payment.service";
+import catchAsync from "../../utilities/catchAsync";
+import sendResponse from "../../utilities/sendResponse";
+import httpStatus from "http-status";
 
-const stripeWebhook = async (req: Request, res: Response) => {
+const stripeWebhook = catchAsync(async (req, res) => {
     const signature = req.headers["stripe-signature"] as string;
+    const rawBody = req.body;
+    // const webhookSecret = config.stripe_webhook_secret as string;
 
-    try {
-        await PaymentServices.stripeWebhook(req.body, signature);
-        // Stripe requires a 200 response to acknowledge receipt of the event
-        res.json({ received: true });
-    } catch (err: any) {
-        res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-};
+    const webhookSecret = "whsec_83f429564a34b1d2eb5451ae8d8a8b5be83bbbf77fbbd6305cfa543464440f30" as string;
+    await PaymentServices.stripeWebhookPayment(rawBody, signature, webhookSecret);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Webhook processed successfully",
+        data: null,
+    });
+});
 
 export const PaymentControllers = {
     stripeWebhook,

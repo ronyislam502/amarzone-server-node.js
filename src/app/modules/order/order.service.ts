@@ -14,28 +14,24 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { stripe } from "../../utilities/stripe";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
-
-    console.log("payload", payload)
     const isUserExists = await User.isUserExistsByEmail(user.email);
     if (!isUserExists) {
         throw new AppError(httpStatus.NOT_FOUND, "Customer not found");
-    }
-
-    const { vendor, products } = payload;
-    if (!vendor || !products || !products.length) {
-        throw new AppError(httpStatus.BAD_REQUEST, "Vendor and products are required");
     }
 
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try {
-        const isVendor = await Vendor.findById(vendor).populate("user").session(session);
+        const isVendor = await Vendor.findById(payload?.vendor).populate("user").session(session);
         let vendorStatus = (isVendor?.user as any)?.status;
+        let vendorUserId = isVendor ? (isVendor?.user as any)?._id : null;
+
         if (!isVendor) {
-            const directUser = await User.findById(vendor).session(session);
+            const directUser = await User.findById(payload?.vendor).session(session);
             if (directUser) {
                 vendorStatus = directUser.status;
+                vendorUserId = directUser._id;
             }
         }
 
@@ -53,15 +49,21 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
         let totalPrice = 0;
         let totalQuantity = 0;
         let maxShippingTime = 0;
+        const tax = 0.88;
 
-        for (const item of products) {
+        if (!payload.products || payload.products.length === 0) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Order must contain at least one product");
+        }
+
+        for (const item of payload.products) {
             const isProductVariant = await Variant.findById(item.variant).session(session);
+
             if (!isProductVariant)
                 throw new AppError(httpStatus.NOT_FOUND, "Product variant not found");
 
             const isInventoryProduct = await Inventory.findOne({
                 variant: isProductVariant._id,
-                "seller.vendor": vendor,
+                "seller.vendor": vendorUserId,
             }).session(session);
 
             if (!isInventoryProduct) {
@@ -87,7 +89,7 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
                 price: unitPrice,
             });
 
-            totalPrice += itemSubtotal;
+            totalPrice = itemSubtotal + tax;
             totalQuantity += item.quantity;
 
             const shippingTime = isInventoryProduct.seller.shippingTime || 0;
@@ -111,7 +113,6 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             );
         }
 
-        const tax = +(totalPrice + 0.88).toFixed(2);
         const commission = +(totalPrice * 0.15).toFixed(2);
         const vendorAmount = totalPrice - commission;
 
@@ -132,7 +133,7 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             [
                 {
                     customer: isUserExists._id,
-                    vendor,
+                    vendor: vendorUserId,
                     orderNo,
                     products: productDetails,
                     totalPrice,
@@ -144,6 +145,7 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
                     paymentStatus: PAYMENT_STATUS.PENDING,
                     transactionId: "",
                     commission,
+                    tax,
                 },
             ],
             { session }
@@ -154,11 +156,37 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: Math.round(order[0].totalPrice * 100), // Stripe expects cents
                 currency: "usd",
+                payment_method_types: ["card"],
                 metadata: {
                     orderId: order[0]._id.toString(),
                 },
             });
-            clientSecret = paymentIntent.client_secret || "";
+            clientSecret = paymentIntent.client_secret as string;
+            //     const checkoutSession = await stripe.checkout.sessions.create({
+            //         payment_method_types: ["card"],
+            //         mode: "payment",
+
+            //         line_items: [
+            //             {
+            //                 price_data: {
+            //                     currency: "usd",
+            //                     product_data: {
+            //                         name: "Order Payment",
+            //                     },
+            //                     unit_amount: Math.round(totalPrice * 100),
+            //                 },
+            //                 quantity: 1,
+            //             },
+            //         ],
+
+            //         metadata: {
+            //             orderId: order[0]._id.toString(),
+            //         },
+
+            //         success_url: "http://localhost:3000/payment/success",
+            //         cancel_url: "http://localhost:3000/payment/cancel",
+            //     });
+            //     clientSecret = checkoutSession.url as string;
         }
 
         await session.commitTransaction();

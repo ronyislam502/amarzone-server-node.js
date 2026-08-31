@@ -2,8 +2,8 @@ import { Router } from "express";
 import { VariantControllers } from "./variant.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { VariantValidations } from "./variant.validation";
-import { multerUpload } from "../../config/multer.config";
 import { parseBody } from "../../middlewares/bodyParser";
+import { multerUpload } from "../../config/multer.config";
 
 const router = Router();
 
