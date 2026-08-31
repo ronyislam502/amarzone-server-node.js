@@ -11,6 +11,7 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
 import { OrderRoutes } from "../modules/order/order.route";
 import { ServiceReviewRoutes } from "../modules/serviceReview/serviceReview.route";
+import { PaymentRoutes } from "../modules/payment/payment.route";
 
 
 const router = Router();
@@ -64,6 +65,10 @@ const moduleRoutes = [
     path: "/service-reviews",
     route: ServiceReviewRoutes
   },
+  {
+    path: "/payments",
+    route: PaymentRoutes
+  }
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

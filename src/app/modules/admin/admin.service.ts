@@ -15,7 +15,6 @@ const allAdminsFromDB = async (query: Record<string, unknown>) => {
         .paginate()
         .fields()
 
-
     const meta = await adminsQuery.countTotal();
     const data = await adminsQuery.modelQuery;
 
@@ -126,5 +125,6 @@ const deleteAdminFromDB = async (id: string) => {
 export const AdminServices = {
     allAdminsFromDB,
     adminFromDB,
-    deleteAdminFromDB
+    deleteAdminFromDB,
+    updateAdminIntoDB
 }

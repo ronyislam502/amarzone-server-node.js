@@ -6,6 +6,9 @@ import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 
 const app: Application = express();
 
+// Webhook route must use express.raw before express.json() parses it
+app.use("/api/v1/payments/webhook", express.raw({ type: "application/json" }));
+
 app.use(express.json());
 app.use(cors());
 

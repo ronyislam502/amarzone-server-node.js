@@ -11,6 +11,7 @@ import { User } from "../user/user.model";
 import mongoose from "mongoose";
 import { Vendor } from "../vendor/vendor.model";
 import QueryBuilder from "../../builder/queryBuilder";
+import { stripe } from "../../utilities/stripe";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
 
@@ -148,9 +149,21 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             { session }
         );
 
+        let clientSecret = "";
+        if (order) {
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: Math.round(order[0].totalPrice * 100), // Stripe expects cents
+                currency: "usd",
+                metadata: {
+                    orderId: order[0]._id.toString(),
+                },
+            });
+            clientSecret = paymentIntent.client_secret || "";
+        }
+
         await session.commitTransaction();
         session.endSession();
-        return order[0];
+        return { order: order[0], clientSecret };
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
