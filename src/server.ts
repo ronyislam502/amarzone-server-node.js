@@ -2,6 +2,7 @@ import { Server } from "http";
 import app from "./app";
 import config from "./app/config";
 import mongoose from "mongoose";
+import { initializeSocket } from "./app/socket/socket";
 
 let server: Server;
 
@@ -11,6 +12,7 @@ async function main() {
     server = app.listen(config.port, () => {
       console.log(`Amarzone API listening on port: ${config.port}`);
     });
+    initializeSocket(server);
   } catch (err) {
     console.log(err);
   }

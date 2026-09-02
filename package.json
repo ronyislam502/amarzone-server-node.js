@@ -29,6 +29,7 @@
     "multer": "^2.2.0",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^9.0.5",
+    "socket.io": "^4.8.3",
     "stripe": "^22.6.0",
     "zod": "^3.24.0-canary.20240701T200529"
   },

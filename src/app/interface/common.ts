@@ -28,3 +28,23 @@ export const PAYMENT_STATUS = {
     UNPAID: "UNPAID",
     REFUNDED: "REFUNDED",
 } as const;
+
+export const CONVERSATION_TYPE = {
+    NORMAL: "NORMAL",
+    ORDER: "ORDER",
+    DISPUTE: "DISPUTE",
+    SUPPORT: "SUPPORT",
+} as const;
+
+export const MESSAGE_TYPE = {
+    TEXT: "TEXT",
+    IMAGE: "IMAGE",
+    VIDEO: "VIDEO",
+    FILE: "FILE",
+} as const;
+
+export const MESSAGE_STATUS = {
+    SENT: "SENT",
+    DELIVERED: "DELIVERED",
+    READ: "READ",
+} as const;
