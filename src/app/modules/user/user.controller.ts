@@ -4,19 +4,45 @@ import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { UserServices } from "./user.service";
 
+const createAdmin = catchAsync(async (req, res) => {
+    const { password, admin } = req.body
+    const result = await UserServices.createAdminIntoDB(req.file as TImageFile, password, admin);
 
-// const getAllUsers = catchAsync(async (req, res) => {
-//     const result = await UserServices.getAllUsersFromDB(req.query);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Admin created successfully",
+        data: result
+    })
+})
 
-//     sendResponse(res, {
-//         statusCode: httpStatus.OK,
-//         success: true,
-//         message: "Users fetched successfully",
-//         meta: result.meta,
-//         data: result.result
-//     });
-// });
+
+const createVendor = catchAsync(async (req, res) => {
+    const { password, vendor } = req.body
+    const result = await UserServices.createVendorIntoDB(req.files as TImageFiles, password, vendor);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Vendor created successfully",
+        data: result
+    })
+})
+
+const createCustomer = catchAsync(async (req, res) => {
+    const { password, customer } = req.body
+    const result = await UserServices.createCustomerIntoDB(req.file as TImageFile, password, customer);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Customer created successfully",
+        data: result
+    })
+})
 
 export const UserControllers = {
-    // getAllUsers
+    createAdmin,
+    createVendor,
+    createCustomer
 }
