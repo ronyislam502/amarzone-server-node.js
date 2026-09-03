@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { VendorServices } from "./vendor.service";
+import { TImageFiles } from "../../interface/image.interface";
 
 const allVendors = catchAsync(async (req, res) => {
     const result = await VendorServices.allVendorsFromDB(req.query);
@@ -29,6 +30,18 @@ const vendor = catchAsync(async (req, res) => {
     })
 })
 
+const updateVendor = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await VendorServices.updateVendorIntoDB(id, req.files as TImageFiles, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Vendor updated successfully",
+        data: result
+    })
+})
+
 const deleteVendor = catchAsync(async (req, res) => {
     const { id } = req.params
     const result = await VendorServices.deleteVendorFromDB(id);
@@ -45,5 +58,6 @@ const deleteVendor = catchAsync(async (req, res) => {
 export const VendorControllers = {
     allVendors,
     vendor,
+    updateVendor,
     deleteVendor
 }

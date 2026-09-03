@@ -18,12 +18,9 @@ const createCustomerValidationSchema = z.object({
 
 const updateCustomerValidationSchema = z.object({
     body: z.object({
-        customer: z.object({
-            name: z.string().optional(),
-            email: z.string().optional(),
-            phone: z.string().optional(),
-            address: updateAddressValidationSchema,
-        }),
+        name: z.string().optional(),
+        phone: z.string().optional(),
+        address: updateAddressValidationSchema.optional(),
     }),
 });
 

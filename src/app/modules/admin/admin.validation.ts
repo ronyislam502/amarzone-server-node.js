@@ -15,7 +15,6 @@ const updateAdminValidationSchema = z.object({
   body: z.object({
     admin: z.object({
       name: z.string().optional(),
-      email: z.string().optional(),
       phone: z.string().optional(),
     }),
   }),

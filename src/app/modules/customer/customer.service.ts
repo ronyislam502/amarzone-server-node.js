@@ -4,6 +4,8 @@ import AppError from "../../errors/AppError";
 import { Customer } from "./customer.model"
 import mongoose from "mongoose";
 import { User } from "../user/user.model";
+import { TCustomer } from "./customer.interface";
+import { TImageFile } from "../../interface/image.interface";
 
 const allCustomersFromDB = async (query: Record<string, unknown>) => {
     const customersQuery = new QueryBuilder(Customer.find(), query)
@@ -18,6 +20,70 @@ const allCustomersFromDB = async (query: Record<string, unknown>) => {
 
     return { meta, data }
 }
+
+const updateCustomerIntoDB = async (id: string, image: TImageFile, payload: Partial<TCustomer>) => {
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const isCustomer = await Customer.findById(id).session(session);
+
+        if (!isCustomer) {
+            throw new AppError(httpStatus.NOT_FOUND, "Customer not found");
+        }
+
+        const { address, ...remainingData } = payload;
+        const modifiedData: Record<string, unknown> = { ...remainingData };
+
+
+        if (address && Object.keys(address).length) {
+            for (const [key, value] of Object.entries(address)) {
+                modifiedData[`address.${key}`] = value;
+            }
+        }
+
+        // Relation user: only name field is updateable
+        if (payload.name) {
+            const updatedUser = await User.findByIdAndUpdate(
+                isCustomer.user,
+                { name: payload.name },
+                {
+                    new: true,
+                    session,
+                    runValidators: true,
+                }
+            );
+
+            if (!updatedUser) {
+                throw new AppError(httpStatus.BAD_REQUEST, "Failed to update user");
+            }
+        }
+
+        const updatedCustomer = await Customer.findByIdAndUpdate(
+            isCustomer._id,
+            modifiedData,
+            {
+                new: true,
+                session,
+                runValidators: true,
+            }
+        );
+
+        if (!updatedCustomer) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Failed to update customer");
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return updatedCustomer;
+    } catch (error: any) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw error;
+    }
+};
 
 const deleteCustomerFromDB = async (id: string) => {
     const session = await mongoose.startSession();
@@ -58,5 +124,6 @@ const deleteCustomerFromDB = async (id: string) => {
 
 export const CustomerServices = {
     allCustomersFromDB,
-    deleteCustomerFromDB
+    deleteCustomerFromDB,
+    updateCustomerIntoDB
 }
