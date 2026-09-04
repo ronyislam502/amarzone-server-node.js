@@ -234,10 +234,10 @@ function generateQrCodeSvg(): string {
  * Generates identical HTML matching the Amarzone PDF invoice layout
  */
 export function generateInvoiceHtml(data: IInvoiceData): string {
-  const currency = data.currencySymbol || "৳";
+  const currency = data.currencySymbol || "$";
   const words =
     data.grandTotalInWords ||
-    `(BDT ${numberToWords(data.grandTotal)} Only)`;
+    `(USD ${numberToWords(data.grandTotal)} Only)`;
 
   const barcodeSvg = generateBarcodeSvg(data.invoiceNo || data.orderId || "AZ-INV-2026-000245");
   const qrCodeSvg = generateQrCodeSvg();
@@ -250,40 +250,36 @@ export function generateInvoiceHtml(data: IInvoiceData): string {
         <td class="col-product">
           <div class="product-wrapper">
             <div class="product-thumb">
-              ${
-                item.image
-                  ? `<img src="${item.image}" alt="${item.title}" class="thumb-img" />`
-                  : `<svg viewBox="0 0 24 24" class="thumb-icon" fill="none" stroke="#9ca3af" stroke-width="1.5">
+              ${item.image
+          ? `<img src="${item.image}" alt="${item.title}" class="thumb-img" />`
+          : `<svg viewBox="0 0 24 24" class="thumb-icon" fill="none" stroke="#9ca3af" stroke-width="1.5">
                       <rect x="3" y="3" width="18" height="18" rx="2" />
                       <circle cx="8.5" cy="8.5" r="1.5" />
                       <polyline points="21 15 16 10 5 21" />
                     </svg>`
-              }
+        }
             </div>
             <div class="product-info">
               <div class="product-title">${item.title}</div>
-              ${
-                item.variantInfo
-                  ? `<div class="product-variant">${item.variantInfo}</div>`
-                  : ""
-              }
+              ${item.variantInfo
+          ? `<div class="product-variant">${item.variantInfo}</div>`
+          : ""
+        }
             </div>
           </div>
         </td>
         <td class="col-seller">
           <div class="seller-name">${item.sellerName}</div>
-          <div class="fulfilled-badge ${
-            (item.fulfilledBy || "").toLowerCase().includes("amarzone")
-              ? "badge-amarzone"
-              : "badge-seller"
-          }">
-            ${
-              item.fulfilledBy
-                ? item.fulfilledBy.startsWith("Fulfilled")
-                  ? item.fulfilledBy
-                  : `Fulfilled by ${item.fulfilledBy}`
-                : "Fulfilled by Amarzone"
-            }
+          <div class="fulfilled-badge ${(item.fulfilledBy || "").toLowerCase().includes("amarzone")
+          ? "badge-amarzone"
+          : "badge-seller"
+        }">
+            ${item.fulfilledBy
+          ? item.fulfilledBy.startsWith("Fulfilled")
+            ? item.fulfilledBy
+            : `Fulfilled by ${item.fulfilledBy}`
+          : "Fulfilled by Amarzone"
+        }
           </div>
         </td>
         <td class="col-asin-sku">
@@ -1113,9 +1109,8 @@ export function generateInvoiceHtml(data: IInvoiceData): string {
           </svg>
           <span>${data.billingAddress.phone}</span>
         </div>
-        ${
-          data.billingAddress.email
-            ? `
+        ${data.billingAddress.email
+      ? `
         <div class="contact-item">
           <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#374151" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -1123,8 +1118,8 @@ export function generateInvoiceHtml(data: IInvoiceData): string {
           </svg>
           <span>${data.billingAddress.email}</span>
         </div>`
-            : ""
-        }
+      : ""
+    }
       </div>
 
       <!-- SHIPPING ADDRESS -->
@@ -1507,8 +1502,8 @@ export function mapOrderToInvoiceData(order: any, customerProfile?: any): IInvoi
     const variantInfo = colorAttr
       ? `Color: ${colorAttr.value}`
       : variant.attributes?.[0]
-      ? `${variant.attributes[0].type}: ${variant.attributes[0].value}`
-      : undefined;
+        ? `${variant.attributes[0].type}: ${variant.attributes[0].value}`
+        : undefined;
 
     const unitPrice = item.price || 0;
     const qty = item.quantity || 1;
@@ -1650,36 +1645,7 @@ export const sampleCloneInvoiceData: IInvoiceData = {
   sellerHandlingFee: 60,
   discount: 700,
   grandTotal: 9067,
-  grandTotalInWords: "(BDT Nine Thousand Sixty Seven Only)",
-  currencySymbol: "৳",
-};
-
-/**
- * Uploads generated PDF buffer to Cloudinary in raw resource mode
- */
-export const uploadPdfToCloudinary = (
-  pdfBuffer: Buffer,
-  fileName: string
-): Promise<{ secure_url: string; public_id: string }> => {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinaryUpload.uploader.upload_stream(
-      {
-        resource_type: "raw",
-        folder: "amarzone/invoices",
-        public_id: `${fileName}.pdf`,
-        format: "pdf",
-      },
-      (error, result) => {
-        if (error || !result) {
-          return reject(error || new Error("Failed to upload PDF to Cloudinary"));
-        }
-        resolve({
-          secure_url: result.secure_url,
-          public_id: result.public_id,
-        });
-      }
-    );
-    uploadStream.end(pdfBuffer);
-  });
+  grandTotalInWords: "(USD Nine Thousand Sixty Seven Only)",
+  currencySymbol: "$",
 };
 

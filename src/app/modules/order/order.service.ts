@@ -12,6 +12,9 @@ import mongoose from "mongoose";
 import { Vendor } from "../vendor/vendor.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import { stripe } from "../../utilities/stripe";
+import { AccountHealthServices } from "../health/health.service";
+import { calculateBuyBox } from "../../utilities/buyBox";
+import { recalculateBestSellers } from "../../utilities/calculate";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -310,9 +313,38 @@ const getSingleOrderFromDB = async (user: JwtPayload, id: string) => {
     return order;
 };
 
+const triggerPostOrderOperations = async (orderId: string) => {
+    try {
+        const order = await Order.findById(orderId).populate("products.product");
+        if (!order) return;
+
+        const vendorId = order.vendor.toString();
+
+        // 1. Recalculate Vendor Account Health
+        await AccountHealthServices.calculateVendorHealth(vendorId);
+
+        // 2. Recalculate Buy Box eligibility
+        await calculateBuyBox(vendorId);
+
+        // 3. Recalculate Best Seller
+        if (order.products && order.products.length > 0) {
+            const categoryIds = order.products
+                .map((p: any) => p.product?.category?.toString())
+                .filter(Boolean);
+            const uniqueCategoryIds = [...new Set(categoryIds)];
+            if (uniqueCategoryIds.length > 0) {
+                await recalculateBestSellers(uniqueCategoryIds);
+            }
+        }
+    } catch (error) {
+        console.error(`[Order Service Post Operations] Error triggering post-order actions for order ${orderId}:`, error);
+    }
+};
+
 export const OrderServices = {
     createOrderIntoDB,
     getAllOrdersFromDB,
     allOrdersByUserFromDB,
     getSingleOrderFromDB,
+    triggerPostOrderOperations
 };

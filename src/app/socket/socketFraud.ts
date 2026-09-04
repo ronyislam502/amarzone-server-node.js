@@ -1,18 +1,26 @@
 import { Server, Socket } from "socket.io";
-import { getIO } from "./socket";
 import { IFraud } from "../modules/fraud/fraud.interface";
 import { FRAUD_STATUS, SOCKET_EVENTS, USER_ROLE } from "../interface/common";
+import { getIO } from "./socket";
 
 /**
  * Register fraud-related socket connection handlers.
  * Admin users are joined to the "ADMIN" room to receive real-time fraud alerts.
  */
 export const registerFraudHandlers = (io: Server, socket: Socket) => {
-  const user = socket.data?.user;
-  if (user && (user.role === USER_ROLE.ADMIN || user.role === USER_ROLE.SUPER_ADMIN)) {
-    socket.join(SOCKET_EVENTS.ADMIN_ROOM);
-    console.log(`[Socket Fraud] Admin ${user._id} (${user.email}) joined ADMIN room`);
-  }
+  const checkAndJoinAdmin = (user?: any) => {
+    const role = user?.role || socket.data?.user?.role;
+    if (role === USER_ROLE.ADMIN || role === USER_ROLE.SUPER_ADMIN) {
+      socket.join(SOCKET_EVENTS.ADMIN_ROOM);
+      console.log(`[Socket Fraud] Socket ${socket.id} joined ADMIN room`);
+    }
+  };
+
+  checkAndJoinAdmin(socket.data?.user);
+
+  socket.on("join_admin", () => {
+    checkAndJoinAdmin(socket.data?.user);
+  });
 };
 
 const getUserIdString = (user: any): string | null => {

@@ -10,3 +10,31 @@ cloudinary.config({
 export const cloudinaryUpload = cloudinary;
 
 
+export const uploadPdfToCloudinary = (
+  pdfBuffer: Buffer,
+  fileName: string
+): Promise<{ secure_url: string; public_id: string }> => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinaryUpload.uploader.upload_stream(
+      {
+        resource_type: "raw",
+        folder: "amarzone/invoices",
+        public_id: `${fileName}.pdf`,
+        format: "pdf",
+      },
+      (error, result) => {
+        if (error || !result) {
+          return reject(error || new Error("Failed to upload PDF to Cloudinary"));
+        }
+        resolve({
+          secure_url: result.secure_url,
+          public_id: result.public_id,
+        });
+      }
+    );
+    uploadStream.end(pdfBuffer);
+  });
+};
+
+
+

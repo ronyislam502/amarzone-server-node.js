@@ -76,3 +76,18 @@ export const SOCKET_EVENTS = {
     CATEGORY_BEST_SELLER_UPDATED: "category-best-seller-updated",
 } as const;
 
+export const SLA_METRIC = {
+    ORDER_DEFECT_RATE: "ORDER_DEFECT_RATE",
+    LATE_SHIPMENT_RATE: "LATE_SHIPMENT_RATE",
+    CANCELLATION_RATE: "CANCELLATION_RATE",
+    VALID_TRACKING_RATE: "VALID_TRACKING_RATE",
+} as const;
+
+export const VENDOR_HEALTH = {
+    HEALTHY: "HEALTHY",
+    AT_RISK: "AT_RISK",
+    CRITICAL: "CRITICAL",
+    SUSPENDED: "SUSPENDED",
+} as const;
+
+

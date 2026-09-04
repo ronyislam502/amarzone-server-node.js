@@ -3,7 +3,7 @@ import cors from "cors";
 import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
-import { PaymentControllers } from "./app/modules/payment/payment.controller";
+import { PaymentControllers } from "./app/modules/payment/payment/payment.controller";
 
 const app: Application = express();
 

@@ -5,9 +5,9 @@ import { Customer } from "../modules/customer/customer.model";
 import {
   generateInvoicePdf,
   mapOrderToInvoiceData,
-  uploadPdfToCloudinary,
 } from "../utilities/generatePdf";
 import sendEmail from "../utilities/sendEmail";
+import { uploadPdfToCloudinary } from "../config/cloudinary.config";
 
 export const invoiceWorker = new Worker(
   "invoice",
@@ -63,15 +63,14 @@ export const invoiceWorker = new Worker(
             <p><strong>Order ID:</strong> ${invoiceData.orderId}<br/>
                <strong>Invoice No:</strong> #${invoiceData.invoiceNo}<br/>
                <strong>Grand Total:</strong> ৳ ${invoiceData.grandTotal.toLocaleString("en-US")}</p>
-            ${
-              invoiceUrl
-                ? `<div style="margin: 25px 0;">
+            ${invoiceUrl
+            ? `<div style="margin: 25px 0;">
                     <a href="${invoiceUrl}" target="_blank" style="background-color: #090b0e; color: #dfa841; padding: 12px 22px; text-decoration: none; border-radius: 6px; font-weight: bold; border: 1px solid #dfa841; display: inline-block;">
                       View & Download PDF Invoice
                     </a>
                    </div>`
-                : ""
-            }
+            : ""
+          }
             <p style="color: #6b7280; font-size: 12px; margin-top: 25px;">Shop More, Pay Less &mdash; Amarzone Ltd.</p>
           </div>`,
           `Your Amarzone Order Invoice - #${invoiceData.invoiceNo}`

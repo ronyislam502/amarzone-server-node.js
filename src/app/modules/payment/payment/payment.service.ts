@@ -1,16 +1,14 @@
 import Stripe from "stripe";
-// import config from "../../config";
-import { Order } from "../order/order.model";
+import { Order } from "../../order/order.model";
 import { Payment } from "./payment.model";
-import { stripe } from "../../utilities/stripe";
-// import AppError from "../../errors/AppError";
-// import httpStatus from "http-status";
-import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
+import { stripe } from "../../../utilities/stripe";
+import { ORDER_STATUS, PAYMENT_STATUS } from "../../../interface/common";
 import mongoose from "mongoose";
-import { OrderServices } from "../order/order.service";
-import { invoiceQueue } from "../../redis/invoice.queue";
-import { Inventory } from "../inventory/inventory.model";
-
+import { OrderServices } from "../../order/order.service";
+import { invoiceQueue } from "../../../redis/invoice.queue";
+import { Inventory } from "../../inventory/inventory.model";
+import { ProcessedEvent } from "../processedEvent/processedEvent.model";
+import { emitNotification } from "../../../socket/socket";
 
 const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: string) => {
     let event: Stripe.Event;
@@ -26,11 +24,11 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
     }
 
     // Idempotency check: check if the event was already processed
-    // const existingEvent = await ProcessedEvent.findOne({ eventId: event.id });
-    // if (existingEvent) {
-    //     console.log(`[Webhook Service] Duplicate event detected and ignored: ${event.id}`);
-    //     return;
-    // }
+    const existingEvent = await ProcessedEvent.findOne({ eventId: event.id });
+    if (existingEvent) {
+        console.log(`[Webhook Service] Duplicate event detected and ignored: ${event.id}`);
+        return;
+    }
 
     // console.log(`[Webhook Service] Processing Stripe Event: ${event.type} (${event.id})`);
 
@@ -85,39 +83,39 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 );
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
 
                 // Explicitly trigger post order operations
-                // try {
-                //     await OrderServices.triggerPostOrderOperations(orderId.toString());
-                // } catch (opError) {
-                //     console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
-                // }
+                try {
+                    await OrderServices.triggerPostOrderOperations(orderId.toString());
+                } catch (opError) {
+                    console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+                }
 
                 // // Emit notifications via Socket.IO (wrapped in try/catch to isolate errors)
-                // try {
-                //     emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
-                //         orderId,
-                //         orderNo: updatedOrder.orderNo,
-                //         amount: updatedOrder.totalPrice,
-                //         message: "Your payment was processed successfully!",
-                //     });
-                // } catch (socketError) {
-                //     console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
-                // }
+                try {
+                    emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
+                        orderId,
+                        orderNo: updatedOrder.orderNo,
+                        amount: updatedOrder.totalPrice,
+                        message: "Your payment was processed successfully!",
+                    });
+                } catch (socketError) {
+                    console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
+                }
 
-                // try {
-                //     emitNotification(`vendor:${updatedOrder.vendor}`, "new_order", {
-                //         orderId,
-                //         orderNo: updatedOrder.orderNo,
-                //         message: "You have a new paid order!",
-                //     });
-                // } catch (socketError) {
-                //     console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
-                // }
+                try {
+                    emitNotification(`vendor:${updatedOrder.vendor}`, "new_order", {
+                        orderId,
+                        orderNo: updatedOrder.orderNo,
+                        message: "You have a new paid order!",
+                    });
+                } catch (socketError) {
+                    console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
+                }
 
                 // Add job to BullMQ with unique jobId to prevent duplicate invoice generation
                 if (isPaid) {
@@ -189,33 +187,33 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 dbSession.endSession();
 
                 // Explicitly trigger post order operations
-                // try {
-                //     await OrderServices.triggerPostOrderOperations(orderId.toString());
-                // } catch (opError) {
-                //     console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
-                // }
+                try {
+                    await OrderServices.triggerPostOrderOperations(orderId.toString());
+                } catch (opError) {
+                    console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+                }
 
                 // Emit notifications via Socket.IO
-                // try {
-                //     emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
-                //         orderId,
-                //         orderNo: updatedOrder.orderNo,
-                //         amount: updatedOrder.totalPrice,
-                //         message: "Your payment was processed successfully!",
-                //     });
-                // } catch (socketError) {
-                //     console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
-                // }
+                try {
+                    emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
+                        orderId,
+                        orderNo: updatedOrder.orderNo,
+                        amount: updatedOrder.totalPrice,
+                        message: "Your payment was processed successfully!",
+                    });
+                } catch (socketError) {
+                    console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
+                }
 
-                // try {
-                //     emitNotification(`vendor:${updatedOrder.vendor}`, "new_order", {
-                //         orderId,
-                //         orderNo: updatedOrder.orderNo,
-                //         message: "You have a new paid order!",
-                //     });
-                // } catch (socketError) {
-                //     console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
-                // }
+                try {
+                    emitNotification(`vendor:${updatedOrder.vendor}`, "new_order", {
+                        orderId,
+                        orderNo: updatedOrder.orderNo,
+                        message: "You have a new paid order!",
+                    });
+                } catch (socketError) {
+                    console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
+                }
 
                 // Add job to BullMQ
                 if (isPaid) {
@@ -296,28 +294,28 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 }
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
 
                 // Explicitly trigger post order operations
-                // try {
-                //     await OrderServices.triggerPostOrderOperations(orderId.toString());
-                // } catch (opError) {
-                //     console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
-                // }
+                try {
+                    await OrderServices.triggerPostOrderOperations(orderId.toString());
+                } catch (opError) {
+                    console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+                }
 
                 // // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)
-                // try {
-                //     emitNotification(`customer:${orderData.customer}`, "payment_failed", {
-                //         orderId,
-                //         orderNo: orderData.orderNo,
-                //         message: "Your payment failed. The order has been cancelled and stock released.",
-                //     });
-                // } catch (socketError) {
-                //     console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
-                // }
+                try {
+                    emitNotification(`customer:${orderData.customer}`, "payment_failed", {
+                        orderId,
+                        orderNo: orderData.orderNo,
+                        message: "Your payment failed. The order has been cancelled and stock released.",
+                    });
+                } catch (socketError) {
+                    console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
+                }
 
             } catch (error) {
                 await dbSession.abortTransaction();
@@ -374,30 +372,30 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 );
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
 
                 // Explicitly trigger post order operations
-                // try {
-                //     await OrderServices.triggerPostOrderOperations(orderId.toString());
-                // } catch (opError) {
-                //     console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
-                // }
+                try {
+                    await OrderServices.triggerPostOrderOperations(orderId.toString());
+                } catch (opError) {
+                    console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
+                }
 
-                // if (updatedOrder) {
-                //     // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)
-                //     try {
-                //         emitNotification(`customer:${updatedOrder.customer}`, "payment_refunded", {
-                //             orderId,
-                //             orderNo: updatedOrder.orderNo,
-                //             message: "Your order payment has been refunded.",
-                //         });
-                //     } catch (socketError) {
-                //         console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
-                //     }
-                // }
+                if (updatedOrder) {
+                    // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)
+                    try {
+                        emitNotification(`customer:${updatedOrder.customer}`, "payment_refunded", {
+                            orderId,
+                            orderNo: updatedOrder.orderNo,
+                            message: "Your order payment has been refunded.",
+                        });
+                    } catch (socketError) {
+                        console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
+                    }
+                }
 
             } catch (error) {
                 await dbSession.abortTransaction();
@@ -417,6 +415,4 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
 export const PaymentServices = {
     stripeWebhookPayment
-}
-
-
+};

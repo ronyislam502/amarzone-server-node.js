@@ -12,11 +12,30 @@ import { checkConversationParticipant } from "../utilities/chat";
 import { sendSocketResponse } from "./socketResponse";
 import { ConversationValidations } from "../modules/chat/conversation/conversation.validation";
 import { MessageValidations } from "../modules/chat/message/message.validation";
+import { SOCKET_EVENTS, USER_ROLE } from "../interface/common";
 
 type TSocketUser = {
   _id: Types.ObjectId;
   email: string;
   role: string;
+};
+
+/**
+ * Joins personal user room, vendor room (if vendor), and admin room (if admin).
+ */
+const joinUserRooms = (socket: Socket, user: TSocketUser) => {
+  const userId = user._id.toString();
+  socket.join(userId);
+  socket.join(`user:${userId}`);
+
+  if (user.role === USER_ROLE.VENDOR) {
+    socket.join(`vendor:${userId}`);
+  }
+
+  if (user.role === USER_ROLE.ADMIN || user.role === USER_ROLE.SUPER_ADMIN) {
+    socket.join(SOCKET_EVENTS.ADMIN_ROOM);
+    console.log(`[Socket] Admin user ${userId} joined ${SOCKET_EVENTS.ADMIN_ROOM} room`);
+  }
 };
 
 /**
@@ -51,7 +70,7 @@ export const getSocketUser = async (
       const user = await User.findOne({ email: decoded.email, isDeleted: false });
       if (user) {
         socket.data.user = { _id: user._id, email: user.email, role: user.role };
-        socket.join(user._id.toString());
+        joinUserRooms(socket, socket.data.user);
         return socket.data.user;
       }
     } catch {
@@ -64,7 +83,7 @@ export const getSocketUser = async (
     const user = await User.findOne({ _id: data.userId, isDeleted: false });
     if (user) {
       socket.data.user = { _id: user._id, email: user.email, role: user.role };
-      socket.join(user._id.toString());
+      joinUserRooms(socket, socket.data.user);
       return socket.data.user;
     }
   }
@@ -74,7 +93,7 @@ export const getSocketUser = async (
     const user = await User.findOne({ email: data.userEmail, isDeleted: false });
     if (user) {
       socket.data.user = { _id: user._id, email: user.email, role: user.role };
-      socket.join(user._id.toString());
+      joinUserRooms(socket, socket.data.user);
       return socket.data.user;
     }
   }
