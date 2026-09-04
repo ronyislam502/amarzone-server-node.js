@@ -25,4 +25,11 @@ router.get(
     OrderControllers.allOrdersByUser
 );
 
+
+router.get(
+    "/:id",
+    auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER, USER_ROLE.VENDOR),
+    OrderControllers.getSingleOrder
+);
+
 export const OrderRoutes = router;

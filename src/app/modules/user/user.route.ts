@@ -18,7 +18,4 @@ router.post("/create-vendor", multerUpload.fields([{ name: "logo", maxCount: 1 }
 router.post("/create-customer", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), multerUpload.single("image"), parseBody, validateRequest(CustomerValidations.createCustomerValidationSchema), UserControllers.createCustomer);
 
 
-
-
-
 export const UserRoutes = router;

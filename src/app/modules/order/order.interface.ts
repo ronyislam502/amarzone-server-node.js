@@ -36,5 +36,6 @@ export type TOrder = {
     paymentStatus: keyof typeof PAYMENT_STATUS;
     transactionId: string;
     tracking?: TTracking;
+    invoiceUrl?: string;
     isDeleted: boolean;
 };

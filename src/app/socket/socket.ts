@@ -1,6 +1,6 @@
 import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
-import { userSocket } from "./user.socket";
+import { chatSocket } from "./chat.socket";
 
 
 export const initializeSocket = (server: HttpServer) => {
@@ -13,8 +13,8 @@ export const initializeSocket = (server: HttpServer) => {
     io.on("connection", (socket) => {
         console.log("A user connected:", socket.id);
 
-        // Initialize user-related socket events
-        userSocket(io, socket);
+        // Initialize chat-related socket events
+        chatSocket(io, socket);
 
         socket.on("disconnect", () => {
             console.log("User disconnected:", socket.id);

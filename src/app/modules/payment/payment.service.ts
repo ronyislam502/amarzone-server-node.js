@@ -7,6 +7,10 @@ import { stripe } from "../../utilities/stripe";
 // import httpStatus from "http-status";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 import mongoose from "mongoose";
+import { OrderServices } from "../order/order.service";
+import { invoiceQueue } from "../../redis/invoice.queue";
+import { Inventory } from "../inventory/inventory.model";
+
 
 const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: string) => {
     let event: Stripe.Event;
@@ -28,7 +32,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
     //     return;
     // }
 
-    console.log(`[Webhook Service] Processing Stripe Event: ${event.type} (${event.id})`);
+    // console.log(`[Webhook Service] Processing Stripe Event: ${event.type} (${event.id})`);
 
     switch (event.type) {
         case "checkout.session.completed": {
@@ -93,7 +97,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 //     console.error("[Webhook Service] Failed to trigger post-order operations:", opError);
                 // }
 
-                // Emit notifications via Socket.IO (wrapped in try/catch to isolate errors)
+                // // Emit notifications via Socket.IO (wrapped in try/catch to isolate errors)
                 // try {
                 //     emitNotification(`customer:${updatedOrder.customer}`, "payment_success", {
                 //         orderId,
@@ -116,10 +120,10 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 // }
 
                 // Add job to BullMQ with unique jobId to prevent duplicate invoice generation
-                // if (isPaid) {
-                //     await invoiceQueue.add("processInvoice", { orderId }, { jobId: orderId });
-                //     console.log(`[Webhook Service] Enqueued post-payment background job with jobId: ${orderId}`);
-                // }
+                if (isPaid) {
+                    await invoiceQueue.add("processInvoice", { orderId }, { jobId: orderId });
+                    console.log(`[Webhook Service] Enqueued post-payment background job with jobId: ${orderId}`);
+                }
 
             } catch (error) {
                 await dbSession.abortTransaction();
@@ -213,11 +217,11 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 //     console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
                 // }
 
-                // // Add job to BullMQ
-                // if (isPaid) {
-                //     await invoiceQueue.add("processInvoice", { orderId }, { jobId: orderId });
-                //     console.log(`[Webhook Service] Enqueued post-payment background job with jobId: ${orderId}`);
-                // }
+                // Add job to BullMQ
+                if (isPaid) {
+                    await invoiceQueue.add("processInvoice", { orderId }, { jobId: orderId });
+                    console.log(`[Webhook Service] Enqueued post-payment background job with jobId: ${orderId}`);
+                }
 
             } catch (error) {
                 await dbSession.abortTransaction();
@@ -277,19 +281,19 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 );
 
                 // Restore inventory
-                // for (const item of orderData.products) {
-                //     await InventoryProduct.findOneAndUpdate(
-                //         {
-                //             product: item.product,
-                //             "seller.vendor": orderData.vendor,
-                //         },
-                //         {
-                //             $inc: { "seller.quantity": item.quantity },
-                //             $set: { "seller.isStock": true },
-                //         },
-                //         { session: dbSession }
-                //     );
-                // }
+                for (const item of orderData.products) {
+                    await Inventory.findOneAndUpdate(
+                        {
+                            product: item.variant,
+                            "seller.vendor": orderData.vendor,
+                        },
+                        {
+                            $inc: { "seller.quantity": item.quantity },
+                            $set: { "seller.isStock": true },
+                        },
+                        { session: dbSession }
+                    );
+                }
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
                 // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
@@ -410,7 +414,6 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
     console.log(`[Webhook Service] Event ${event.id} marked as successfully processed.`);
 };
-
 
 export const PaymentServices = {
     stripeWebhookPayment

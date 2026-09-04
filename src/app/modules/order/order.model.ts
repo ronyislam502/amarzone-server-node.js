@@ -156,6 +156,10 @@ const orderSchema = new Schema<TOrder>(
             type: trackingSchema,
             required: false,
         },
+        invoiceUrl: {
+            type: String,
+            default: "",
+        },
         isDeleted: {
             type: Boolean,
             default: false,

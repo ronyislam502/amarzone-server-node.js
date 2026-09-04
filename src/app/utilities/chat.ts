@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import httpStatus from "http-status";
 import AppError from "../errors/AppError";
 import { User } from "../modules/user/user.model";
+import { Conversation } from "../modules/chat/conversation/conversation.model";
 
 
 /**

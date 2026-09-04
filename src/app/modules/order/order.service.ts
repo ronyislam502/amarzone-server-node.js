@@ -255,10 +255,64 @@ const allOrdersByUserFromDB = async (user: JwtPayload, query: Record<string, unk
     const result = await ordersQuery.modelQuery;
 
     return { meta, result };
-}
+};
+
+const getSingleOrderFromDB = async (user: JwtPayload, id: string) => {
+    const isUserExists = await User.isUserExistsByEmail(user?.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "This user not found");
+    }
+
+    const query = mongoose.Types.ObjectId.isValid(id)
+        ? { $or: [{ _id: id }, { orderNo: id }] }
+        : { orderNo: id };
+
+    const order = await Order.findOne(query)
+        .populate("customer", "name email")
+        .populate("vendor", "name email")
+        .populate("tracking.shippedBy", "name email")
+        .populate({
+            path: "products.variant",
+            populate: {
+                path: "product",
+                select: "title thumbnail",
+            },
+        });
+
+    if (!order) {
+        throw new AppError(httpStatus.NOT_FOUND, "Order not found");
+    }
+
+    const customerId = (order.customer as any)?._id?.toString() || order.customer?.toString();
+    const vendorId = (order.vendor as any)?._id?.toString() || order.vendor?.toString();
+
+    if (
+        isUserExists.role === USER_ROLE.CUSTOMER &&
+        customerId !== isUserExists._id.toString()
+    ) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You are not authorized to view this order"
+        );
+    }
+
+    if (
+        isUserExists.role === USER_ROLE.VENDOR &&
+        vendorId !== isUserExists._id.toString()
+    ) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You are not authorized to view this order"
+        );
+    }
+
+    return order;
+};
 
 export const OrderServices = {
     createOrderIntoDB,
     getAllOrdersFromDB,
-    allOrdersByUserFromDB
-}
+    allOrdersByUserFromDB,
+    getSingleOrderFromDB,
+};
