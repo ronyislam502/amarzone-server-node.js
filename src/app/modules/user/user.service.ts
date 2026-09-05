@@ -13,6 +13,7 @@ import { Vendor } from "../vendor/vendor.model"
 import { Customer } from "../customer/customer.model"
 import { TCustomer } from "../customer/customer.interface"
 import { JwtPayload } from "jsonwebtoken"
+import { NotificationServices } from "../notification/notification.service"
 
 const createAdminIntoDB = async (image: TImageFile, password: string, payload: TAdmin) => {
     const userData: Partial<TUser> = {
@@ -59,8 +60,8 @@ const createAdminIntoDB = async (image: TImageFile, password: string, payload: T
 
 const createVendorIntoDB = async (images: TImageFiles, password: string, payload: TVendor) => {
 
-    const logo = images?.logo[0];
-    const banner = images?.banner[0];
+    const logo = images?.logo?.[0];
+    const banner = images?.banner?.[0];
 
     if (logo && logo.path) {
         payload.logo = logo.path;
@@ -96,6 +97,16 @@ const createVendorIntoDB = async (images: TImageFiles, password: string, payload
         }
         await session.commitTransaction();
         await session.endSession();
+        try {
+            await NotificationServices.createNotificationIntoDB({
+                recipientRole: USER_ROLE.ADMIN,
+                type: "NEW_ACCOUNT",
+                message: `A new vendor account (${payload.name}) has been created.`,
+                relatedId: newUser[0]._id,
+            });
+        } catch (err) {
+            console.error("Failed to create new vendor notification", err);
+        }
 
         return newVendor;
     } catch (error: any) {
@@ -138,6 +149,17 @@ const createCustomerIntoDB = async (image: TImageFile, password: string, payload
 
         await session.commitTransaction();
         await session.endSession();
+
+        try {
+            await NotificationServices.createNotificationIntoDB({
+                recipientRole: USER_ROLE.ADMIN,
+                type: "NEW_ACCOUNT",
+                message: `A new customer account (${payload.name}) has been created.`,
+                relatedId: newUser[0]._id,
+            });
+        } catch (err) {
+            console.error("Failed to create new customer notification", err);
+        }
 
         return newCustomer;
     } catch (error: any) {

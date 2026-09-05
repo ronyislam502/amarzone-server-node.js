@@ -7,7 +7,7 @@ import { Variant } from "../variant/variant.model";
 import { Order } from "../order/order.model";
 import { ProductReview } from "./productReview.model";
 import QueryBuilder from "../../builder/queryBuilder";
-import { ORDER_STATUS } from "../../interface/common";
+import { ORDER_STATUS, USER_ROLE } from "../../interface/common";
 
 const createProductReviewIntoDB = async (user: JwtPayload, payload: Partial<TProductReview>) => {
   const isUser = await User.isUserExistsByEmail(user.email);
@@ -116,9 +116,37 @@ const allReviewsByProductFromDB = async (id: string, query: Record<string, unkno
   };
 };
 
+const deleteProductReviewFromDB = async (user: JwtPayload, id: string) => {
+  const isUser = await User.isUserExistsByEmail(user.email);
+  if (!isUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const review = await ProductReview.findOne({ _id: id, isDeleted: false });
+  if (!review) {
+    throw new AppError(httpStatus.NOT_FOUND, "Review not found");
+  }
+
+  // Check if customer, verify ownership
+  if (user.role === USER_ROLE.CUSTOMER && review.customer.toString() !== isUser._id.toString()) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to delete this review");
+  }
+
+  const result = await ProductReview.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  );
+
+  return result;
+};
+
 export const ProductReviewServices = {
   createProductReviewIntoDB,
   updateProductReviewInDB,
+  deleteProductReviewFromDB,
   allReviewsByProductFromDB,
 };
+
+
 

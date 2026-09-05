@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface TPayoutRequest {
+export type TPayout = {
   vendor: Types.ObjectId;
   amount: number;
   status: "PENDING" | "APPROVED" | "REJECTED";

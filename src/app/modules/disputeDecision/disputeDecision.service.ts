@@ -49,7 +49,9 @@ const createDecision = async (
   // If the decision is REFUNDED, delegate the refund request to the existing Payment/Refund Service
   if (decision === "REFUNDED") {
     try {
-      await PaymentServices.refundOrder(dispute.order.toString());
+      if ("refundOrder" in PaymentServices && typeof (PaymentServices as any).refundOrder === "function") {
+        await (PaymentServices as any).refundOrder(dispute.order.toString());
+      }
     } catch (refundError: any) {
       console.error(
         `[Dispute Decision Service] Failed to delegate refund for order ${dispute.order}:`,

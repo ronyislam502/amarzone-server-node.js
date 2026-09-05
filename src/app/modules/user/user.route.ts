@@ -17,7 +17,7 @@ router.post("/create-admin", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), multe
 
 router.post("/create-vendor", multerUpload.fields([{ name: "logo", maxCount: 1 }, { name: "banner", maxCount: 1 }]), validateImageFileRequest(ImageFilesArrayZodSchema), parseBody, validateRequest(VendorValidations.createVendorValidationSchema), UserControllers.createVendor);
 
-router.post("/create-customer", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), multerUpload.single("image"), parseBody, validateRequest(CustomerValidations.createCustomerValidationSchema), UserControllers.createCustomer);
+router.post("/create-customer", multerUpload.single("image"), parseBody, validateRequest(CustomerValidations.createCustomerValidationSchema), UserControllers.createCustomer);
 
 
 export const UserRoutes = router;

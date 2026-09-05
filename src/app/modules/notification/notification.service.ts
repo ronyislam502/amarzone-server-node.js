@@ -25,12 +25,22 @@ const createNotificationIntoDB = async (payload: Partial<TNotification>) => {
 
     if (room) {
         try {
-            emitNotification(room, type as string, {
+            const notifData = {
                 notificationId: notification._id,
+                _id: notification._id,
                 message,
+                type,
+                recipientRole,
+                recipientId,
                 relatedId: notification.relatedId,
                 createdAt: notification.createdAt,
-            });
+            };
+
+            emitNotification(room, type as string, notifData);
+
+            if (room === "admin_dashboard") {
+                emitNotification("ADMIN", type as string, notifData);
+            }
         } catch (error) {
             console.error(`[Notification Service] Failed to emit Socket.io event to room ${room}:`, error);
         }

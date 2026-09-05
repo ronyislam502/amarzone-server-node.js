@@ -6,8 +6,6 @@ import { TImageFiles } from "../../interface/image.interface";
 import { Variant } from "./variant.model";
 import { generateSKU } from "../../utilities/generateSku";
 import { generateASIN } from "../../utilities/generateAsin";
-import { TCategory } from "../category/category.interface";
-import { TDepartment } from "../department/department.interface";
 import QueryBuilder from "../../builder/queryBuilder";
 
 

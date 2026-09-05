@@ -79,3 +79,5 @@ export const Inventory = model<TInventory>(
     "Inventory",
     inventoryProductSchema
 );
+
+export const InventoryProduct = Inventory;

@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
-import { TPayoutRequest } from "./payoutRequest.interface";
+import { TPayout } from "./payout.interface";
 
-const payoutRequestSchema = new Schema<TPayoutRequest>(
+
+const payoutSchema = new Schema<TPayout>(
   {
     vendor: {
       type: Schema.Types.ObjectId,
@@ -33,4 +34,4 @@ const payoutRequestSchema = new Schema<TPayoutRequest>(
   }
 );
 
-export const PayoutRequest = model<TPayoutRequest>("PayoutRequest", payoutRequestSchema);
+export const Payout = model<TPayout>("Payout", payoutSchema);

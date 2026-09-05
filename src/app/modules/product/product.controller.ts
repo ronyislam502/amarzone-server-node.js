@@ -16,6 +16,30 @@ const createProduct = catchAsync(async (req, res) => {
     });
 });
 
+const allProducts = catchAsync(async (req, res) => {
+    const result = await ProductServices.allProductsFromDB(req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Products retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const singleProduct = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ProductServices.productFromDB(id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Product retrieved successfully",
+        data: result,
+    });
+});
+
 const updateProduct = catchAsync(async (req, res) => {
     const result = await ProductServices.updateProductIntoDB(req.user as JwtPayload, req.params.id, req.file as TImageFile, req.body);
 
@@ -29,5 +53,7 @@ const updateProduct = catchAsync(async (req, res) => {
 
 export const ProductControllers = {
     createProduct,
+    allProducts,
+    singleProduct,
     updateProduct,
 };

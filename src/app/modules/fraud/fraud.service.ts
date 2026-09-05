@@ -9,7 +9,7 @@ import { Fraud } from "./fraud.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import { JwtPayload } from "jsonwebtoken";
 import { emitFraudAlertCreated, emitFraudAlertUpdated, emitFraudResolved, emitFraudStatusChanged } from "../../socket/socketFraud";
-import { Payment } from "../payment/payment/payment.model";
+import { Payment } from "../payment/payment.model";
 
 /**
  * Server-side automatic evaluation of user fraud risk based on activity metrics.

@@ -56,7 +56,13 @@ export const getIO = (): Server => {
 
 export const emitNotification = (room: string, event: string, data: any) => {
     if (io) {
+        // Emit specific event
         io.to(room).emit(event, data);
+        // Also emit unified "notification" event with type embedded
+        io.to(room).emit("notification", {
+            ...data,
+            type: data?.type || event,
+        });
     } else {
         console.warn("Socket.IO not initialized. Skipping real-time notification.");
     }

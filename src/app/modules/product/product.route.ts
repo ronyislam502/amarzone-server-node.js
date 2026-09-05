@@ -15,8 +15,12 @@ router.post(
     ProductControllers.createProduct
 );
 
+router.get("/", ProductControllers.allProducts);
+
+router.get("/:id", ProductControllers.singleProduct);
+
 router.patch(
-    "/update-product/:id", multerUpload.single("image"), parseBody,
+    "/update-product/:id", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.VENDOR), multerUpload.single("image"), parseBody,
     validateRequest(ProductValidations.updateProductValidationSchema),
     ProductControllers.updateProduct
 );

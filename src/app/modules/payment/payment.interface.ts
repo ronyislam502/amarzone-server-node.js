@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { PAYMENT_STATUS } from "../../../interface/common";
+import { PAYMENT_STATUS } from "../../interface/common";
 
 export interface TPayment {
   orderId: Types.ObjectId;

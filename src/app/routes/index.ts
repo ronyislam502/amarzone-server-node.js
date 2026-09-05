@@ -11,8 +11,15 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
 import { OrderRoutes } from "../modules/order/order.route";
 import { ServiceReviewRoutes } from "../modules/serviceReview/serviceReview.route";
-import { PaymentRoutes } from "../modules/payment/payment/payment.route";
-
+import { PaymentRoutes } from "../modules/payment/payment.route";
+import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
+import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
+import { DisputeRoutes } from "../modules/dispute/dispute.route";
+import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
+import { FraudRoutes } from "../modules/fraud/fraud.route";
+import { AccountHealthRoutes } from "../modules/health/health.route";
+import { NotificationRoutes } from "../modules/notification/notification.route";
+import { SlaViolationRoutes } from "../modules/violation/violation.route";
 
 const router = Router();
 
@@ -27,48 +34,92 @@ const moduleRoutes = [
   },
   {
     path: "/admins",
-    route: AdminRoutes
+    route: AdminRoutes,
   },
   {
     path: "/vendors",
-    route: VendorRoutes
+    route: VendorRoutes,
   },
   {
     path: "/customers",
-    route: CustomerRoutes
+    route: CustomerRoutes,
   },
   {
     path: "/departments",
-    route: DepartmentRoutes
+    route: DepartmentRoutes,
   },
   {
     path: "/categories",
-    route: CategoryRoutes
+    route: CategoryRoutes,
   },
   {
     path: "/products",
-    route: ProductRoutes
+    route: ProductRoutes,
   },
   {
     path: "/variants",
-    route: VariantRoutes
+    route: VariantRoutes,
   },
   {
     path: "/inventories",
-    route: InventoryRoutes
+    route: InventoryRoutes,
   },
   {
     path: "/orders",
-    route: OrderRoutes
+    route: OrderRoutes,
+  },
+  {
+    path: "/product-reviews",
+    route: ProductReviewRoutes,
   },
   {
     path: "/service-reviews",
-    route: ServiceReviewRoutes
+    route: ServiceReviewRoutes,
   },
   {
     path: "/payments",
-    route: PaymentRoutes
-  }
+    route: PaymentRoutes,
+  },
+  {
+    path: "/dashboard",
+    route: DashboardRoutes,
+  },
+  {
+    path: "/disputes",
+    route: DisputeRoutes,
+  },
+  {
+    path: "/dispute-decisions",
+    route: DisputeDecisionRoutes,
+  },
+  {
+    path: "/frauds",
+    route: FraudRoutes,
+  },
+  {
+    path: "/fraud",
+    route: FraudRoutes,
+  },
+  {
+    path: "/account-health",
+    route: AccountHealthRoutes,
+  },
+  {
+    path: "/health",
+    route: AccountHealthRoutes,
+  },
+  {
+    path: "/notifications",
+    route: NotificationRoutes,
+  },
+  {
+    path: "/sla-violations",
+    route: SlaViolationRoutes,
+  },
+  {
+    path: "/violations",
+    route: SlaViolationRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

@@ -15,6 +15,9 @@ import { stripe } from "../../utilities/stripe";
 import { AccountHealthServices } from "../health/health.service";
 import { calculateBuyBox } from "../../utilities/buyBox";
 import { recalculateBestSellers } from "../../utilities/calculate";
+import { NotificationServices } from "../notification/notification.service";
+import { emitNotification } from "../../socket/socket";
+import sendEmail from "../../utilities/sendEmail";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -192,6 +195,35 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             //     clientSecret = checkoutSession.url as string;
         }
 
+        if (order[0]) {
+            await triggerPostOrderOperations(order[0]._id.toString());
+
+            // Trigger Notification for Admin
+            try {
+                await NotificationServices.createNotificationIntoDB({
+                    recipientRole: USER_ROLE.ADMIN,
+                    type: "NEW_ORDER",
+                    message: `A new order #${orderNo} has been placed.`,
+                    relatedId: order[0]._id,
+                });
+            } catch (err) {
+                console.error("Failed to create new order notification for admin", err);
+            }
+
+            // Trigger Notification for Vendor
+            try {
+                await NotificationServices.createNotificationIntoDB({
+                    recipientRole: USER_ROLE.VENDOR,
+                    recipientId: isVendor?._id,
+                    type: "NEW_ORDER",
+                    message: `You have received a new order #${orderNo}.`,
+                    relatedId: order[0]._id,
+                });
+            } catch (err) {
+                console.error("Failed to create new order notification for vendor", err);
+            }
+        }
+
         await session.commitTransaction();
         session.endSession();
         return { order: order[0], clientSecret };
@@ -341,10 +373,154 @@ const triggerPostOrderOperations = async (orderId: string) => {
     }
 };
 
+const cancelExpiredUnpaidOrders = async (days = 7) => {
+    const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    // Find all orders where status is PENDING, payment is not completed, and created before cutoffDate
+    const expiredOrders = await Order.find({
+        status: ORDER_STATUS.PENDING,
+        paymentStatus: { $in: [PAYMENT_STATUS.PENDING, PAYMENT_STATUS.UNPAID] },
+        createdAt: { $lte: cutoffDate },
+        isDeleted: false,
+    }).populate("customer", "name email");
+
+    if (!expiredOrders || expiredOrders.length === 0) {
+        return { cancelledCount: 0, orderIds: [] };
+    }
+
+    console.log(`[Order Expiry] Found ${expiredOrders.length} unpaid order(s) past ${days} days. Cancelling...`);
+
+    const cancelledOrderIds: string[] = [];
+
+    for (const order of expiredOrders) {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try {
+            // 1. Mark order as CANCELLED and paymentStatus as UNPAID
+            order.status = ORDER_STATUS.CANCELLED;
+            order.paymentStatus = PAYMENT_STATUS.UNPAID;
+            await order.save({ session });
+
+            // 2. Replenish inventory quantity for each product variant
+            if (order.products && order.products.length > 0) {
+                for (const item of order.products) {
+                    await Inventory.findOneAndUpdate(
+                        {
+                            variant: item.variant,
+                            "seller.vendor": order.vendor,
+                        },
+                        {
+                            $inc: { "seller.quantity": item.quantity },
+                            $set: { "seller.isStock": true },
+                        },
+                        { session }
+                    );
+                }
+            }
+
+            await session.commitTransaction();
+            session.endSession();
+
+            cancelledOrderIds.push(order._id.toString());
+            console.log(`[Order Expiry] Auto-cancelled order #${order.orderNo} (${order._id}) and restored inventory.`);
+
+            // 3. Post-cancellation triggers (Buy Box, Best Seller, Vendor Health)
+            try {
+                await triggerPostOrderOperations(order._id.toString());
+            } catch (opError) {
+                console.error(`[Order Expiry] Post-order operations failed for #${order.orderNo}:`, opError);
+            }
+
+            // 4. In-App Notifications & Real-Time Socket.IO
+            const customerIdStr = (order.customer as any)?._id?.toString() || order.customer?.toString();
+            const vendorIdStr = (order.vendor as any)?._id?.toString() || order.vendor?.toString();
+
+            if (customerIdStr) {
+                try {
+                    await NotificationServices.createNotificationIntoDB({
+                        recipientRole: USER_ROLE.CUSTOMER,
+                        recipientId: new mongoose.Types.ObjectId(customerIdStr),
+                        type: "ORDER_CANCELLED" as any,
+                        message: `Order #${order.orderNo} has been automatically cancelled because payment was not completed within 7 days.`,
+                        relatedId: order._id,
+                    });
+                } catch (notifErr) {
+                    console.error(`[Order Expiry] Failed to create customer notification:`, notifErr);
+                }
+
+                try {
+                    emitNotification(`customer:${customerIdStr}`, "order_cancelled", {
+                        orderId: order._id,
+                        orderNo: order.orderNo,
+                        message: `Order #${order.orderNo} was automatically cancelled due to payment expiration (7 days).`,
+                    });
+                } catch (sockErr) {
+                    console.error(`[Order Expiry] Socket notification to customer failed:`, sockErr);
+                }
+            }
+
+            if (vendorIdStr) {
+                try {
+                    await NotificationServices.createNotificationIntoDB({
+                        recipientRole: USER_ROLE.VENDOR,
+                        recipientId: new mongoose.Types.ObjectId(vendorIdStr),
+                        type: "ORDER_CANCELLED" as any,
+                        message: `Order #${order.orderNo} was cancelled due to payment expiration. Product stock has been restored.`,
+                        relatedId: order._id,
+                    });
+                } catch (notifErr) {
+                    console.error(`[Order Expiry] Failed to create vendor notification:`, notifErr);
+                }
+
+                try {
+                    emitNotification(`vendor:${vendorIdStr}`, "order_cancelled", {
+                        orderId: order._id,
+                        orderNo: order.orderNo,
+                        message: `Order #${order.orderNo} was cancelled due to unpaid expiration. Stock restored.`,
+                    });
+                } catch (sockErr) {
+                    console.error(`[Order Expiry] Socket notification to vendor failed:`, sockErr);
+                }
+            }
+
+            // 5. Send Email to Customer
+            const customerEmail = (order.customer as any)?.email;
+            const customerName = (order.customer as any)?.name || "Customer";
+            if (customerEmail) {
+                try {
+                    const emailHtml = `
+                        <h2>Order Cancellation Notice</h2>
+                        <p>Hello ${customerName},</p>
+                        <p>Your order <strong>#${order.orderNo}</strong> has been automatically cancelled because payment was not received within the 7-day payment window.</p>
+                        <p>All items reserved for this order have been returned to inventory.</p>
+                        <p>If you still wish to purchase these items, you are welcome to place a new order on Amarzone.</p>
+                        <br/>
+                        <p>Best regards,<br/>Amarzone Team</p>
+                    `;
+                    await sendEmail(customerEmail, emailHtml, `Order #${order.orderNo} Cancelled - Payment Window Expired`);
+                } catch (emailErr) {
+                    console.error(`[Order Expiry] Failed to send email to ${customerEmail}:`, emailErr);
+                }
+            }
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            console.error(`[Order Expiry] Error during cancellation of order #${order.orderNo}:`, error);
+        }
+    }
+
+    return {
+        cancelledCount: cancelledOrderIds.length,
+        orderIds: cancelledOrderIds,
+    };
+};
+
 export const OrderServices = {
     createOrderIntoDB,
     getAllOrdersFromDB,
     allOrdersByUserFromDB,
     getSingleOrderFromDB,
-    triggerPostOrderOperations
+    triggerPostOrderOperations,
+    cancelExpiredUnpaidOrders,
 };
