@@ -7,6 +7,7 @@ import { USER_ROLE, USER_STATUS } from "../../interface/common";
 import { Product } from "../product/product.model";
 import { Variant } from "../variant/variant.model";
 import { Inventory } from "./inventory.model";
+import QueryBuilder from "../../builder/queryBuilder";
 
 const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
 
@@ -86,6 +87,99 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
 
 }
 
+const myInventoryFromDB = async (
+    user: JwtPayload,
+    query: Record<string, unknown>
+) => {
+    const isUserExists = await User.isUserExistsByEmail(user?.email);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "This user is not found");
+    }
+
+    if (isUserExists.role !== USER_ROLE.VENDOR) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only vendors can view their inventory"
+        );
+    }
+
+    const myInventoryQuery = new QueryBuilder(
+        Inventory.find({ "seller.vendor": isUserExists._id }).populate({
+            path: "variant",
+            populate: {
+                path: "product",
+            },
+        }),
+        query
+    )
+        .search(["asin"])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const meta = await myInventoryQuery.countTotal();
+    const data = await myInventoryQuery.modelQuery;
+
+    return {
+        meta,
+        data,
+    };
+};
+
+const updatePriceIntoDB = async (
+    user: JwtPayload,
+    id: string,
+    payload: { price: number }
+) => {
+    const isUserExists = await User.isUserExistsByEmail(user?.email);
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const inventory = await Inventory.findOne({
+        _id: id,
+        "seller.vendor": isUserExists._id,
+    });
+
+    if (!inventory) {
+        throw new AppError(httpStatus.NOT_FOUND, "Inventory item not found");
+    }
+
+    inventory.seller.price = payload.price;
+    await inventory.save();
+    return inventory;
+};
+
+const updateQuantityIntoDB = async (
+    user: JwtPayload,
+    id: string,
+    payload: { quantity: number }
+) => {
+    const isUserExists = await User.isUserExistsByEmail(user?.email);
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const inventory = await Inventory.findOne({
+        _id: id,
+        "seller.vendor": isUserExists._id,
+    });
+
+    if (!inventory) {
+        throw new AppError(httpStatus.NOT_FOUND, "Inventory item not found");
+    }
+
+    inventory.seller.quantity = payload.quantity;
+    inventory.seller.isStock = payload.quantity > 0;
+    await inventory.save();
+    return inventory;
+};
+
 export const InventoryServices = {
-    listProductIntoDB
+    listProductIntoDB,
+    myInventoryFromDB,
+    updatePriceIntoDB,
+    updateQuantityIntoDB,
 }

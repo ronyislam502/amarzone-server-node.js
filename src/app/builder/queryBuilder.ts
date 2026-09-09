@@ -11,7 +11,7 @@ class QueryBuilder<T> {
 
   search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
-    if (searchTerm) {
+    if (searchTerm && searchableFields.length > 0) {
       this.modelQuery = this.modelQuery.find({
         $or: searchableFields.map(
           (field) =>
@@ -56,8 +56,18 @@ class QueryBuilder<T> {
   }
 
   paginate() {
+    const limitParam = this?.query?.limit;
+    if (
+      limitParam === "all" ||
+      limitParam === "0" ||
+      limitParam === 0 ||
+      this?.query?.all === "true" ||
+      this?.query?.all === true
+    ) {
+      return this;
+    }
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(limitParam) || 10;
     const skip = (page - 1) * limit;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
@@ -75,8 +85,23 @@ class QueryBuilder<T> {
   async countTotal() {
     const totalQueries = this.modelQuery.getFilter();
     const total = await this.modelQuery.model.countDocuments(totalQueries);
+    const limitParam = this?.query?.limit;
+    if (
+      limitParam === "all" ||
+      limitParam === "0" ||
+      limitParam === 0 ||
+      this?.query?.all === "true" ||
+      this?.query?.all === true
+    ) {
+      return {
+        page: 1,
+        limit: total,
+        total,
+        totalPage: 1,
+      };
+    }
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(limitParam) || 10;
     const totalPage = Math.ceil(total / limit);
 
     return {

@@ -9,9 +9,9 @@ let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(config.database_url as string);
+    await mongoose.connect(config?.database_url as string);
     server = app.listen(config.port, () => {
-      console.log(`Amarzone API listening on port: ${config.port}`);
+      console.log(`Amarzone listening on port: ${config.port}`);
     });
     initializeSocket(server);
     initializeOrderExpiryCron();

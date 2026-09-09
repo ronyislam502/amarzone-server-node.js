@@ -15,7 +15,56 @@ const listProduct = catchAsync(async (req, res) => {
     });
 });
 
+const myInventory = catchAsync(async (req, res) => {
+    const result = await InventoryServices.myInventoryFromDB(
+        req.user as JwtPayload,
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "My inventory retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const updatePrice = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await InventoryServices.updatePriceIntoDB(
+        req.user as JwtPayload,
+        id,
+        req.body
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Inventory price updated successfully",
+        data: result,
+    });
+});
+
+const updateQuantity = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await InventoryServices.updateQuantityIntoDB(
+        req.user as JwtPayload,
+        id,
+        req.body
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Inventory quantity updated successfully",
+        data: result,
+    });
+});
 
 export const InventoryControllers = {
-    listProduct
+    listProduct,
+    myInventory,
+    updatePrice,
+    updateQuantity,
 }

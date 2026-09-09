@@ -206,7 +206,7 @@ const createCustomerIntoDB = async (image: TImageFile, password: string, payload
 //     };
 // };
 
-const getMyProfileFromDB = async (user: JwtPayload) => {
+const myProfileFromDB = async (user: JwtPayload) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
 
     if (!isUserExists) {
@@ -239,5 +239,5 @@ export const UserServices = {
     createVendorIntoDB,
     createCustomerIntoDB,
     // getAllUsersFromDB,
-    getMyProfileFromDB
+    myProfileFromDB
 }

@@ -3,6 +3,7 @@ import { TImageFile, TImageFiles } from "../../interface/image.interface";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { UserServices } from "./user.service";
+import { JwtPayload } from "jsonwebtoken";
 
 const createAdmin = catchAsync(async (req, res) => {
     const { password, admin } = req.body
@@ -41,8 +42,20 @@ const createCustomer = catchAsync(async (req, res) => {
     })
 })
 
+const myProfile=catchAsync(async (req, res) => {
+    const result = await UserServices.myProfileFromDB(req.user as JwtPayload);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "My profile retrieved successfully",
+        data: result
+    })
+})
+
 export const UserControllers = {
     createAdmin,
     createVendor,
-    createCustomer
+    createCustomer,
+    myProfile
 }

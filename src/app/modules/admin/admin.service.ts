@@ -9,7 +9,7 @@ import { TImageFile } from "../../interface/image.interface";
 
 const allAdminsFromDB = async (query: Record<string, unknown>) => {
     const adminsQuery = new QueryBuilder(Admin.find(), query)
-        .search([])
+        .search(["name", "email", "phone"])
         .filter()
         .sort()
         .paginate()

@@ -7,8 +7,30 @@ import { InventoryControllers } from "./inventory.controller";
 
 const router = Router();
 
-router.post("/list-product", auth(USER_ROLE.VENDOR), validateRequest(InventoryValidations.createInventoryValidationSchema),
-    InventoryControllers.listProduct);
+router.post(
+    "/list-product",
+    auth(USER_ROLE.VENDOR),
+    validateRequest(InventoryValidations.createInventoryValidationSchema),
+    InventoryControllers.listProduct
+);
 
+
+router.get(
+    "/my-inventory",
+    auth(USER_ROLE.VENDOR),
+    InventoryControllers.myInventory
+);
+
+router.patch(
+    "/update-price/:id",
+    auth(USER_ROLE.VENDOR),
+    InventoryControllers.updatePrice
+);
+
+router.patch(
+    "/update-quantity/:id",
+    auth(USER_ROLE.VENDOR),
+    InventoryControllers.updateQuantity
+);
 
 export const InventoryRoutes = router;
