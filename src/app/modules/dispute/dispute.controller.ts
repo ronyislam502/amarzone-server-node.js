@@ -2,20 +2,13 @@ import httpStatus from "http-status";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { DisputeServices } from "./dispute.service";
-import { User } from "../user/user.model";
-import AppError from "../../errors/AppError";
+import { JwtPayload } from "jsonwebtoken";
+import { userInfo } from "os";
 
-const getUserIdFromUserPayload = async (email: string) => {
-  const user = await User.findOne({ email, isDeleted: false });
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "Authenticated user not found");
-  }
-  return user._id;
-};
+
 
 const createDispute = catchAsync(async (req, res) => {
-  const currentUserId = await getUserIdFromUserPayload(req.user.email);
-  const result = await DisputeServices.createDispute(currentUserId, req.body);
+  const result = await DisputeServices.createDispute(req.user as JwtPayload, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -26,11 +19,9 @@ const createDispute = catchAsync(async (req, res) => {
 });
 
 const getDisputeById = catchAsync(async (req, res) => {
-  const currentUserId = await getUserIdFromUserPayload(req.user.email);
   const { id } = req.params;
   const result = await DisputeServices.getDisputeById(
-    currentUserId,
-    req.user.role,
+    req.user as JwtPayload,
     id
   );
 
@@ -43,10 +34,8 @@ const getDisputeById = catchAsync(async (req, res) => {
 });
 
 const getUserDisputes = catchAsync(async (req, res) => {
-  const currentUserId = await getUserIdFromUserPayload(req.user.email);
-  const result = await DisputeServices.getUserDisputes(
-    currentUserId,
-    req.user.role,
+  const result = await DisputeServices.getUserDisputesFromDB(
+    req.user as JwtPayload,
     req.query
   );
 
@@ -60,10 +49,9 @@ const getUserDisputes = catchAsync(async (req, res) => {
 });
 
 const updateDisputeStatus = catchAsync(async (req, res) => {
-  const currentUserId = await getUserIdFromUserPayload(req.user.email);
   const { id } = req.params;
   const result = await DisputeServices.updateDisputeStatus(
-    currentUserId,
+    req.user as JwtPayload,
     id,
     req.body
   );

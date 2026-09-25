@@ -36,7 +36,7 @@ const createProductReviewIntoDB = async (user: JwtPayload, payload: Partial<TPro
   // Prevent duplicate reviews for the same product by the same customer
   const existingReview = await ProductReview.findOne({
     customer: isUser._id,
-    product: payload.product,
+    product: isproduct._id,
     isDeleted: false,
   });
 
@@ -91,10 +91,12 @@ const updateProductReviewInDB = async (
 
 
 const allReviewsByProductFromDB = async (id: string, query: Record<string, unknown>) => {
-  const reviewProductQuery = new QueryBuilder(ProductReview.find({ product: id, isDeleted: false }).populate("customer")
-    .populate("user", 'name email')
-    .populate("variant")
-    .populate("order"), query)
+  const reviewProductQuery = new QueryBuilder(
+    ProductReview.find({ product: id, isDeleted: false })
+      .populate("customer", "name email avatar")
+      .populate("order"),
+    query
+  )
     .search([])
     .filter()
     .sort()

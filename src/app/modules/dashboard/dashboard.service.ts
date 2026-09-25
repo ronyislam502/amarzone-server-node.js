@@ -3,7 +3,6 @@ import { Order } from "../order/order.model";
 import { User } from "../user/user.model";
 import { Product } from "../product/product.model";
 import { Category } from "../category/category.model";
-import { InventoryProduct } from "../inventory/inventory.model";
 import { Payment } from "../payment/payment.model";
 import { ServiceReview } from "../serviceReview/serviceReview.model";
 import { ProductReview } from "../productReview/productReview.model";
@@ -19,13 +18,17 @@ import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../builder/queryBuilder";
+import { Inventory } from "../inventory/inventory.model";
 
 // ─── HELPER: DATE FILTER CALCULATOR ──────────────────────────────────────────
 const getDateFilter = (query: TDashboardQuery) => {
   const now = new Date();
   let startDate = new Date();
 
-  if (query.range === "7_days") {
+  if (query.range === "today") {
+    startDate.setHours(0, 0, 0, 0);
+    return { $gte: startDate, $lte: now };
+  } else if (query.range === "7_days") {
     startDate.setDate(now.getDate() - 7);
   } else if (query.range === "90_days") {
     startDate.setDate(now.getDate() - 90);
@@ -188,7 +191,7 @@ const getUsersStats = async (startOfMonth: Date) => {
 };
 
 const getInventoryStats = async () => {
-  const result = await InventoryProduct.aggregate([
+  const result = await Inventory.aggregate([
     { $match: { isDeleted: { $ne: true } } },
     {
       $group: {
@@ -376,13 +379,22 @@ const getOrderAnalytics = async (thirtyDaysAgo: Date) => {
 };
 
 const getTopLists = async () => {
-  const [topSellingProducts, topSellingCategories, topVendors, topCustomers] = await Promise.all([
+  const [topSellingProducts, topSellingCategories, topSellingDepartments, topVendors, topCustomers] = await Promise.all([
     Order.aggregate([
       { $match: { isDeleted: { $ne: true } } },
       { $unwind: "$products" },
       {
+        $lookup: {
+          from: "variants",
+          localField: "products.variant",
+          foreignField: "_id",
+          as: "variantInfo",
+        },
+      },
+      { $unwind: "$variantInfo" },
+      {
         $group: {
-          _id: "$products.product",
+          _id: "$variantInfo.product",
           totalSold: { $sum: "$products.quantity" },
         },
       },
@@ -412,8 +424,17 @@ const getTopLists = async () => {
       { $unwind: "$products" },
       {
         $lookup: {
+          from: "variants",
+          localField: "products.variant",
+          foreignField: "_id",
+          as: "variantInfo",
+        },
+      },
+      { $unwind: "$variantInfo" },
+      {
+        $lookup: {
           from: "products",
-          localField: "products.product",
+          localField: "variantInfo.product",
           foreignField: "_id",
           as: "productInfo",
         },
@@ -426,7 +447,7 @@ const getTopLists = async () => {
         },
       },
       { $sort: { totalQuantity: -1 } },
-      { $limit: 5 },
+      { $limit: 8 },
       {
         $lookup: {
           from: "categories",
@@ -440,6 +461,52 @@ const getTopLists = async () => {
         $project: {
           _id: 1,
           categoryName: "$categoryDetails.name",
+          totalQuantity: 1,
+        },
+      },
+    ]),
+    Order.aggregate([
+      { $match: { isDeleted: { $ne: true } } },
+      { $unwind: "$products" },
+      {
+        $lookup: {
+          from: "variants",
+          localField: "products.variant",
+          foreignField: "_id",
+          as: "variantInfo",
+        },
+      },
+      { $unwind: "$variantInfo" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "variantInfo.product",
+          foreignField: "_id",
+          as: "productInfo",
+        },
+      },
+      { $unwind: "$productInfo" },
+      {
+        $group: {
+          _id: "$productInfo.department",
+          totalQuantity: { $sum: "$products.quantity" },
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 8 },
+      {
+        $lookup: {
+          from: "departments",
+          localField: "_id",
+          foreignField: "_id",
+          as: "departmentDetails",
+        },
+      },
+      { $unwind: "$departmentDetails" },
+      {
+        $project: {
+          _id: 1,
+          departmentName: "$departmentDetails.name",
           totalQuantity: 1,
         },
       },
@@ -509,6 +576,7 @@ const getTopLists = async () => {
   return {
     topSellingProducts,
     topSellingCategories,
+    topSellingDepartments,
     topVendors,
     topCustomers,
   };
@@ -680,6 +748,10 @@ const getSuperAdminDashboardFromDB = async (query: TDashboardQuery) => {
       category: item.categoryName,
       sales: item.totalQuantity,
     })),
+    departmentSalesChart: (topLists.topSellingDepartments || []).map((item: any) => ({
+      department: item.departmentName,
+      sales: item.totalQuantity,
+    })),
     paymentStatusPieChart: [
       { status: "PAID", count: payments.totalSuccessfulPayments },
       { status: "UNPAID", count: payments.failedPayments },
@@ -717,12 +789,11 @@ const getAdminDashboardFromDB = async (query: TDashboardQuery) => {
   const superAdminData = await getSuperAdminDashboardFromDB(query);
 
   const { marketplaceCommission, vendorEarnings, ...adminOverviewCards } = superAdminData.overviewCards;
-  const { revenueChart, ...adminCharts } = superAdminData.charts;
 
   return {
     ...superAdminData,
     overviewCards: adminOverviewCards,
-    charts: adminCharts,
+    charts: superAdminData.charts,
   };
 };
 
@@ -847,7 +918,7 @@ const getVendorSales = async (vendorObjId: Types.ObjectId, todayStart: Date, sta
 };
 
 const getVendorProductsStats = async (vendorObjId: Types.ObjectId) => {
-  const productLists = await InventoryProduct.aggregate([
+  const productLists = await Inventory.aggregate([
     { $match: { "seller.vendor": vendorObjId, isDeleted: { $ne: true } } },
     {
       $facet: {

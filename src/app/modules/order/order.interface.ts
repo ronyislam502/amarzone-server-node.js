@@ -4,16 +4,25 @@ import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 export type TTracking = {
     trackingNumber: string;
     courierName: string;
-    shippedBy?: Types.ObjectId; // Admin/Vendor
-    shippedAt?: Date;
-    estimatedDelivery?: Date;
+    shippedBy: Types.ObjectId; // Admin/Vendor
+    shippedAt: Date;
+    estimatedDelivery: Date;
     deliveredAt?: Date;
-    notes?: string;
 };
 
 export type TDateRange = {
     from: Date;
     to: Date;
+};
+
+export type TRefund = {
+    refundId: string;
+    refundAmount: number;
+    refundedBy: Types.ObjectId;
+    refundInitiatorRole: string;
+    refundReason?: string;
+    refundedAt: Date;
+    stripeRefundStatus?: string;
 };
 
 export type TOrder = {
@@ -34,8 +43,8 @@ export type TOrder = {
     deliveryDate: TDateRange;
     status: keyof typeof ORDER_STATUS;
     paymentStatus: keyof typeof PAYMENT_STATUS;
-    transactionId: string;
     tracking?: TTracking;
     invoiceUrl?: string;
+    refund?: TRefund;
     isDeleted: boolean;
 };

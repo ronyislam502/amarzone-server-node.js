@@ -51,9 +51,28 @@ const updateProduct = catchAsync(async (req, res) => {
     });
 });
 
+const getProductsByVendor = catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const result = await ProductServices.productsByVendorFromDB(
+        id as string,
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Products by vendor retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
 export const ProductControllers = {
     createProduct,
     allProducts,
     singleProduct,
     updateProduct,
+    getProductsByVendor,
 };
+

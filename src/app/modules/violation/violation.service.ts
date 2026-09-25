@@ -8,8 +8,9 @@ import {
   emitVendorSuspended,
   emitViolationResolved,
 } from "../../socket/socketViolation";
-import { USER_STATUS, SLA_SEVERITY, SLA_METRIC, VENDOR_HEALTH } from "../../interface/common";
+import { USER_STATUS, SLA_SEVERITY, SLA_METRIC, VENDOR_HEALTH, USER_ROLE } from "../../interface/common";
 import QueryBuilder from "../../builder/queryBuilder";
+import { NotificationServices } from "../notification/notification.service";
 
 const SLA_CONFIG = {
   [SLA_METRIC.ORDER_DEFECT_RATE]: {
@@ -102,6 +103,17 @@ const evaluateSla = async (
         } else {
           sendSuspensionEmail(emailAddress, evalItem.name, evalItem.val, config.allowed, config.explanation, config.recommendation);
           emitVendorSuspended(vendorId, newViolation);
+          try {
+            await NotificationServices.createNotificationIntoDB({
+              recipientRole: USER_ROLE.VENDOR,
+              recipientId: new mongoose.Types.ObjectId(vendorId),
+              type: "SLA_SUSPENDED",
+              message: `Your account has been suspended due to severe SLA violation on metric: ${evalItem.name}.`,
+              relatedId: newViolation._id,
+            });
+          } catch (notifError) {
+            console.error("[SLA Suspension Notification] Failed to create notification:", notifError);
+          }
         }
       } else {
         // Unresolved violation already exists
@@ -115,6 +127,17 @@ const evaluateSla = async (
           if (severity === SLA_SEVERITY.SUSPENSION && oldSeverity === SLA_SEVERITY.WARNING) {
             sendSuspensionEmail(emailAddress, evalItem.name, evalItem.val, config.allowed, config.explanation, config.recommendation);
             emitVendorSuspended(vendorId, existing);
+            try {
+              await NotificationServices.createNotificationIntoDB({
+                recipientRole: USER_ROLE.VENDOR,
+                recipientId: new mongoose.Types.ObjectId(vendorId),
+                type: "SLA_SUSPENDED",
+                message: `Your account has been suspended due to severe SLA violation on metric: ${evalItem.name}.`,
+                relatedId: existing._id,
+              });
+            } catch (notifError) {
+              console.error("[SLA Suspension Notification] Failed to create notification:", notifError);
+            }
           } else if (severity === SLA_SEVERITY.WARNING && oldSeverity === SLA_SEVERITY.SUSPENSION) {
             // De-escalated, warning emit/email optionally triggerable
             emitVendorWarning(vendorId, existing);

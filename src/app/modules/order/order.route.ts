@@ -15,7 +15,7 @@ router.post(
 
 router.get(
     "/",
-    // auth(USER_ROLE.ADMIN),
+    auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN),
     OrderControllers.getAllOrders
 );
 
@@ -26,10 +26,24 @@ router.get(
 );
 
 
+
 router.get(
     "/:id",
     auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER, USER_ROLE.VENDOR),
     OrderControllers.getSingleOrder
+);
+
+router.patch(
+    "/update/:id",
+    auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.VENDOR),
+    OrderControllers.updateOrder
+);
+
+
+router.patch(
+    "/refund/:id",
+    auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.VENDOR, USER_ROLE.CUSTOMER),
+    OrderControllers.orderRefund
 );
 
 export const OrderRoutes = router;

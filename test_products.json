@@ -1,0 +1,502 @@
+﻿{
+    "success":  true,
+    "message":  "Products retrieved successfully",
+    "meta":  {
+                 "page":  1,
+                 "limit":  10,
+                 "total":  305,
+                 "totalPage":  31
+             },
+    "data":  [
+                 {
+                     "_id":  "9808430941a19268ffb44889",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "TevraPet",
+                     "category":  {
+                                      "_id":  "6aa1897805533d21f779a43f",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Healthcare",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:44.398Z",
+                                      "updatedAt":  "2026-09-09T16:29:44.398Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:14:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "Fast-Acting Parasite Defense: Fast-acting veterinary-approved formula begins killing fleas and ticks rapidly upon administration to relieve itching and distress.",
+                                      "Broad-Spectrum Prevention: Effectively breaks the pest lifecycle by destroying adult fleas, eggs, and larvae, preventing persistent home infestations.",
+                                      "Easy-to-Administer Format: Flavored chewable tablet or convenient topical applicator ensures stress-free dosing without messy battles.",
+                                      "Month-Long Sustained Defense: Single treatment delivers up to 30 full days of continuous protection against harmful parasites and disease vectors.",
+                                      "Safe for Dogs \u0026 Puppies: Rigorously tested for safety and efficacy when used as directed, suitable for multi-pet households."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "pethealthcare",
+                                  "petsupplies",
+                                  "tevrapet",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/81TsMF0Zr4L.jpg",
+                     "title":  "TevraPet Activate II Flea and Tick Prevention for Dogs | 4 Count | Medium Dogs 11-20 lbs | Topical Drops | 4 Months Flea T...",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=bd51368c28c242cc25935cb2; asin=PEPEOPOPBQ; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=9808430941a19268ffb44889; sku=PEPEOPOPBQ-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=404f546423412a164c1eae7c; asin=PEPEZ3VGBB; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=9808430941a19268ffb44889; sku=PEPEZ3VGBB-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "5765e7fd08db296aa9eda11a",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Apex",
+                     "category":  {
+                                      "_id":  "6aa1897805533d21f779a43f",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Healthcare",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:44.398Z",
+                                      "updatedAt":  "2026-09-09T16:29:44.398Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:13:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "Fast-Acting Parasite Defense: Fast-acting veterinary-approved formula begins killing fleas and ticks rapidly upon administration to relieve itching and distress.",
+                                      "Broad-Spectrum Prevention: Effectively breaks the pest lifecycle by destroying adult fleas, eggs, and larvae, preventing persistent home infestations.",
+                                      "Easy-to-Administer Format: Flavored chewable tablet or convenient topical applicator ensures stress-free dosing without messy battles.",
+                                      "Month-Long Sustained Defense: Single treatment delivers up to 30 full days of continuous protection against harmful parasites and disease vectors.",
+                                      "Safe for Dogs \u0026 Puppies: Rigorously tested for safety and efficacy when used as directed, suitable for multi-pet households."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "pethealthcare",
+                                  "petsupplies",
+                                  "apex",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/61UsinYT4bL.jpg",
+                     "title":  "Apex Plus Flea \u0026 Tick Prevention for Large Dogs (45-88 lbs) 3-Month Supply | Topical Treatment, Easy to Apply, 24-Hour Act...",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=cba3ec0bf3716a6d1aeb30bc; asin=PEPEQOZXSS; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=5765e7fd08db296aa9eda11a; sku=PEPEQOZXSS-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=f3601f2801fc0670c13a4847; asin=PEPEQMKP3C; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=5765e7fd08db296aa9eda11a; sku=PEPEQMKP3C-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "04dc9ee1d9bfb50cae510149",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Advantus",
+                     "category":  {
+                                      "_id":  "6aa1897805533d21f779a43f",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Healthcare",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:44.398Z",
+                                      "updatedAt":  "2026-09-09T16:29:44.398Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:12:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "Fast-Acting Parasite Defense: Fast-acting veterinary-approved formula begins killing fleas and ticks rapidly upon administration to relieve itching and distress.",
+                                      "Broad-Spectrum Prevention: Effectively breaks the pest lifecycle by destroying adult fleas, eggs, and larvae, preventing persistent home infestations.",
+                                      "Easy-to-Administer Format: Flavored chewable tablet or convenient topical applicator ensures stress-free dosing without messy battles.",
+                                      "Month-Long Sustained Defense: Single treatment delivers up to 30 full days of continuous protection against harmful parasites and disease vectors.",
+                                      "Safe for Dogs \u0026 Puppies: Rigorously tested for safety and efficacy when used as directed, suitable for multi-pet households."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "pethealthcare",
+                                  "petsupplies",
+                                  "advantus",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71BItukxr-L.jpg",
+                     "title":  "Advantus Dog Fast Acting Oral Flea Treatment Soft Chewable 4 - 22 lbs. | 7 ct.",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=a583dc24dade8b96952a93bc; asin=PEPEDH5PO4; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=04dc9ee1d9bfb50cae510149; sku=PEPEDH5PO4-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=85aeb67e516a5c37b4621af3; asin=PEPECPCK9A; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=04dc9ee1d9bfb50cae510149; sku=PEPECPCK9A-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "7a53e72b18a97472910f069e",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Dog",
+                     "category":  {
+                                      "_id":  "6aa1897805533d21f779a43f",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Healthcare",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:44.398Z",
+                                      "updatedAt":  "2026-09-09T16:29:44.398Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:11:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "Fast-Acting Parasite Defense: Fast-acting veterinary-approved formula begins killing fleas and ticks rapidly upon administration to relieve itching and distress.",
+                                      "Broad-Spectrum Prevention: Effectively breaks the pest lifecycle by destroying adult fleas, eggs, and larvae, preventing persistent home infestations.",
+                                      "Easy-to-Administer Format: Flavored chewable tablet or convenient topical applicator ensures stress-free dosing without messy battles.",
+                                      "Month-Long Sustained Defense: Single treatment delivers up to 30 full days of continuous protection against harmful parasites and disease vectors.",
+                                      "Safe for Dogs \u0026 Puppies: Rigorously tested for safety and efficacy when used as directed, suitable for multi-pet households."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "pethealthcare",
+                                  "petsupplies",
+                                  "dog",
+                                  "bestseller"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71id0-NaGHL.jpg",
+                     "title":  "Dog Flea and Tick Treatment Chewable with Calming Supplements 180 Count | Oral Fleas Ticks Chewables Support Suitable for ...",
+                     "updatedAt":  "2026-09-12T17:58:13.607Z",
+                     "variants":  [
+                                      "@{_id=8a7fed5494af1fb09638c9c2; asin=PEPEEK15RO; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=7a53e72b18a97472910f069e; sku=PEPEEK15RO-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=ec832f041c1a32c049949592; asin=PEPEVT9SJB; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=7a53e72b18a97472910f069e; sku=PEPEVT9SJB-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "1b3e79eb82e2a200454b13f7",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "PetFusion",
+                     "category":  {
+                                      "_id":  "6aa1897005533d21f779a439",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Beds",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:36.368Z",
+                                      "updatedAt":  "2026-09-09T16:29:36.368Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:10:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Density Orthopedic Foam: Medical-grade egg crate or memory foam base relieves joint pain, hip dysplasia, and arthritis pressure points for restorative sleep.",
+                                      "Plush Faux-Fur Sleeping Surface: Ultra-soft, breathable sleeping surface creates a safe, comforting cocoon that calms anxious pets and promotes deep rest.",
+                                      "Cushioned Supportive Bolsters: Padded side bolsters provide ergonomic head, neck, and back support while giving pets a comfortable chin-rest.",
+                                      "Waterproof Liner \u0026 Washable Cover: Equipped with an internal water-resistant lining and a removable zippered exterior cover that is 100% machine washable.",
+                                      "Non-Skid Traction Bottom: High-friction silicone grip dots on the underside keep the bed securely in place on hardwood, tile, and laminate floors."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "petbeds",
+                                  "petsupplies",
+                                  "petfusion",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71U0tyUX7bL.jpg",
+                     "title":  "PetFusion Ultimate Solid Memory Foam Waterproof Dog Bed with Bolsters",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=8c317f8388cd5a4f47f6b5d4; asin=PEPE6AU687; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=1b3e79eb82e2a200454b13f7; sku=PEPE6AU687-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=56608f97fefcc98da2c3dcf2; asin=PEPEJUA7Y7; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=1b3e79eb82e2a200454b13f7; sku=PEPEJUA7Y7-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "3c100f61bd338a29b64a47c7",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Furhaven",
+                     "category":  {
+                                      "_id":  "6aa1897005533d21f779a439",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Beds",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:36.368Z",
+                                      "updatedAt":  "2026-09-09T16:29:36.368Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:09:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Density Orthopedic Foam: Medical-grade egg crate or memory foam base relieves joint pain, hip dysplasia, and arthritis pressure points for restorative sleep.",
+                                      "Plush Faux-Fur Sleeping Surface: Ultra-soft, breathable sleeping surface creates a safe, comforting cocoon that calms anxious pets and promotes deep rest.",
+                                      "Cushioned Supportive Bolsters: Padded side bolsters provide ergonomic head, neck, and back support while giving pets a comfortable chin-rest.",
+                                      "Waterproof Liner \u0026 Washable Cover: Equipped with an internal water-resistant lining and a removable zippered exterior cover that is 100% machine washable.",
+                                      "Non-Skid Traction Bottom: High-friction silicone grip dots on the underside keep the bed securely in place on hardwood, tile, and laminate floors."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "petbeds",
+                                  "petsupplies",
+                                  "furhaven",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71kNqAYmt4L.jpg",
+                     "title":  "Furhaven Orthopedic Ultra Plush Luxe Lounger Ergonomic Contour Pet Bed for Dogs",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=035ff308bd940dd169ad8854; asin=PEPEQZX81K; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=3c100f61bd338a29b64a47c7; sku=PEPEQZX81K-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=05aa82583acad1f8e8ae853c; asin=PEPEAKYHAQ; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=3c100f61bd338a29b64a47c7; sku=PEPEAKYHAQ-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "7334199836f6ac6c9b1c7592",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Best Friends by Sheri",
+                     "category":  {
+                                      "_id":  "6aa1897005533d21f779a439",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Beds",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:36.368Z",
+                                      "updatedAt":  "2026-09-09T16:29:36.368Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:08:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Density Orthopedic Foam: Medical-grade egg crate or memory foam base relieves joint pain, hip dysplasia, and arthritis pressure points for restorative sleep.",
+                                      "Plush Faux-Fur Sleeping Surface: Ultra-soft, breathable sleeping surface creates a safe, comforting cocoon that calms anxious pets and promotes deep rest.",
+                                      "Cushioned Supportive Bolsters: Padded side bolsters provide ergonomic head, neck, and back support while giving pets a comfortable chin-rest.",
+                                      "Waterproof Liner \u0026 Washable Cover: Equipped with an internal water-resistant lining and a removable zippered exterior cover that is 100% machine washable.",
+                                      "Non-Skid Traction Bottom: High-friction silicone grip dots on the underside keep the bed securely in place on hardwood, tile, and laminate floors."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "petbeds",
+                                  "petsupplies",
+                                  "bestfriendsbysheri",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71HKFLUh48L.jpg",
+                     "title":  "Best Friends by Sheri The Original Calming Donut Cuddle Cat and Dog Bed",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=1c6a49570a68ebe9596b8ab5; asin=PEPE2DDCKN; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=7334199836f6ac6c9b1c7592; sku=PEPE2DDCKN-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=c2fe321926327026a49ff848; asin=PEPEOMXTLF; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=7334199836f6ac6c9b1c7592; sku=PEPEOMXTLF-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "26dd7409f2a28a926a254d1b",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Bedsure",
+                     "category":  {
+                                      "_id":  "6aa1897005533d21f779a439",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Pet Beds",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:36.368Z",
+                                      "updatedAt":  "2026-09-09T16:29:36.368Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:07:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Density Orthopedic Foam: Medical-grade egg crate or memory foam base relieves joint pain, hip dysplasia, and arthritis pressure points for restorative sleep.",
+                                      "Plush Faux-Fur Sleeping Surface: Ultra-soft, breathable sleeping surface creates a safe, comforting cocoon that calms anxious pets and promotes deep rest.",
+                                      "Cushioned Supportive Bolsters: Padded side bolsters provide ergonomic head, neck, and back support while giving pets a comfortable chin-rest.",
+                                      "Waterproof Liner \u0026 Washable Cover: Equipped with an internal water-resistant lining and a removable zippered exterior cover that is 100% machine washable.",
+                                      "Non-Skid Traction Bottom: High-friction silicone grip dots on the underside keep the bed securely in place on hardwood, tile, and laminate floors."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "petbeds",
+                                  "petsupplies",
+                                  "bedsure",
+                                  "bestseller"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/81FMBHgfS6L.jpg",
+                     "title":  "Bedsure Orthopedic Dog Bed for Medium Dogs Foam Mattress with Removable Washable Cover",
+                     "updatedAt":  "2026-09-12T17:58:13.497Z",
+                     "variants":  [
+                                      "@{_id=a29d4b068134a4711830cd21; asin=PEPEP9YC7U; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=26dd7409f2a28a926a254d1b; sku=PEPEP9YC7U-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=1828e23844192119e16eb261; asin=PEPEITTHIQ; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=26dd7409f2a28a926a254d1b; sku=PEPEITTHIQ-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "11991968bb71eb83e5cff724",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Purina",
+                     "category":  {
+                                      "_id":  "6aa1896805533d21f779a433",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Cat Food",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:28.765Z",
+                                      "updatedAt":  "2026-09-09T16:29:28.765Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:06:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Protein Savory Recipe: Packed with real poultry or fish in smooth pate or rich gravy to satisfy your cat\u0027s natural carnivorous cravings.",
+                                      "Essential Taurine \u0026 Vitamins: Fortified with taurine, vitamin E, and essential amino acids to maintain clear vision, healthy heart function, and strong immunity.",
+                                      "Optimal Moisture Hydration: High natural moisture content supports healthy feline urinary tract health and kidney function.",
+                                      "Gentle Digestive Fiber: Prebiotic fibers promote smooth digestive transit and help reduce the formation of hairballs in indoor cats.",
+                                      "Irresistible Palatability: Tender texture and savory aroma designed to entice even the most selective and finicky feline appetites."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "catfood",
+                                  "petsupplies",
+                                  "purina",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/813aT05JRUL.jpg",
+                     "title":  "Friskies Purina Wet Cat Food Pate Variety Pack Salmon Dinner, Turkey and Giblets Dinner and Mixed Grill - 5.5 oz. Cans (Pa...",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=163d29b324f5e3b280c037b1; asin=PECA6OSPTC; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=11991968bb71eb83e5cff724; sku=PECA6OSPTC-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=a62b524444e05be7ee9abd42; asin=PECA0OPEJO; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=11991968bb71eb83e5cff724; sku=PECA0OPEJO-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 },
+                 {
+                     "_id":  "6ccee13cf8a5517c8c559756",
+                     "author":  {
+                                    "name":  "AMARZONE1",
+                                    "role":  "ADMIN"
+                                },
+                     "brand":  "Blue Buffalo",
+                     "category":  {
+                                      "_id":  "6aa1896805533d21f779a433",
+                                      "department":  "6aa18073a44acc89eb4085b3",
+                                      "name":  "Cat Food",
+                                      "icon":  "",
+                                      "isDeleted":  false,
+                                      "createdAt":  "2026-09-09T16:29:28.765Z",
+                                      "updatedAt":  "2026-09-09T16:29:28.765Z",
+                                      "__v":  0
+                                  },
+                     "createdAt":  "2026-09-12T12:05:41.527Z",
+                     "department":  {
+                                        "_id":  "6aa18073a44acc89eb4085b3",
+                                        "name":  "Pet Supplies",
+                                        "icon":  "",
+                                        "createdAt":  "2026-09-09T15:51:15.390Z",
+                                        "updatedAt":  "2026-09-09T15:51:15.390Z",
+                                        "__v":  0
+                                    },
+                     "features":  [
+                                      "High-Protein Savory Recipe: Packed with real poultry or fish in smooth pate or rich gravy to satisfy your cat\u0027s natural carnivorous cravings.",
+                                      "Essential Taurine \u0026 Vitamins: Fortified with taurine, vitamin E, and essential amino acids to maintain clear vision, healthy heart function, and strong immunity.",
+                                      "Optimal Moisture Hydration: High natural moisture content supports healthy feline urinary tract health and kidney function.",
+                                      "Gentle Digestive Fiber: Prebiotic fibers promote smooth digestive transit and help reduce the formation of hairballs in indoor cats.",
+                                      "Irresistible Palatability: Tender texture and savory aroma designed to entice even the most selective and finicky feline appetites."
+                                  ],
+                     "isBestSeller":  false,
+                     "isDeleted":  false,
+                     "tags":  [
+                                  "catfood",
+                                  "petsupplies",
+                                  "bluebuffalo",
+                                  "featured"
+                              ],
+                     "thumbnail":  "https://m.media-amazon.com/images/I/71GrMBatYkL.jpg",
+                     "title":  "Blue Buffalo Tastefuls Natural Pate Wet Cat Food Variety Pack, Salmon, Chicken,Ocean Fish \u0026 Tuna Entrées 3-oz Cans (4 of E...",
+                     "updatedAt":  "2026-09-12T12:15:41.527Z",
+                     "variants":  [
+                                      "@{_id=ee01a55fa60df9fb4f97e78d; asin=PECATCXD95; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=6ccee13cf8a5517c8c559756; sku=PECATCXD95-MED-SAV; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}",
+                                      "@{_id=0d27f83decb148f71a40716c; asin=PECA2EZVT6; attributes=System.Object[]; createdAt=2026-09-11T14:13:58.030Z; images=System.Object[]; isDeleted=False; isPrivateLevel=False; product=6ccee13cf8a5517c8c559756; sku=PECA2EZVT6-LAR-WIL; updatedAt=2026-09-11T14:13:58.030Z; inventory=System.Object[]}"
+                                  ]
+                 }
+             ]
+}

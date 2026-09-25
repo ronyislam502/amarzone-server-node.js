@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { Product } from "../product/product.model";
-import { TVariants } from "./variant.interface";
+import { TVariant } from "./variant.interface";
 import { TImageFiles } from "../../interface/image.interface";
 import { Variant } from "./variant.model";
 import { generateSKU } from "../../utilities/generateSku";
@@ -9,7 +9,7 @@ import { generateASIN } from "../../utilities/generateAsin";
 import QueryBuilder from "../../builder/queryBuilder";
 
 
-const createVariantIntoDB = async (images: TImageFiles, payload: TVariants) => {
+const createVariantIntoDB = async (images: TImageFiles, payload: TVariant) => {
 
     const isProductExists = await Product.findById(payload?.product).populate("department").populate("category");
 

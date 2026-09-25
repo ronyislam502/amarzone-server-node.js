@@ -101,7 +101,7 @@ class QueryBuilder<T> {
       };
     }
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(limitParam) || 10;
+    const limit = Number(limitParam) || 100;
     const totalPage = Math.ceil(total / limit);
 
     return {

@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { TVariantAttribute, TVariants } from "./variant.interface";
+import { TVariantAttribute, TVariant } from "./variant.interface";
 
 const variantAttributeSchema = new Schema<TVariantAttribute>(
   {
@@ -9,7 +9,7 @@ const variantAttributeSchema = new Schema<TVariantAttribute>(
   { _id: false }
 );
 
-const variantSchema = new Schema<TVariants>(
+const variantSchema = new Schema<TVariant>(
   {
     product: {
       type: Schema.Types.ObjectId,
@@ -36,6 +36,12 @@ const variantSchema = new Schema<TVariants>(
       type: Boolean,
       default: false
     },
+    inventories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Inventory",
+      },
+    ],
     isDeleted: {
       type: Boolean,
       default: false
@@ -61,4 +67,4 @@ variantSchema.pre("aggregate", function (next) {
   next();
 });
 
-export const Variant = model<TVariants>("Variant", variantSchema);
+export const Variant = model<TVariant>("Variant", variantSchema);

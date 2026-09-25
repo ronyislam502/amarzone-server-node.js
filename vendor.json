@@ -1,0 +1,1802 @@
+[
+  {
+    "_id": "106f15bcbe8ee921cb0d75dd",
+    "user": "b8f0cbf4cb3fa635c09991a4",
+    "name": "Bengal Heritage Crafts",
+    "email": "vendor1@gmail.com",
+    "phone": "+880 1711-402918",
+    "address": {
+      "street": "142/A Mirpur Road, Dhanmondi",
+      "state": "Dhaka",
+      "postalCode": "1205",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/102/400/400.jpg?hmac=9x2BNfQ-Xuup9PLSghHjhL7ie2aAMPHA-6sTez-Z2sw",
+    "banner": "https://fastly.picsum.photos/id/0/1200/400.jpg?hmac=XAn4w9d9N6iMW8-agNobcxy4anB19B1jSYd23lPqrxs",
+    "isDeleted": false,
+    "createdAt": "2026-01-10T08:00:00.000Z",
+    "updatedAt": "2026-01-24T08:00:00.000Z"
+  },
+  {
+    "_id": "1d7d16a8dd8964d1d5ec7a29",
+    "user": "d866192cbcfae6e8a20f6e28",
+    "name": "Dhaka Silicon Solutions",
+    "email": "vendor2@gmail.com",
+    "phone": "+880 1819-234501",
+    "address": {
+      "street": "78 Gulshan Avenue, Plot 14",
+      "state": "Dhaka",
+      "postalCode": "1212",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/103/400/400.jpg?hmac=feBLvHHFPMTz1EaXmGTtWfF8rsHWA_9o-AckTvMruO4",
+    "banner": "https://fastly.picsum.photos/id/1/1200/400.jpg?hmac=hptHn9OwOUJigXun5nyYVP_3BR4pOrltTDV2CHHsnyk",
+    "isDeleted": false,
+    "createdAt": "2026-01-12T12:48:00.000Z",
+    "updatedAt": "2026-01-26T13:48:00.000Z"
+  },
+  {
+    "_id": "106d2993f55d72d7e621f7d6",
+    "user": "826b3eb6531d910021975785",
+    "name": "Jamuna Organics & Spices",
+    "email": "vendor3@gmail.com",
+    "phone": "+880 1912-345672",
+    "address": {
+      "street": "45/2 Kemal Ataturk Avenue, Banani",
+      "state": "Dhaka",
+      "postalCode": "1213",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/104/400/400.jpg?hmac=Okh8V325VJas7GQi2kZ0U54bdGfw5I_ccd4XA9VX1qo",
+    "banner": "https://fastly.picsum.photos/id/2/1200/400.jpg?hmac=n23WtVWQwgRn1ZrrVSjVOwRi1mlsvAhbisoVRgFOEaU",
+    "isDeleted": false,
+    "createdAt": "2026-01-14T17:36:00.000Z",
+    "updatedAt": "2026-01-28T19:36:00.000Z"
+  },
+  {
+    "_id": "31443a47ffac17e1b6b94862",
+    "user": "c317b45278acfd60b7267a66",
+    "name": "Padma River Artisans",
+    "email": "vendor4@gmail.com",
+    "phone": "+880 1623-456783",
+    "address": {
+      "street": "12 Motijheel Commercial Area",
+      "state": "Dhaka",
+      "postalCode": "1000",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/106/400/400.jpg?hmac=eEZPxCkV47FG3BhZGEEkvju56UXv21b2QNtwjUqcNTc",
+    "banner": "https://fastly.picsum.photos/id/3/1200/400.jpg?hmac=XWlEqxg-xZ15ftFQOnnydlMUa40_9B1Uot9BSnGfHu4",
+    "isDeleted": false,
+    "createdAt": "2026-01-16T22:24:00.000Z",
+    "updatedAt": "2026-01-31T01:24:00.000Z"
+  },
+  {
+    "_id": "55283c8b9d8618e50abd1709",
+    "user": "b1b040ce070de6bbb3805d2a",
+    "name": "Sylhet Green Tea Traders",
+    "email": "vendor5@gmail.com",
+    "phone": "+880 1713-987654",
+    "address": {
+      "street": "88 Zindabazar Main Arcade",
+      "state": "Sylhet",
+      "postalCode": "3100",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/107/400/400.jpg?hmac=Tw5IGwPKXffTRtERQNVpnngbuGCU41IywM01jKfkK8w",
+    "banner": "https://fastly.picsum.photos/id/4/1200/400.jpg?hmac=iSMJVK1dIVdFO96zAsl4Qjx4qZv4njSdvmBWcUZuVnc",
+    "isDeleted": false,
+    "createdAt": "2026-01-19T03:12:00.000Z",
+    "updatedAt": "2026-02-02T07:12:00.000Z"
+  },
+  {
+    "_id": "1d721ebd0f902bb245d89887",
+    "user": "14c3c2da164549d7d502c0d4",
+    "name": "Chittagong Maritime Supplies",
+    "email": "vendor6@gmail.com",
+    "phone": "+880 1817-654321",
+    "address": {
+      "street": "234 Agrabad Commercial Area",
+      "state": "Chittagong",
+      "postalCode": "4100",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/108/400/400.jpg?hmac=oCLlyiWMorSandpmgd93DYa7tQ4_3nDSt0rkFA8cks0",
+    "banner": "https://fastly.picsum.photos/id/5/1200/400.jpg?hmac=IBBp5SzKvHXqOxJrh-I8F85nekgx59TlI8faEt_MM8c",
+    "isDeleted": false,
+    "createdAt": "2026-01-21T08:00:00.000Z",
+    "updatedAt": "2026-02-04T13:00:00.000Z"
+  },
+  {
+    "_id": "1296ac823b32300bbd8907da",
+    "user": "5fc1f4c81b412f57655c646e",
+    "name": "Sundarban Raw Honey & Botanicals",
+    "email": "vendor7@gmail.com",
+    "phone": "+880 1914-112233",
+    "address": {
+      "street": "19 KDA Commercial Avenue",
+      "state": "Khulna",
+      "postalCode": "9100",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/109/400/400.jpg?hmac=Zo3A1uyhOwvBB3BkhP3l7ngZ7IrhcNauPeHCM16x3AY",
+    "banner": "https://fastly.picsum.photos/id/6/1200/400.jpg?hmac=08XBoWm_IogyUY1Bjpfxox182qdOdCeBBflHg2MzsK8",
+    "isDeleted": false,
+    "createdAt": "2026-01-23T12:48:00.000Z",
+    "updatedAt": "2026-02-06T18:48:00.000Z"
+  },
+  {
+    "_id": "21856890ee2602bd5ee0d0d5",
+    "user": "6fe153eff916deae09d0ad9b",
+    "name": "Sonargaon Weavers Guild",
+    "email": "vendor8@gmail.com",
+    "phone": "+880 1621-223344",
+    "address": {
+      "street": "67 Old Folk Art Museum Road",
+      "state": "Narayanganj",
+      "postalCode": "1400",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/110/400/400.jpg?hmac=OGcxURhvyXIWGH9fOilAJH4FZJv4yJhXHPayI6wsAbU",
+    "banner": "https://fastly.picsum.photos/id/7/1200/400.jpg?hmac=fedxuF3KrSZvaNv25bo7LeVVe320AnDQjEddCv6rVNE",
+    "isDeleted": false,
+    "createdAt": "2026-01-25T17:36:00.000Z",
+    "updatedAt": "2026-02-09T00:36:00.000Z"
+  },
+  {
+    "_id": "154a097610eb439ab692488a",
+    "user": "99a20833fadaee38a87be749",
+    "name": "Meghna Delta Electro",
+    "email": "vendor9@gmail.com",
+    "phone": "+880 1715-334455",
+    "address": {
+      "street": "310 Station Road",
+      "state": "Rangpur",
+      "postalCode": "5400",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/111/400/400.jpg?hmac=1dh4-ydpDy-Jer6EXsXl6O0_k9gHr2R03bJk9SJFohU",
+    "banner": "https://fastly.picsum.photos/id/8/1200/400.jpg?hmac=BRh0Z9UoTo8wZLSZ3NKCAcVen-G0PwBpm-fA-9z5uEc",
+    "isDeleted": false,
+    "createdAt": "2026-01-27T22:24:00.000Z",
+    "updatedAt": "2026-02-11T06:24:00.000Z"
+  },
+  {
+    "_id": "83272a57fe09b9555bc5dce7",
+    "user": "1c34b8104318cd9f97a63449",
+    "name": "Rajshahi Silk Emporium",
+    "email": "vendor10@gmail.com",
+    "phone": "+880 1812-445566",
+    "address": {
+      "street": "15 Shaheb Bazar Market",
+      "state": "Rajshahi",
+      "postalCode": "6000",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/112/400/400.jpg?hmac=60KWAFCy-kqydDF41A6hT-Hc1_mOVJJFejEqh3a-8fc",
+    "banner": "https://fastly.picsum.photos/id/9/1200/400.jpg?hmac=vtBYIvUJ3CaZLDbl7V0VeHojFn9yX7qF6lCOboV7rHU",
+    "isDeleted": false,
+    "createdAt": "2026-01-30T03:12:00.000Z",
+    "updatedAt": "2026-02-13T12:12:00.000Z"
+  },
+  {
+    "_id": "e48317263eb270001a1c4f11",
+    "user": "a2f835b81723636d1b24dbe7",
+    "name": "Rangpur Agro Harvest",
+    "email": "vendor11@gmail.com",
+    "phone": "+880 1916-556677",
+    "address": {
+      "street": "82 RK Road, Central Junction",
+      "state": "Rangpur",
+      "postalCode": "5401",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/113/400/400.jpg?hmac=hCg1mc0JZPvlwmU2b7Lu17RjRcBxyHCdgiF1URs9PuE",
+    "banner": "https://fastly.picsum.photos/id/10/1200/400.jpg?hmac=CjKFa3jcR4LYZhh4V4U-Gy19zJwQ6HJuUonOX99v7Vw",
+    "isDeleted": false,
+    "createdAt": "2026-02-01T08:00:00.000Z",
+    "updatedAt": "2026-02-15T18:00:00.000Z"
+  },
+  {
+    "_id": "60860b43684e63a69f8014e3",
+    "user": "2cd44cc863e8d919cc00bf87",
+    "name": "Comilla Khadi Handlooms",
+    "email": "vendor12@gmail.com",
+    "phone": "+880 1625-667788",
+    "address": {
+      "street": "93 Kandirpar Super Market",
+      "state": "Comilla",
+      "postalCode": "3500",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/114/400/400.jpg?hmac=ju1hDZozG7yevl7r1Z00mBKlM8nNsj3xsl5b6QxvDH0",
+    "banner": "https://fastly.picsum.photos/id/11/1200/400.jpg?hmac=ccJLfrMtNOqRf1O75nz6R1DBMS-fpW4ZFJAVXPXJHTo",
+    "isDeleted": false,
+    "createdAt": "2026-02-03T12:48:00.000Z",
+    "updatedAt": "2026-02-17T23:48:00.000Z"
+  },
+  {
+    "_id": "029264d69c224c3148379d18",
+    "user": "19f294a789904c37bb87c2fb",
+    "name": "Cox's Bazar Pearl & Coral",
+    "email": "vendor13@gmail.com",
+    "phone": "+880 1718-778899",
+    "address": {
+      "street": "11 Kolatoli Beach Boulevard",
+      "state": "Chittagong",
+      "postalCode": "4700",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/115/400/400.jpg?hmac=nWHNT5wyI521-uVsjVF2GI0q7l_YCNntQ0_uoSOFUI4",
+    "banner": "https://fastly.picsum.photos/id/12/1200/400.jpg?hmac=ggF2Emki9BMSJwWBi1A7Whlg0Ap74jVFKDM62pml1gE",
+    "isDeleted": false,
+    "createdAt": "2026-02-05T17:36:00.000Z",
+    "updatedAt": "2026-02-20T05:36:00.000Z"
+  },
+  {
+    "_id": "c3518ac9bc16cd3c25f3a001",
+    "user": "af118c21634f7d5dd82d9f64",
+    "name": "Barisal Floating River Mart",
+    "email": "vendor14@gmail.com",
+    "phone": "+880 1814-889900",
+    "address": {
+      "street": "54 Sadar Road, Port Zone",
+      "state": "Barisal",
+      "postalCode": "8200",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/116/400/400.jpg?hmac=QwUU2N392q3gmXgjo5rYTxesD1z5d_43Xk8Nln5-OvM",
+    "banner": "https://fastly.picsum.photos/id/13/1200/400.jpg?hmac=NiK0O1KBLHxizG7OyBw5ncjFOmQZMUiULdo3rnvWSro",
+    "isDeleted": false,
+    "createdAt": "2026-02-07T22:24:00.000Z",
+    "updatedAt": "2026-02-22T11:24:00.000Z"
+  },
+  {
+    "_id": "6ad608f6304b70345d35ca57",
+    "user": "9183abf5e07bcb0ab99bae43",
+    "name": "Bogra Pottery & Terracotta",
+    "email": "vendor15@gmail.com",
+    "phone": "+880 1918-990011",
+    "address": {
+      "street": "29 Satmatha Plaza",
+      "state": "Bogra",
+      "postalCode": "5800",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/117/400/400.jpg?hmac=lqQqWF--nOABfxYFPF-OUZTuCyYMv3Y0siDTCYlbbdI",
+    "banner": "https://fastly.picsum.photos/id/14/1200/400.jpg?hmac=DBsk706NPxqDKE55i9mxJSyt9mbN01ExWORVTwPUzVY",
+    "isDeleted": false,
+    "createdAt": "2026-02-10T03:12:00.000Z",
+    "updatedAt": "2026-02-24T17:12:00.000Z"
+  },
+  {
+    "_id": "ee8e2a43c00b08fc0e9556e2",
+    "user": "2251c437ec328e57909f985a",
+    "name": "Gazipur Modern Apparel Works",
+    "email": "vendor16@gmail.com",
+    "phone": "+880 1629-001122",
+    "address": {
+      "street": "402 Joydebpur Chowrasta",
+      "state": "Gazipur",
+      "postalCode": "1700",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/118/400/400.jpg?hmac=WcHayYlQ4gV6VF5Dx0QFEPWhwD6VdhjupJElZc1AylQ",
+    "banner": "https://fastly.picsum.photos/id/15/1200/400.jpg?hmac=eJd60rCq6uGwqWAoOvwlx6PnPKtgDxS5dT07D0jT9LU",
+    "isDeleted": false,
+    "createdAt": "2026-02-12T08:00:00.000Z",
+    "updatedAt": "2026-02-26T23:00:00.000Z"
+  },
+  {
+    "_id": "a2a95ce9382172a99ee9b149",
+    "user": "bb5d0b5a4b987915af7801b4",
+    "name": "Narayanganj Fiber Mills",
+    "email": "vendor17@gmail.com",
+    "phone": "+880 1710-123456",
+    "address": {
+      "street": "18 BB Road, River Front",
+      "state": "Narayanganj",
+      "postalCode": "1401",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/119/400/400.jpg?hmac=DujNQIO6Z2qAjIsVzDfgrMOKUCZH2CGUN6Q5W3qXyjk",
+    "banner": "https://fastly.picsum.photos/id/16/1200/400.jpg?hmac=LzlkC1sd9QR16zY8II9hIeUngkCLvvMHmVQlxnAS2sI",
+    "isDeleted": false,
+    "createdAt": "2026-02-14T12:48:00.000Z",
+    "updatedAt": "2026-03-01T04:48:00.000Z"
+  },
+  {
+    "_id": "670a00bc6bf3260751c50465",
+    "user": "d502553c6a66accb8b192f38",
+    "name": "Mymensingh Organic Grain",
+    "email": "vendor18@gmail.com",
+    "phone": "+880 1811-234567",
+    "address": {
+      "street": "61 Gangadas Guha Road",
+      "state": "Mymensingh",
+      "postalCode": "2200",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/120/400/400.jpg?hmac=aPCs-klVkMGGF4CzgC6Lc2gTBZtH4QsKwKpyyg5VgyQ",
+    "banner": "https://fastly.picsum.photos/id/17/1200/400.jpg?hmac=J7fS4fKh2cmeYvrOsq2BLPVWeDVn8_l27evDV27QjDI",
+    "isDeleted": false,
+    "createdAt": "2026-02-16T17:36:00.000Z",
+    "updatedAt": "2026-03-03T10:36:00.000Z"
+  },
+  {
+    "_id": "da960e355c8cbf15b072a7fd",
+    "user": "cda44917081414bddc561690",
+    "name": "Dinajpur Aromatic Rice Traders",
+    "email": "vendor19@gmail.com",
+    "phone": "+880 1910-345678",
+    "address": {
+      "street": "74 Nimtola Bazar",
+      "state": "Dinajpur",
+      "postalCode": "5200",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/121/400/400.jpg?hmac=7QxpPkVXU0kRv-QSw_tmetsPzdSpazWGYJ0RXEganBg",
+    "banner": "https://fastly.picsum.photos/id/18/1200/400.jpg?hmac=jlRH1X5XvJkhuyelOgLED2HC0MoAuuA7LPWENJLpluk",
+    "isDeleted": false,
+    "createdAt": "2026-02-18T22:24:00.000Z",
+    "updatedAt": "2026-03-05T16:24:00.000Z"
+  },
+  {
+    "_id": "f77a124b2d97ad7bcad4fe1e",
+    "user": "ac9b876a39f98d9548c5c210",
+    "name": "Jessore Leather Craft Guild",
+    "email": "vendor20@gmail.com",
+    "phone": "+880 1620-456789",
+    "address": {
+      "street": "38 MK Road, Kotwali",
+      "state": "Jessore",
+      "postalCode": "7400",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/122/400/400.jpg?hmac=yU9i-eHFYuzHiGntDMBiD1Nm0ox7UDvhvyDPXPQIZds",
+    "banner": "https://fastly.picsum.photos/id/19/1200/400.jpg?hmac=eoEmPoOHBiDDk_F3ORGCv_7eTeyffLQ88dwI2O5HK6g",
+    "isDeleted": false,
+    "createdAt": "2026-02-21T03:12:00.000Z",
+    "updatedAt": "2026-03-07T22:12:00.000Z"
+  },
+  {
+    "_id": "09bda6a3f0c6a8e0cc0044e0",
+    "user": "0b6f3052ebf3a477fa01d546",
+    "name": "Kushtia Musical Crafts",
+    "email": "vendor21@gmail.com",
+    "phone": "+880 1714-567890",
+    "address": {
+      "street": "22 NS Road, Majampur",
+      "state": "Kushtia",
+      "postalCode": "7000",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/123/400/400.jpg?hmac=QD7b6QzGyY7XjjhJTop0Jzk99lFU5RqAS89LBUl14pY",
+    "banner": "https://fastly.picsum.photos/id/20/1200/400.jpg?hmac=O6wchG8LMt7kORc1ImNTAH_MpzMMkaaav7yO5-oYisI",
+    "isDeleted": false,
+    "createdAt": "2026-02-23T08:00:00.000Z",
+    "updatedAt": "2026-03-10T04:00:00.000Z"
+  },
+  {
+    "_id": "3b558c177c0ce01586bd6fe8",
+    "user": "e3c4560e307d7383ab63ea31",
+    "name": "Tangail Weaving House",
+    "email": "vendor22@gmail.com",
+    "phone": "+880 1813-678901",
+    "address": {
+      "street": "105 Victoria Road",
+      "state": "Tangail",
+      "postalCode": "1900",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/124/400/400.jpg?hmac=XRS4zzjM57I0M8_t1fmpTLHR8bQhJcHy2rJZ78j6ftU",
+    "banner": "https://fastly.picsum.photos/id/21/1200/400.jpg?hmac=CBABtgT7vHWLUhKv5poXcB5JmPX9EWx1L4GuAfAowOE",
+    "isDeleted": false,
+    "createdAt": "2026-02-25T12:48:00.000Z",
+    "updatedAt": "2026-03-12T09:48:00.000Z"
+  },
+  {
+    "_id": "2219120250d23f598833dac9",
+    "user": "18c19b6ee5c7bce25d32fba3",
+    "name": "Sylhet Lime & Spice Merchants",
+    "email": "vendor23@gmail.com",
+    "phone": "+880 1915-789012",
+    "address": {
+      "street": "52 Amberkhana Point",
+      "state": "Sylhet",
+      "postalCode": "3101",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/125/400/400.jpg?hmac=UnXauuEU_d19eOGgww8kkznAOQccYPYUaSoWbCoaYYU",
+    "banner": "https://fastly.picsum.photos/id/22/1200/400.jpg?hmac=jwBmTv5l6LnwMS6SNDW1kWO-skeRm5HYc0o_-fM9FUw",
+    "isDeleted": false,
+    "createdAt": "2026-02-27T17:36:00.000Z",
+    "updatedAt": "2026-03-14T15:36:00.000Z"
+  },
+  {
+    "_id": "8f048ee7278b73fe00df60a4",
+    "user": "1e7f5f9ac63e54ee4c6dd364",
+    "name": "Khulna Mangrove Woods",
+    "email": "vendor24@gmail.com",
+    "phone": "+880 1624-890123",
+    "address": {
+      "street": "84 Lower Jessore Road",
+      "state": "Khulna",
+      "postalCode": "9000",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/126/400/400.jpg?hmac=ia-Rdu9o6OB1KGp2XJs9WuRJ4GPksZXn9XNwgGmu5iU",
+    "banner": "https://fastly.picsum.photos/id/23/1200/400.jpg?hmac=JxFzDrdGbbT4EFSiSjleVGndvbqikg9AMBlwEPV4J6k",
+    "isDeleted": false,
+    "createdAt": "2026-03-01T22:24:00.000Z",
+    "updatedAt": "2026-03-16T21:24:00.000Z"
+  },
+  {
+    "_id": "883a9a0926edb8bded61ce7d",
+    "user": "8ca26d1a5916c75054669a2a",
+    "name": "Dhaka Urban Gadgets",
+    "email": "vendor25@gmail.com",
+    "phone": "+880 1717-901234",
+    "address": {
+      "street": "21 Elephant Road, Multiplan Level 3",
+      "state": "Dhaka",
+      "postalCode": "1205B",
+      "country": "Bangladesh"
+    },
+    "logo": "https://fastly.picsum.photos/id/127/400/400.jpg?hmac=3J6eAN-6x1XlviVDKwzoZiAH5XnV-Y2eI4LilK4ZtAk",
+    "banner": "https://fastly.picsum.photos/id/24/1200/400.jpg?hmac=HRvwHDVACpLGv4YYQUFt4yx85R3RUlc5VgnHaD-YPxU",
+    "isDeleted": false,
+    "createdAt": "2026-03-04T03:12:00.000Z",
+    "updatedAt": "2026-03-19T03:12:00.000Z"
+  },
+  {
+    "_id": "075341c6f64a7d0b97dc21c0",
+    "user": "66854cd503a86ae79a324cb0",
+    "name": "Apex Precision Optics",
+    "email": "vendor26@gmail.com",
+    "phone": "+1 (415) 555-0101",
+    "address": {
+      "street": "580 Howard Street, Suite 400",
+      "state": "California",
+      "postalCode": "94105",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/128/400/400.jpg?hmac=k_1ZotpiF-ueHvENZfEaz0S9lDng3_g_Noe6gNEywDQ",
+    "banner": "https://fastly.picsum.photos/id/25/1200/400.jpg?hmac=nbL0oRHHv-tvZtAEFjVXMxMGp2QL6k0zMs75g2pFWqg",
+    "isDeleted": false,
+    "createdAt": "2026-03-06T08:00:00.000Z",
+    "updatedAt": "2026-03-21T09:00:00.000Z"
+  },
+  {
+    "_id": "173d760754db5238772ab748",
+    "user": "d54cef6da52b5ee122983fd7",
+    "name": "Pacific Crest Gear Co.",
+    "email": "vendor27@gmail.com",
+    "phone": "+1 (206) 555-0102",
+    "address": {
+      "street": "1201 3rd Avenue, Floor 14",
+      "state": "Washington",
+      "postalCode": "98101",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/129/400/400.jpg?hmac=dgWBph-WRayQhyWQCe_QhSASvSxeeazN0jg0sUL2URg",
+    "banner": "https://fastly.picsum.photos/id/26/1200/400.jpg?hmac=wRBNG6Rns8YfAxmUuT6JTYQdzRJI2Ehht68G2kxe72c",
+    "isDeleted": false,
+    "createdAt": "2026-03-08T12:48:00.000Z",
+    "updatedAt": "2026-03-23T14:48:00.000Z"
+  },
+  {
+    "_id": "ce7c510da2ba1a33d6ce571c",
+    "user": "edc1f7a8c585b014032452ae",
+    "name": "Silicon Valley Components",
+    "email": "vendor28@gmail.com",
+    "phone": "+1 (650) 555-0103",
+    "address": {
+      "street": "3000 Sand Hill Road, Bldg 4",
+      "state": "California",
+      "postalCode": "94025",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/130/400/400.jpg?hmac=t7pjDM3Xuw1JrVA6Zohl7DYlGQWzMGSx6Mo9n-rgQQY",
+    "banner": "https://fastly.picsum.photos/id/27/1200/400.jpg?hmac=3dUqWuvoUwqS7mawlSd3GqYMHVGufJpXPn-b0NG_tmo",
+    "isDeleted": false,
+    "createdAt": "2026-03-10T17:36:00.000Z",
+    "updatedAt": "2026-03-25T20:36:00.000Z"
+  },
+  {
+    "_id": "001dd4fdb76392e40c87945f",
+    "user": "54320e588cff611e84c8887a",
+    "name": "Austin Sound & Acoustics",
+    "email": "vendor29@gmail.com",
+    "phone": "+1 (512) 555-0104",
+    "address": {
+      "street": "600 Congress Avenue, Suite 1100",
+      "state": "Texas",
+      "postalCode": "78701",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/131/400/400.jpg?hmac=CbEVKXEo5vhFlYwxfvFOAdNUG2jdYzXZiKoPAhXUEgc",
+    "banner": "https://fastly.picsum.photos/id/28/1200/400.jpg?hmac=lvudm8-Fhlh__n6uiqrIsd0Y44iBgexoiCRtTko1-S8",
+    "isDeleted": false,
+    "createdAt": "2026-03-12T22:24:00.000Z",
+    "updatedAt": "2026-03-28T02:24:00.000Z"
+  },
+  {
+    "_id": "02fac8e1f0ea325ae9cfea6c",
+    "user": "2412011f0f48342245446e09",
+    "name": "Empire State Tech Direct",
+    "email": "vendor30@gmail.com",
+    "phone": "+1 (212) 555-0105",
+    "address": {
+      "street": "350 5th Avenue, Suite 5100",
+      "state": "New York",
+      "postalCode": "10118",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/132/400/400.jpg?hmac=p-aH9l9cGnUeqlmdgvGs6DUIZR1_3NcgKXDv0yXpns0",
+    "banner": "https://fastly.picsum.photos/id/29/1200/400.jpg?hmac=jF6OP15T2owQfEg90ovYONWEDaPp6Nnf7FuQsU2m5g0",
+    "isDeleted": false,
+    "createdAt": "2026-03-15T03:12:00.000Z",
+    "updatedAt": "2026-03-30T08:12:00.000Z"
+  },
+  {
+    "_id": "d0f13b6c96de35a99bcb7ae0",
+    "user": "b9f99c33750db34acb57d5a2",
+    "name": "Golden Gate Gadget Works",
+    "email": "vendor31@gmail.com",
+    "phone": "+1 (415) 555-0106",
+    "address": {
+      "street": "101 California Street, Suite 2450",
+      "state": "California",
+      "postalCode": "94111",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/133/400/400.jpg?hmac=fqf6pjgv90K_96eKCtqAuhE_nKHguVxewB1fx1euQJs",
+    "banner": "https://fastly.picsum.photos/id/30/1200/400.jpg?hmac=DHco0uOLxHSND31-6iuXFwOiHpF9SEamQaUSISfGzKE",
+    "isDeleted": false,
+    "createdAt": "2026-03-17T08:00:00.000Z",
+    "updatedAt": "2026-04-01T14:00:00.000Z"
+  },
+  {
+    "_id": "28fc2d46dc90c1ed2d62fe6d",
+    "user": "670eee5519e0a3fed1ec6d7a",
+    "name": "Cascade Mountain Outfitters",
+    "email": "vendor32@gmail.com",
+    "phone": "+1 (206) 555-0107",
+    "address": {
+      "street": "1122 E Pike Street",
+      "state": "Washington",
+      "postalCode": "98122",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/134/400/400.jpg?hmac=t95B0gxiQNjhV2UjCwn8aaQcd01C4qKtpx3DrUqrb2s",
+    "banner": "https://fastly.picsum.photos/id/31/1200/400.jpg?hmac=XpHqJyM05wLQBytJlzgreR9iMsLUeiMpnDpeK3ekhuI",
+    "isDeleted": false,
+    "createdAt": "2026-03-19T12:48:00.000Z",
+    "updatedAt": "2026-04-03T19:48:00.000Z"
+  },
+  {
+    "_id": "3045a9d3360864f5ca2b2317",
+    "user": "ebbf506fe2a938d836aa5fe0",
+    "name": "Rocky Mountain Peak Goods",
+    "email": "vendor33@gmail.com",
+    "phone": "+1 (303) 555-0108",
+    "address": {
+      "street": "1600 California Street",
+      "state": "Colorado",
+      "postalCode": "80202",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/135/400/400.jpg?hmac=lV-ZXso00GOXxfzfWrK5eV65VwpToeAgT_UljtAmMr8",
+    "banner": "https://fastly.picsum.photos/id/32/1200/400.jpg?hmac=4tXSUqqH3uQ22CAtRotv1E_idBgZJLhtuiIaCBajF6E",
+    "isDeleted": false,
+    "createdAt": "2026-03-21T17:36:00.000Z",
+    "updatedAt": "2026-04-06T01:36:00.000Z"
+  },
+  {
+    "_id": "98c14eeaa88369c8eadfbcfd",
+    "user": "241bdac39a74fa5ac0707ba5",
+    "name": "Great Lakes Industrial Supply",
+    "email": "vendor34@gmail.com",
+    "phone": "+1 (312) 555-0109",
+    "address": {
+      "street": "233 S Wacker Drive, Suite 8400",
+      "state": "Illinois",
+      "postalCode": "60606",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/136/400/400.jpg?hmac=g7AnITqu4200BQ-sqA1GTwz3oRvd-ZggWMUrvqX0wXA",
+    "banner": "https://fastly.picsum.photos/id/33/1200/400.jpg?hmac=ZYLbWUvCyRsdt3NSN-N22SgRBC-61CRBecdfiov-E-A",
+    "isDeleted": false,
+    "createdAt": "2026-03-23T22:24:00.000Z",
+    "updatedAt": "2026-04-08T07:24:00.000Z"
+  },
+  {
+    "_id": "d7e70059a17356ebd7a48338",
+    "user": "9cc6b9b181967af9fcf1c514",
+    "name": "Sunshine State Citrus & Spice",
+    "email": "vendor35@gmail.com",
+    "phone": "+1 (305) 555-0110",
+    "address": {
+      "street": "1111 Lincoln Road, Suite 600",
+      "state": "Florida",
+      "postalCode": "33139",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/137/400/400.jpg?hmac=M3DQdywZUeoUAnf9FM66jmmwe8PKoGOnm876eUBsuxo",
+    "banner": "https://fastly.picsum.photos/id/34/1200/400.jpg?hmac=pgCg0lLPWgUxnNMcmGYX4Xgy7eOGiSfq6bMISLxMbcI",
+    "isDeleted": false,
+    "createdAt": "2026-03-26T03:12:00.000Z",
+    "updatedAt": "2026-04-10T13:12:00.000Z"
+  },
+  {
+    "_id": "455c93d78fabe77ca04c4705",
+    "user": "a4b6987e1dc4d02d5a5782ba",
+    "name": "Lone Star Hardware Co.",
+    "email": "vendor36@gmail.com",
+    "phone": "+1 (214) 555-0111",
+    "address": {
+      "street": "1717 McKinney Avenue, Suite 1200",
+      "state": "Texas",
+      "postalCode": "75202",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/139/400/400.jpg?hmac=Uo3ylOVkqbiLwCvoUlxv2l6PoudDGzYYV92C-Q5AVwM",
+    "banner": "https://fastly.picsum.photos/id/35/1200/400.jpg?hmac=NTpIydFJFUbj8sLoqyY4sVMzVeprzxzSMJhmnL_BPm8",
+    "isDeleted": false,
+    "createdAt": "2026-03-28T08:00:00.000Z",
+    "updatedAt": "2026-04-12T19:00:00.000Z"
+  },
+  {
+    "_id": "9e6ed571ca2adae179d30274",
+    "user": "1d2c16a15084cd1706499fd2",
+    "name": "New England Wool & Leather",
+    "email": "vendor37@gmail.com",
+    "phone": "+1 (617) 555-0112",
+    "address": {
+      "street": "100 High Street, Floor 18",
+      "state": "Massachusetts",
+      "postalCode": "02110",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/140/400/400.jpg?hmac=g-jpVEE9sIBkD90UyFVabP86FsrmMieI68Tc-9_GKYE",
+    "banner": "https://fastly.picsum.photos/id/36/1200/400.jpg?hmac=_v1O7ezdXm8-nsufzvlavzvj4LlDMBVFZAfL3SWIYcg",
+    "isDeleted": false,
+    "createdAt": "2026-03-30T12:48:00.000Z",
+    "updatedAt": "2026-04-15T00:48:00.000Z"
+  },
+  {
+    "_id": "41fda783f178ba0a1dabcacf",
+    "user": "d78eb77a087cd92d989ffaf5",
+    "name": "Midwest Forge & Tool",
+    "email": "vendor38@gmail.com",
+    "phone": "+1 (216) 555-0113",
+    "address": {
+      "street": "100 Public Square, Suite 450",
+      "state": "Ohio",
+      "postalCode": "44113",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/141/400/400.jpg?hmac=rvZ6eMhtYLl4zBJ70q9Lus1gtPMUMSNVFeVXK0IodKQ",
+    "banner": "https://fastly.picsum.photos/id/37/1200/400.jpg?hmac=7HHFQ2Z7bqxBiR8IyzYc0eQYN-Ui0k9b18fsYBWyEBU",
+    "isDeleted": false,
+    "createdAt": "2026-04-01T17:36:00.000Z",
+    "updatedAt": "2026-04-17T06:36:00.000Z"
+  },
+  {
+    "_id": "cef0b5661a31568c9af12426",
+    "user": "75dd896cb2e94febcccd0be1",
+    "name": "Blue Ridge Mountain Crafts",
+    "email": "vendor39@gmail.com",
+    "phone": "+1 (828) 555-0114",
+    "address": {
+      "street": "121 S Main Street, Suite 300",
+      "state": "North Carolina",
+      "postalCode": "28801",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/142/400/400.jpg?hmac=mmhVn7MCArXkV3U3RGr1DHJxBdhAm8QFaeWwOL7UKgg",
+    "banner": "https://fastly.picsum.photos/id/38/1200/400.jpg?hmac=cdjou11YdGVWWLiHI0PhHXM-LkIcRlm2rEfngfBaPPQ",
+    "isDeleted": false,
+    "createdAt": "2026-04-03T22:24:00.000Z",
+    "updatedAt": "2026-04-19T12:24:00.000Z"
+  },
+  {
+    "_id": "0d0fec79a8d450072f7523ed",
+    "user": "ff161a2b9d310c30741c8ed4",
+    "name": "Emerald City Electronics",
+    "email": "vendor40@gmail.com",
+    "phone": "+1 (206) 555-0115",
+    "address": {
+      "street": "400 Pine Street, Suite 502",
+      "state": "Washington",
+      "postalCode": "98101B",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/143/400/400.jpg?hmac=bVe57R20nBGz2_-ZWu-d1tdHn2zqFjBxQyJGg2Q2aF0",
+    "banner": "https://fastly.picsum.photos/id/39/1200/400.jpg?hmac=9DmB8XwNH17EZNnTVWz5HfQgLof_0OsOFd7EcIG7eRA",
+    "isDeleted": false,
+    "createdAt": "2026-04-06T03:12:00.000Z",
+    "updatedAt": "2026-04-21T18:12:00.000Z"
+  },
+  {
+    "_id": "7fc5429a098c3e7f816e66b0",
+    "user": "05cb4ddd99fdc1456d788947",
+    "name": "Sonoran Desert Botanicals",
+    "email": "vendor41@gmail.com",
+    "phone": "+1 (602) 555-0116",
+    "address": {
+      "street": "201 E Washington Street",
+      "state": "Arizona",
+      "postalCode": "85004",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/144/400/400.jpg?hmac=IobWb1vc5VdjtgPV2oOgHCU1hvS3a0HkGeDvDNawfnw",
+    "banner": "https://fastly.picsum.photos/id/40/1200/400.jpg?hmac=zSBnNET3atvNHa5tmIwNhOAbEaKrbaW5xWPA-OaBJvg",
+    "isDeleted": false,
+    "createdAt": "2026-04-08T08:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "_id": "6a8cf6c78422064fd1e91c7b",
+    "user": "777a37036cb50458e06ed6b0",
+    "name": "Steel City Heavy Supply",
+    "email": "vendor42@gmail.com",
+    "phone": "+1 (412) 555-0117",
+    "address": {
+      "street": "600 Grant Street, Suite 3900",
+      "state": "Pennsylvania",
+      "postalCode": "15219",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/145/400/400.jpg?hmac=ytOpCvRdf1m9Z3jb84KlcPujJ9Jqym6BepXOeW1wvdk",
+    "banner": "https://fastly.picsum.photos/id/41/1200/400.jpg?hmac=fxFuvVaVlONQKFHZ2phhli6OODPLODSpthWxW2Cx89Y",
+    "isDeleted": false,
+    "createdAt": "2026-04-10T12:48:00.000Z",
+    "updatedAt": "2026-04-26T05:48:00.000Z"
+  },
+  {
+    "_id": "e99b48011611d4499c7019e7",
+    "user": "16d8ef0bec70b6883238c26b",
+    "name": "Chesapeake Bay Provisions",
+    "email": "vendor43@gmail.com",
+    "phone": "+1 (410) 555-0118",
+    "address": {
+      "street": "100 Light Street, Suite 1000",
+      "state": "Maryland",
+      "postalCode": "21202",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/146/400/400.jpg?hmac=xfQnxSRKjuIlGMTO-7iBJoLIdE2poilSwEDrZ03Hovk",
+    "banner": "https://fastly.picsum.photos/id/42/1200/400.jpg?hmac=I9yKWI1SpB14AMvSSh3HgmmUGz82QZyR05s3TtHal00",
+    "isDeleted": false,
+    "createdAt": "2026-04-12T17:36:00.000Z",
+    "updatedAt": "2026-04-28T11:36:00.000Z"
+  },
+  {
+    "_id": "d440f17a4ed3750b8877630c",
+    "user": "d8ab01b8679862cad1069057",
+    "name": "Big Sky Frontier Leather",
+    "email": "vendor44@gmail.com",
+    "phone": "+1 (406) 555-0119",
+    "address": {
+      "street": "280 W Kagy Boulevard",
+      "state": "Montana",
+      "postalCode": "59715",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/147/400/400.jpg?hmac=EtobpNQI_FLctas3TyOZMRQX362T9SCJs1rvd1S7d8Y",
+    "banner": "https://fastly.picsum.photos/id/43/1200/400.jpg?hmac=NG2rlIaBnjJ8qN4istKoK7wyYIz1rcQFTiCJO-Juf30",
+    "isDeleted": false,
+    "createdAt": "2026-04-14T22:24:00.000Z",
+    "updatedAt": "2026-04-30T17:24:00.000Z"
+  },
+  {
+    "_id": "5d13b16dca93184af86be8a7",
+    "user": "3a41fdae67e168ad11088f8a",
+    "name": "Music City Studio Instruments",
+    "email": "vendor45@gmail.com",
+    "phone": "+1 (615) 555-0120",
+    "address": {
+      "street": "150 4th Avenue N, Suite 1800",
+      "state": "Tennessee",
+      "postalCode": "37219",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/149/400/400.jpg?hmac=GUovnibc3mxPKRWAWbmdwwpc-LDppfLJ_NgkaAVJXdw",
+    "banner": "https://fastly.picsum.photos/id/44/1200/400.jpg?hmac=FA5MAzxZ7Q4GiNXsKOphk2i5I9F0LVbzhIuDXbGXzZ4",
+    "isDeleted": false,
+    "createdAt": "2026-04-17T03:12:00.000Z",
+    "updatedAt": "2026-05-02T23:12:00.000Z"
+  },
+  {
+    "_id": "dc4f30d53286be784a28f7a3",
+    "user": "a74a0ddfefb63d9c4f585acc",
+    "name": "Peachtree Modern Living",
+    "email": "vendor46@gmail.com",
+    "phone": "+1 (404) 555-0121",
+    "address": {
+      "street": "3344 Peachtree Road NE, Suite 800",
+      "state": "Georgia",
+      "postalCode": "30326",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/151/400/400.jpg?hmac=eR5xy_083FZqvpPbaSveZqHF_VZlL0TLVWP6ahbIts8",
+    "banner": "https://fastly.picsum.photos/id/45/1200/400.jpg?hmac=a9p52RPaW-BpYbIoBBIZ1sILHWCF0BrjJUIFlzh7db0",
+    "isDeleted": false,
+    "createdAt": "2026-04-19T08:00:00.000Z",
+    "updatedAt": "2026-05-05T05:00:00.000Z"
+  },
+  {
+    "_id": "f77d15dbc656e8d2ff931976",
+    "user": "129eab2fb3fc20bd661ddb36",
+    "name": "Buckeye Heritage Home",
+    "email": "vendor47@gmail.com",
+    "phone": "+1 (614) 555-0122",
+    "address": {
+      "street": "41 S High Street, Suite 2800",
+      "state": "Ohio",
+      "postalCode": "43215",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/152/400/400.jpg?hmac=Utl43XvmEyT1dGXdMw6eJLoeIn_1eLZ49wpZqTI9Nrw",
+    "banner": "https://fastly.picsum.photos/id/46/1200/400.jpg?hmac=4mG_T7MSHD4cMqwPtz76UbUop91SHZNOx2dakZbfmhw",
+    "isDeleted": false,
+    "createdAt": "2026-04-21T12:48:00.000Z",
+    "updatedAt": "2026-05-07T10:48:00.000Z"
+  },
+  {
+    "_id": "d402ea4f6b4a17d76d43f5e7",
+    "user": "15de9f8a211bc1c77b92ce9b",
+    "name": "Sierra Nevada Camp Craft",
+    "email": "vendor48@gmail.com",
+    "phone": "+1 (775) 555-0123",
+    "address": {
+      "street": "100 N Sierra Street",
+      "state": "Nevada",
+      "postalCode": "89501",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/153/400/400.jpg?hmac=3TSGL4jmzwMcBMdDUOqw_vj6eOcUBeBHFeadjnyFpWQ",
+    "banner": "https://fastly.picsum.photos/id/47/1200/400.jpg?hmac=5o3JLDfLT9kg_tTu6M0V56kEjODtJ-WTleWg6xTmGoU",
+    "isDeleted": false,
+    "createdAt": "2026-04-23T17:36:00.000Z",
+    "updatedAt": "2026-05-09T16:36:00.000Z"
+  },
+  {
+    "_id": "e3c16fc5925677408029b74d",
+    "user": "66106d7109e662f185ad32f3",
+    "name": "Alamo Tactical Gear",
+    "email": "vendor49@gmail.com",
+    "phone": "+1 (210) 555-0124",
+    "address": {
+      "street": "300 Convent Street, Suite 1400",
+      "state": "Texas",
+      "postalCode": "78205",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/154/400/400.jpg?hmac=adCFz83Okci0HjLdbliSy_FVJP-8zR5iyoSof2ptVs4",
+    "banner": "https://fastly.picsum.photos/id/48/1200/400.jpg?hmac=6zdByBAyo3cmIuIGRrqGdgBlGNaHTvOsw3Vv-qcH2L0",
+    "isDeleted": false,
+    "createdAt": "2026-04-25T22:24:00.000Z",
+    "updatedAt": "2026-05-11T22:24:00.000Z"
+  },
+  {
+    "_id": "9896bf3aaf639b0c88d837a5",
+    "user": "0ceb953f031837b3c5940dac",
+    "name": "Manhattan Modern Design",
+    "email": "vendor50@gmail.com",
+    "phone": "+1 (212) 555-0125",
+    "address": {
+      "street": "599 Lexington Avenue, Floor 22",
+      "state": "New York",
+      "postalCode": "10022",
+      "country": "USA"
+    },
+    "logo": "https://fastly.picsum.photos/id/155/400/400.jpg?hmac=JPpjssEz-IODTr1fNhGOELKid4AmnhFaTux7UXBJKg4",
+    "banner": "https://fastly.picsum.photos/id/49/1200/400.jpg?hmac=H6aI6JySFKf9hB343LJou0nC0SQ7R7Q4XJDjWGBTgwg",
+    "isDeleted": false,
+    "createdAt": "2026-04-28T03:12:00.000Z",
+    "updatedAt": "2026-05-14T04:12:00.000Z"
+  },
+  {
+    "_id": "553b45def54f0c23f8b29745",
+    "user": "b3aa94c42cf75278e4e46a1a",
+    "name": "Maple Ridge Provisions",
+    "email": "vendor51@gmail.com",
+    "phone": "+1 (604) 555-0201",
+    "address": {
+      "street": "22000 Dewdney Trunk Road",
+      "state": "British Columbia",
+      "postalCode": "V2X 3H5",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/156/400/400.jpg?hmac=GZdjhSIry7tkylV4574jxDkSdzOMWDTqVPnopFKGaoo",
+    "banner": "https://fastly.picsum.photos/id/50/1200/400.jpg?hmac=6380wqSIaazAClQt2nj00nJ0nM51Tu4euisdXjv7rYQ",
+    "isDeleted": false,
+    "createdAt": "2026-04-30T08:00:00.000Z",
+    "updatedAt": "2026-05-16T10:00:00.000Z"
+  },
+  {
+    "_id": "abbbd4976f3e63667c74aaed",
+    "user": "8b73fd3cbd4fedb8d7cfec8b",
+    "name": "Great North Optics & Imaging",
+    "email": "vendor52@gmail.com",
+    "phone": "+1 (416) 555-0202",
+    "address": {
+      "street": "161 Bay Street, Suite 2700",
+      "state": "Ontario",
+      "postalCode": "M5J 2S1",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/157/400/400.jpg?hmac=VKxvugC2wvu0ftxGMcnvbESVRAtIT0C7I0Dv8r1EuPg",
+    "banner": "https://fastly.picsum.photos/id/51/1200/400.jpg?hmac=kIOIEU3ydstiarKnNDK1cZ5GgLlv8yEh7TQmptqnWeg",
+    "isDeleted": false,
+    "createdAt": "2026-05-02T12:48:00.000Z",
+    "updatedAt": "2026-05-18T15:48:00.000Z"
+  },
+  {
+    "_id": "edb8559f210bf8b962ea7662",
+    "user": "8c976ce7878392a8ecfdf6f7",
+    "name": "Vancouver Harbour Goods",
+    "email": "vendor53@gmail.com",
+    "phone": "+1 (604) 555-0203",
+    "address": {
+      "street": "1055 W Georgia Street, Suite 1500",
+      "state": "British Columbia",
+      "postalCode": "V6E 3P3",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/158/400/400.jpg?hmac=FLuHnI6bnGDe1pAzvma6VmpBJEVkmVHE74qN9Bw-bRM",
+    "banner": "https://fastly.picsum.photos/id/52/1200/400.jpg?hmac=Rwc1eNlM9HvpMlsfdz7bZcVRaWspf4XpKqXY7xHpvq4",
+    "isDeleted": false,
+    "createdAt": "2026-05-04T17:36:00.000Z",
+    "updatedAt": "2026-05-20T21:36:00.000Z"
+  },
+  {
+    "_id": "d16af3e29ee0b49728e62981",
+    "user": "0028ec8cd5ad5c9949759403",
+    "name": "Montreal Artisanal Leather",
+    "email": "vendor54@gmail.com",
+    "phone": "+1 (514) 555-0204",
+    "address": {
+      "street": "1000 Rue De La Gauchetiere O",
+      "state": "Quebec",
+      "postalCode": "H3B 4W5",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/159/400/400.jpg?hmac=JJwlfKoMjaIl23sr31EGsNMeXUlWWd1PXy-zBz-FY4k",
+    "banner": "https://fastly.picsum.photos/id/53/1200/400.jpg?hmac=Cq4O7OSU99Z_o1ygzdhuCCRHjRPYKURCooYSy-b1AkY",
+    "isDeleted": false,
+    "createdAt": "2026-05-06T22:24:00.000Z",
+    "updatedAt": "2026-05-23T03:24:00.000Z"
+  },
+  {
+    "_id": "06528a2b58817f3d16188f88",
+    "user": "5e84596052c747273347b4aa",
+    "name": "Prairie Gold Grain & Mill",
+    "email": "vendor55@gmail.com",
+    "phone": "+1 (204) 555-0205",
+    "address": {
+      "street": "201 Portage Avenue, Suite 1800",
+      "state": "Manitoba",
+      "postalCode": "R3B 3K6",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/160/400/400.jpg?hmac=7APQoTNtazlA53z2jKSaoi2brz8qDuIibEbzf-W5B3E",
+    "banner": "https://fastly.picsum.photos/id/54/1200/400.jpg?hmac=VuspybxGXcYJrETmlzXB8CmWPlBboAfjmZN91YGPXbw",
+    "isDeleted": false,
+    "createdAt": "2026-05-09T03:12:00.000Z",
+    "updatedAt": "2026-05-25T09:12:00.000Z"
+  },
+  {
+    "_id": "f51c9532ac6c9836cd5e90d0",
+    "user": "b12779451b30ce909a6fcd65",
+    "name": "Laurentian Pine Crafts",
+    "email": "vendor56@gmail.com",
+    "phone": "+1 (514) 555-0206",
+    "address": {
+      "street": "455 Boulevard Rene-Levesque O",
+      "state": "Quebec",
+      "postalCode": "H2Z 1Z3",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/161/400/400.jpg?hmac=VdHQAvpfUYI-nunYC9KIFFva-U4XyUJyojJ6nmJxNqw",
+    "banner": "https://fastly.picsum.photos/id/55/1200/400.jpg?hmac=NY25rO-rvr7VzuuQolUlEBQoDfc_qJAo3bVRB5XEpJ8",
+    "isDeleted": false,
+    "createdAt": "2026-05-11T08:00:00.000Z",
+    "updatedAt": "2026-05-27T15:00:00.000Z"
+  },
+  {
+    "_id": "0fdbd88e00c82a39024847fa",
+    "user": "bd2b6ac8c1fa4a7531afa9dd",
+    "name": "Yukon Trail Outpost",
+    "email": "vendor57@gmail.com",
+    "phone": "+1 (867) 555-0207",
+    "address": {
+      "street": "302 Steele Street",
+      "state": "Yukon",
+      "postalCode": "Y1A 2C5",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/162/400/400.jpg?hmac=K4cAzDwKlnW224C4pzJzqoDBYnyFx_r_wycolqysXIQ",
+    "banner": "https://fastly.picsum.photos/id/56/1200/400.jpg?hmac=iHL9_JcWFiyB5Ls1bybakgt7YuGMPBCyvNeVywVTOU8",
+    "isDeleted": false,
+    "createdAt": "2026-05-13T12:48:00.000Z",
+    "updatedAt": "2026-05-29T20:48:00.000Z"
+  },
+  {
+    "_id": "57be2d76484f839775bbc5e4",
+    "user": "bf9ebaa190194c2211f74822",
+    "name": "Atlantic Tide Nautical",
+    "email": "vendor58@gmail.com",
+    "phone": "+1 (902) 555-0208",
+    "address": {
+      "street": "1969 Upper Water Street, Tower 2",
+      "state": "Nova Scotia",
+      "postalCode": "B3J 3R7",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/163/400/400.jpg?hmac=vbC0b6xvbaN842dzKg0CicQHDcBu13meSCQeHh-aJrs",
+    "banner": "https://fastly.picsum.photos/id/57/1200/400.jpg?hmac=6SYRBA7onM5TmBXAG5mfEE_HurHjJ0GSzxr9TYSnWMA",
+    "isDeleted": false,
+    "createdAt": "2026-05-15T17:36:00.000Z",
+    "updatedAt": "2026-06-01T02:36:00.000Z"
+  },
+  {
+    "_id": "e4739d1ac886329eaf448152",
+    "user": "9f398cfe8f14a6da5730115a",
+    "name": "Banff Alpine Equipment",
+    "email": "vendor59@gmail.com",
+    "phone": "+1 (403) 555-0209",
+    "address": {
+      "street": "220 Bear Street, Suite 102",
+      "state": "Alberta",
+      "postalCode": "T1L 1A1",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/164/400/400.jpg?hmac=CTANnyQFLxy_E-EcxLpd_CrknyqhRThuDgH7uFzGY4M",
+    "banner": "https://fastly.picsum.photos/id/58/1200/400.jpg?hmac=CiLBrfZjCDHBN_2Rp81n03hEnX_cnb1OWWWT2tVQsVQ",
+    "isDeleted": false,
+    "createdAt": "2026-05-17T22:24:00.000Z",
+    "updatedAt": "2026-06-03T08:24:00.000Z"
+  },
+  {
+    "_id": "4bae991ef77546a7c7bcf692",
+    "user": "1a6d50cea8037e19a6b63fc8",
+    "name": "Ontario Lakes Timberworks",
+    "email": "vendor60@gmail.com",
+    "phone": "+1 (416) 555-0210",
+    "address": {
+      "street": "100 King Street W, Suite 5600",
+      "state": "Ontario",
+      "postalCode": "M5X 1C9",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/165/400/400.jpg?hmac=2pNjhj20nxxGLi_7LTBU5NgrX60JSaoI4Nsq15NZDRQ",
+    "banner": "https://fastly.picsum.photos/id/59/1200/400.jpg?hmac=UcngJAhDi1EcdLSRNc0GuTtBxSyxRfE2n1N6NcylgCY",
+    "isDeleted": false,
+    "createdAt": "2026-05-20T03:12:00.000Z",
+    "updatedAt": "2026-06-05T14:12:00.000Z"
+  },
+  {
+    "_id": "9ae0438a1594f2bbc3a5de98",
+    "user": "320c2708422e5000da330f26",
+    "name": "Fraser Valley Honey & Berry",
+    "email": "vendor61@gmail.com",
+    "phone": "+1 (604) 555-0211",
+    "address": {
+      "street": "33827 South Fraser Way",
+      "state": "British Columbia",
+      "postalCode": "V2S 2C4",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/166/400/400.jpg?hmac=cHBjLdAgtcrf9aydJi-KSu0n2BfKLNe2LcJ0WpJoso0",
+    "banner": "https://fastly.picsum.photos/id/60/1200/400.jpg?hmac=OTOPjnhPqnAfxzLRy_cxQGZqMjnHAJ4DVUbdHpm9Eho",
+    "isDeleted": false,
+    "createdAt": "2026-05-22T08:00:00.000Z",
+    "updatedAt": "2026-06-07T20:00:00.000Z"
+  },
+  {
+    "_id": "1f2be03902906082a5393f27",
+    "user": "4fd4e610311d0c6bf0c4a530",
+    "name": "Red River Winter Gear",
+    "email": "vendor62@gmail.com",
+    "phone": "+1 (204) 555-0212",
+    "address": {
+      "street": "360 Main Street, Suite 1400",
+      "state": "Manitoba",
+      "postalCode": "R3C 3Z3",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/167/400/400.jpg?hmac=0ePv-8EFgJ2Ui5cB1nfNz7r_NJFtT3czGdBxNg-Ej_Q",
+    "banner": "https://fastly.picsum.photos/id/61/1200/400.jpg?hmac=9UFfGk85bY72g05D7RYJP3FSLPzkIhPu_jBMuxY0q7g",
+    "isDeleted": false,
+    "createdAt": "2026-05-24T12:48:00.000Z",
+    "updatedAt": "2026-06-10T01:48:00.000Z"
+  },
+  {
+    "_id": "907c24ae9e063626ab9be6e3",
+    "user": "f9b606871755acb4f999d7fe",
+    "name": "Halifax Dockside Outfitters",
+    "email": "vendor63@gmail.com",
+    "phone": "+1 (902) 555-0213",
+    "address": {
+      "street": "1801 Hollis Street, Suite 900",
+      "state": "Nova Scotia",
+      "postalCode": "B3J 3N4",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/168/400/400.jpg?hmac=-5J29d1J2jjhbPqWlI4QVcVMDnSy_-cviZn16Ai59qs",
+    "banner": "https://fastly.picsum.photos/id/62/1200/400.jpg?hmac=9cFhpQkY5I-B8dzzU0bSVl6o-qJUsOCrie9Vv_P1QNw",
+    "isDeleted": false,
+    "createdAt": "2026-05-26T17:36:00.000Z",
+    "updatedAt": "2026-06-12T07:36:00.000Z"
+  },
+  {
+    "_id": "65c584703b18265422875e42",
+    "user": "c11c95c2cd6ca302098535d9",
+    "name": "Calgary Stampede Saddle & Hide",
+    "email": "vendor64@gmail.com",
+    "phone": "+1 (403) 555-0214",
+    "address": {
+      "street": "525 8th Avenue SW, Suite 2200",
+      "state": "Alberta",
+      "postalCode": "T2P 1G1",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/169/400/400.jpg?hmac=mnMBdKhoNLG5f9avUgfvu01diCsdoLIi0v09pK5XAYw",
+    "banner": "https://fastly.picsum.photos/id/63/1200/400.jpg?hmac=eVEW-l2mFqOaAbpwpfH6jmx7t56PFyFLFhO46PUa2dY",
+    "isDeleted": false,
+    "createdAt": "2026-05-28T22:24:00.000Z",
+    "updatedAt": "2026-06-14T13:24:00.000Z"
+  },
+  {
+    "_id": "5de32af037cadd0a0f1ef37f",
+    "user": "3e7facc233da954f02b5ee5f",
+    "name": "Okanagan Valley Gourmet",
+    "email": "vendor65@gmail.com",
+    "phone": "+1 (250) 555-0215",
+    "address": {
+      "street": "1631 Dickson Avenue, Suite 1100",
+      "state": "British Columbia",
+      "postalCode": "V1Y 0B5",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/170/400/400.jpg?hmac=P_ORjKv_6ZXG5Z6FU_0MbZF2uXpqi4k65K7I4lpxZhM",
+    "banner": "https://fastly.picsum.photos/id/64/1200/400.jpg?hmac=RDqxe5iAhSK5wIjkGbmy2JJ54qhTD68mFFF7H7dTovU",
+    "isDeleted": false,
+    "createdAt": "2026-05-31T03:12:00.000Z",
+    "updatedAt": "2026-06-16T19:12:00.000Z"
+  },
+  {
+    "_id": "de826ba76ced5e1ea07b053d",
+    "user": "f2fb66838eeca177785d1fb4",
+    "name": "Georgian Bay Paddle & Camp",
+    "email": "vendor66@gmail.com",
+    "phone": "+1 (705) 555-0216",
+    "address": {
+      "street": "80 Hurontario Street",
+      "state": "Ontario",
+      "postalCode": "L9Y 2L8",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/171/400/400.jpg?hmac=ERWi8xx-8XsXzUmro5lb3ulnsAb8_qzs0Zzd8jsEq-U",
+    "banner": "https://fastly.picsum.photos/id/65/1200/400.jpg?hmac=nUg2OMZmd5etNfSKgN0iRuhFXWu4swI7fxj1EerY6uY",
+    "isDeleted": false,
+    "createdAt": "2026-06-02T08:00:00.000Z",
+    "updatedAt": "2026-06-19T01:00:00.000Z"
+  },
+  {
+    "_id": "2582fb9d9d8c29ebaedbb2e5",
+    "user": "fc85c070e2527b6adf974d72",
+    "name": "Cape Breton Handweavers",
+    "email": "vendor67@gmail.com",
+    "phone": "+1 (902) 555-0217",
+    "address": {
+      "street": "360 Charlotte Street",
+      "state": "Nova Scotia",
+      "postalCode": "B1P 1E1",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/172/400/400.jpg?hmac=WB71SunT1lvQkQIkfRk1qBHBDLdvBizsFEe_lH4uAcc",
+    "banner": "https://fastly.picsum.photos/id/66/1200/400.jpg?hmac=M_wFhI7OpsPopclqReZM8XhGfcIwZvujZS0yTly0Vv8",
+    "isDeleted": false,
+    "createdAt": "2026-06-04T12:48:00.000Z",
+    "updatedAt": "2026-06-21T06:48:00.000Z"
+  },
+  {
+    "_id": "f6509d09b10d8c522ff0c8d9",
+    "user": "adc1e13ffebae40f235c7b4a",
+    "name": "St. Lawrence Ceramic Studio",
+    "email": "vendor68@gmail.com",
+    "phone": "+1 (514) 555-0218",
+    "address": {
+      "street": "150 Rue Saint-Paul O",
+      "state": "Quebec",
+      "postalCode": "H2Y 1Z6",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/173/400/400.jpg?hmac=TU_DMkn7FSRRwiEpVveLvmyATg-y4hNrNKT-Cs4VQ1M",
+    "banner": "https://fastly.picsum.photos/id/67/1200/400.jpg?hmac=-Z3TjTLq0yIn1o0g-VlYfDQFr_wCyaV4BKFiYl4cWvY",
+    "isDeleted": false,
+    "createdAt": "2026-06-06T17:36:00.000Z",
+    "updatedAt": "2026-06-23T12:36:00.000Z"
+  },
+  {
+    "_id": "4f153480da1754f86f6ed6c9",
+    "user": "39ac94725149ce562ba4cba2",
+    "name": "Whistler Mountain Activewear",
+    "email": "vendor69@gmail.com",
+    "phone": "+1 (604) 555-0219",
+    "address": {
+      "street": "4370 Lorimer Road, Suite 201",
+      "state": "British Columbia",
+      "postalCode": "V8E 1A6",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/174/400/400.jpg?hmac=_mWTlZ5OfHinSa-NEn9OPX6HQdEabzsNYj3wrOPVQLY",
+    "banner": "https://fastly.picsum.photos/id/68/1200/400.jpg?hmac=exTXWiPqwgOyc_tvewGxbpdm1Psk_bC-H5lYQgKDtNI",
+    "isDeleted": false,
+    "createdAt": "2026-06-08T22:24:00.000Z",
+    "updatedAt": "2026-06-25T18:24:00.000Z"
+  },
+  {
+    "_id": "3c3c09a6618b773932a21f3a",
+    "user": "799ac76331ab5d34c7790b6a",
+    "name": "Toronto Urban Tech Foundry",
+    "email": "vendor70@gmail.com",
+    "phone": "+1 (416) 555-0220",
+    "address": {
+      "street": "250 Front Street W, Suite 700",
+      "state": "Ontario",
+      "postalCode": "M5V 3G5",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/175/400/400.jpg?hmac=3R0ZitObzzLehq0hkXQfNWbf5fw7aHArfw8OxdKsPZI",
+    "banner": "https://fastly.picsum.photos/id/69/1200/400.jpg?hmac=Y2ky3DMmgvqPbj0EA7kWfUnYMKJjjCoAeaB47jrJWyg",
+    "isDeleted": false,
+    "createdAt": "2026-06-11T03:12:00.000Z",
+    "updatedAt": "2026-06-28T00:12:00.000Z"
+  },
+  {
+    "_id": "ec44fa707116a863bdb83700",
+    "user": "abc8f17496da519c0c6c16fc",
+    "name": "Jasper Wilderness Supplies",
+    "email": "vendor71@gmail.com",
+    "phone": "+1 (780) 555-0221",
+    "address": {
+      "street": "614 Connaught Drive",
+      "state": "Alberta",
+      "postalCode": "T0E 1E0",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/176/400/400.jpg?hmac=htsWa5W-TirEaolha3-eSmDojl6MOKOIZa7EeNGbS5Q",
+    "banner": "https://fastly.picsum.photos/id/70/1200/400.jpg?hmac=yr2KkZwd-o8Cnb1_87i-Nle7VQIM_0skiBAn3lz750E",
+    "isDeleted": false,
+    "createdAt": "2026-06-13T08:00:00.000Z",
+    "updatedAt": "2026-06-30T06:00:00.000Z"
+  },
+  {
+    "_id": "b4bbab0c0e03a0df8698d245",
+    "user": "029df90c804a52dc3382f0de",
+    "name": "Prince Edward Island Preserves",
+    "email": "vendor72@gmail.com",
+    "phone": "+1 (902) 555-0222",
+    "address": {
+      "street": "134 Kent Street, Suite 400",
+      "state": "Prince Edward Island",
+      "postalCode": "C1A 8R8",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/177/400/400.jpg?hmac=aVgfzmAJ4tG-EzJLqqeY46vHKmUGnlqQPo53s8Qrh0U",
+    "banner": "https://fastly.picsum.photos/id/71/1200/400.jpg?hmac=GdCI2EjiKGioDt4bhiNGAD_eoafs2mKUwXZjk6hqaJc",
+    "isDeleted": false,
+    "createdAt": "2026-06-15T12:48:00.000Z",
+    "updatedAt": "2026-07-02T11:48:00.000Z"
+  },
+  {
+    "_id": "a6dde3625fa2f2160753c296",
+    "user": "31e84cb003762b5399b0e66d",
+    "name": "Fundy Coast Woolens",
+    "email": "vendor73@gmail.com",
+    "phone": "+1 (506) 555-0223",
+    "address": {
+      "street": "44 Chipman Hill, Suite 1000",
+      "state": "New Brunswick",
+      "postalCode": "E2L 4S6",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/178/400/400.jpg?hmac=5CGtj32WCAo6Xc0wgIuoADrWJyjDyRs9YsToZoBNNVo",
+    "banner": "https://fastly.picsum.photos/id/72/1200/400.jpg?hmac=LDQQ72ajj-djQ_D2BYjYt2WEV91Gsy2AcpLHCTViFlM",
+    "isDeleted": false,
+    "createdAt": "2026-06-17T17:36:00.000Z",
+    "updatedAt": "2026-07-04T17:36:00.000Z"
+  },
+  {
+    "_id": "db37a523b94036967545a99b",
+    "user": "678f05340e5a9fcdb718692c",
+    "name": "Saskatchewan Sunflower Organics",
+    "email": "vendor74@gmail.com",
+    "phone": "+1 (306) 555-0224",
+    "address": {
+      "street": "410 22nd Street E, Suite 850",
+      "state": "Saskatchewan",
+      "postalCode": "S7K 5T6",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/179/400/400.jpg?hmac=QFpfoTOJ1s4KXB8xDyQlHASjv-bxQ0QNYCchGZ6R8VI",
+    "banner": "https://fastly.picsum.photos/id/73/1200/400.jpg?hmac=kTn0_tMFAP6weySdronzDdPjw3sfAWU5OW2EcSpDrHY",
+    "isDeleted": false,
+    "createdAt": "2026-06-19T22:24:00.000Z",
+    "updatedAt": "2026-07-06T23:24:00.000Z"
+  },
+  {
+    "_id": "301a9a366b5dc14f6c0c8265",
+    "user": "c14d0f91f85c71efd76a2c67",
+    "name": "Coast Mountain Timber & Stone",
+    "email": "vendor75@gmail.com",
+    "phone": "+1 (604) 555-0225",
+    "address": {
+      "street": "1090 W Pender Street, Suite 1900",
+      "state": "British Columbia",
+      "postalCode": "V6E 2N7",
+      "country": "Canada"
+    },
+    "logo": "https://fastly.picsum.photos/id/180/400/400.jpg?hmac=6wejBjIhQa_EVoTRrmCV1wSTaTulCihrn1jq8hRqBms",
+    "banner": "https://fastly.picsum.photos/id/74/1200/400.jpg?hmac=gYkYvW6-szJpNY245wicRzOG_g4kngnft8hfkPivjOM",
+    "isDeleted": false,
+    "createdAt": "2026-06-22T03:12:00.000Z",
+    "updatedAt": "2026-07-09T05:12:00.000Z"
+  },
+  {
+    "_id": "226dfa62d78df76870273a8d",
+    "user": "79121b51f6e23f33435d4409",
+    "name": "Bavarian Precision Instruments",
+    "email": "vendor76@gmail.com",
+    "phone": "+49 89 218031",
+    "address": {
+      "street": "Maximilianstraße 35",
+      "state": "Bavaria",
+      "postalCode": "80539",
+      "country": "Germany"
+    },
+    "logo": "https://fastly.picsum.photos/id/181/400/400.jpg?hmac=yZYh3Wu5e4lBKC07Evjp-iCoTSZcDltX-cMkFzf2Vqc",
+    "banner": "https://fastly.picsum.photos/id/75/1200/400.jpg?hmac=bQM-TlzazE5oTVgvlU5_gXFQNzd3lskr4M2i9dkJXMo",
+    "isDeleted": false,
+    "createdAt": "2026-06-24T08:00:00.000Z",
+    "updatedAt": "2026-07-11T11:00:00.000Z"
+  },
+  {
+    "_id": "3cabfd031e1739b97f2911a0",
+    "user": "8cad9eb8da5812afadfcb553",
+    "name": "Atelier Lumière Paris",
+    "email": "vendor77@gmail.com",
+    "phone": "+33 1 42 68 32",
+    "address": {
+      "street": "28 Rue du Faubourg Saint-Honoré",
+      "state": "Île-de-France",
+      "postalCode": "75008",
+      "country": "France"
+    },
+    "logo": "https://fastly.picsum.photos/id/182/400/400.jpg?hmac=EBQ1aYd4D0_v4sLbHqz839qXJZlS3cBF_0UDEK_UcWI",
+    "banner": "https://fastly.picsum.photos/id/76/1200/400.jpg?hmac=74JvkdOdLdsfrXhhIJYr4JKI_tBdWIcWcOiI50VhYFQ",
+    "isDeleted": false,
+    "createdAt": "2026-06-26T12:48:00.000Z",
+    "updatedAt": "2026-07-13T16:48:00.000Z"
+  },
+  {
+    "_id": "7b8b1eeb18aa7e23ca2d6bf2",
+    "user": "77fb7e676d5ff231b7c2533e",
+    "name": "Milano Sartoria Elegance",
+    "email": "vendor78@gmail.com",
+    "phone": "+39 02 8845 33",
+    "address": {
+      "street": "Via Montenapoleone 8",
+      "state": "Lombardy",
+      "postalCode": "20121",
+      "country": "Italy"
+    },
+    "logo": "https://fastly.picsum.photos/id/183/400/400.jpg?hmac=zznxmvsbD96KIuCYGcfG-xn9FwHec083mgPYCPYWgeE",
+    "banner": "https://fastly.picsum.photos/id/77/1200/400.jpg?hmac=SXAu7bMVs-Spk7Aq9xAMqLL_fdbVJKeBNZduqM-a_VM",
+    "isDeleted": false,
+    "createdAt": "2026-06-28T17:36:00.000Z",
+    "updatedAt": "2026-07-15T22:36:00.000Z"
+  },
+  {
+    "_id": "29b8e03fd3286b1f7e32ee84",
+    "user": "5d02bfb0499821a2f4f6b895",
+    "name": "Iberian Sun Olive & Vine",
+    "email": "vendor79@gmail.com",
+    "phone": "+34 93 402 34",
+    "address": {
+      "street": "Passeig de Gràcia 42",
+      "state": "Catalonia",
+      "postalCode": "08007",
+      "country": "Spain"
+    },
+    "logo": "https://fastly.picsum.photos/id/184/400/400.jpg?hmac=V9CcOfhhTuMr8o2lia6_hSIeXt8hHJE9xWu7T0BrjRQ",
+    "banner": "https://fastly.picsum.photos/id/78/1200/400.jpg?hmac=yPQhZs4rUNWj1nvlc-3Y0Vy7U5oaXqcimY-BjOUnTqI",
+    "isDeleted": false,
+    "createdAt": "2026-06-30T22:24:00.000Z",
+    "updatedAt": "2026-07-18T04:24:00.000Z"
+  },
+  {
+    "_id": "54012a6b02887289824ab164",
+    "user": "ea4e31e78ffdedf32ba477a3",
+    "name": "Amsterdam Canal Bicycle Works",
+    "email": "vendor80@gmail.com",
+    "phone": "+31 20 525 35",
+    "address": {
+      "street": "Herengracht 450",
+      "state": "North Holland",
+      "postalCode": "1017 CA",
+      "country": "Netherlands"
+    },
+    "logo": "https://fastly.picsum.photos/id/185/400/400.jpg?hmac=HJNyjv_l10zAnK1dLLXE019ggcuL36SlVVxJ0X9eR4I",
+    "banner": "https://fastly.picsum.photos/id/79/1200/400.jpg?hmac=nXLR536qDGUVeLl_8Ue_4WvBKra9M-Lsfnz2iQiN49I",
+    "isDeleted": false,
+    "createdAt": "2026-07-03T03:12:00.000Z",
+    "updatedAt": "2026-07-20T10:12:00.000Z"
+  },
+  {
+    "_id": "675fa0c1550ad228410022bb",
+    "user": "ff1ba4bd9a246aa8754f26a6",
+    "name": "Nordic Fjord Outdoor Labs",
+    "email": "vendor81@gmail.com",
+    "phone": "+46 8 123 45636",
+    "address": {
+      "street": "Kungsgatan 18",
+      "state": "Stockholm County",
+      "postalCode": "111 35",
+      "country": "Sweden"
+    },
+    "logo": "https://fastly.picsum.photos/id/186/400/400.jpg?hmac=zJ9C2yNSZ1nPkmIwJT7FG8dLgMuOwCdARbhxpqwmUTQ",
+    "banner": "https://fastly.picsum.photos/id/80/1200/400.jpg?hmac=dChlyF3Bo0ju1KcysJq7vBCy31VCs4jwc3kGSzk3UK8",
+    "isDeleted": false,
+    "createdAt": "2026-07-05T08:00:00.000Z",
+    "updatedAt": "2026-07-22T16:00:00.000Z"
+  },
+  {
+    "_id": "035fcc139f5b581f9f420cb9",
+    "user": "6df4db03176d665893728d5d",
+    "name": "Kraków Amber & Goldsmiths",
+    "email": "vendor82@gmail.com",
+    "phone": "+48 12 663 37",
+    "address": {
+      "street": "Floriańska 14",
+      "state": "Lesser Poland",
+      "postalCode": "31-021",
+      "country": "Poland"
+    },
+    "logo": "https://fastly.picsum.photos/id/187/400/400.jpg?hmac=BjRyAXcKY8vWedpDAzkOJEt7BamqirIl8dnqanqGMf4",
+    "banner": "https://fastly.picsum.photos/id/81/1200/400.jpg?hmac=OMnWUR1fzdP7qyLU_cDHDKBrkAgP5pYgnG_MjB-5PmU",
+    "isDeleted": false,
+    "createdAt": "2026-07-07T12:48:00.000Z",
+    "updatedAt": "2026-07-24T21:48:00.000Z"
+  },
+  {
+    "_id": "7a70c3d5e4d60161f166af70",
+    "user": "3e5c1e3159316580f5c6ef2b",
+    "name": "Brussels Master Chocolatiers",
+    "email": "vendor83@gmail.com",
+    "phone": "+32 2 504 38",
+    "address": {
+      "street": "Rue du Marché aux Herbes 61",
+      "state": "Brussels-Capital",
+      "postalCode": "B-1000",
+      "country": "Belgium"
+    },
+    "logo": "https://fastly.picsum.photos/id/188/400/400.jpg?hmac=BOrsZIYfst8WWM_F95__EDMmKov7PbOOZOkqMjggrz4",
+    "banner": "https://fastly.picsum.photos/id/82/1200/400.jpg?hmac=VRuwSDAEnDMBMsbSL3JHYJoCc2Xk06-2R3uPAPnPfkw",
+    "isDeleted": false,
+    "createdAt": "2026-07-09T17:36:00.000Z",
+    "updatedAt": "2026-07-27T03:36:00.000Z"
+  },
+  {
+    "_id": "7e126a2ce298275b32ad3c2e",
+    "user": "451dd9c6bdd46d8b4fd23c26",
+    "name": "Vienna Classical Audio",
+    "email": "vendor84@gmail.com",
+    "phone": "+43 1 51581 39",
+    "address": {
+      "street": "Graben 21",
+      "state": "Vienna",
+      "postalCode": "1010",
+      "country": "Austria"
+    },
+    "logo": "https://fastly.picsum.photos/id/189/400/400.jpg?hmac=fspG4LjbAXUqSlY1AUNuKDJyJFs-XL7LpVzazkx5hG4",
+    "banner": "https://fastly.picsum.photos/id/83/1200/400.jpg?hmac=K2GY17K6cQCMJjEPaDEOfmei6OIg6O-8UTHwiY_sf10",
+    "isDeleted": false,
+    "createdAt": "2026-07-11T22:24:00.000Z",
+    "updatedAt": "2026-07-29T09:24:00.000Z"
+  },
+  {
+    "_id": "b5444f04f3c564c8c130312f",
+    "user": "ec559caceaeb7bab372fa0f4",
+    "name": "Dublin Celtic Wool & Tweed",
+    "email": "vendor85@gmail.com",
+    "phone": "+353 1 496 40",
+    "address": {
+      "street": "33 Dawson Street",
+      "state": "Leinster",
+      "postalCode": "D02 W274",
+      "country": "Ireland"
+    },
+    "logo": "https://fastly.picsum.photos/id/190/400/400.jpg?hmac=vTQxc0oGknxVZ3-JTcz0-r0RjNsF-FyOX6MkP8lHzzw",
+    "banner": "https://fastly.picsum.photos/id/84/1200/400.jpg?hmac=RjXvytuEzQ3fDmVMUyigD-qgFZzeTsxRdIX2nh5CI4g",
+    "isDeleted": false,
+    "createdAt": "2026-07-14T03:12:00.000Z",
+    "updatedAt": "2026-07-31T15:12:00.000Z"
+  },
+  {
+    "_id": "1cb4d4aef37c37865a972785",
+    "user": "6e100ded21f02a50529a9009",
+    "name": "Copenhagen Design Kollektiv",
+    "email": "vendor86@gmail.com",
+    "phone": "+45 33 92 41",
+    "address": {
+      "street": "Østergade 24",
+      "state": "Capital Region",
+      "postalCode": "1100",
+      "country": "Denmark"
+    },
+    "logo": "https://fastly.picsum.photos/id/191/400/400.jpg?hmac=YCCDFslYbRCTsYI0sqyLDlrA6WkswfZSs2ha8RQiNmU",
+    "banner": "https://fastly.picsum.photos/id/85/1200/400.jpg?hmac=4JxveV6_9cwxn40Xz7XVVxEmBgu_jXHMYGAXxnjXmCQ",
+    "isDeleted": false,
+    "createdAt": "2026-07-16T08:00:00.000Z",
+    "updatedAt": "2026-08-02T21:00:00.000Z"
+  },
+  {
+    "_id": "0e4961edc1e6a547772d9471",
+    "user": "dd34814552b7e27e4d3a26e7",
+    "name": "Porto Maritime Cork & Tile",
+    "email": "vendor87@gmail.com",
+    "phone": "+351 22 205 42",
+    "address": {
+      "street": "Rua das Flores 112",
+      "state": "Porto District",
+      "postalCode": "4050-262",
+      "country": "Portugal"
+    },
+    "logo": "https://fastly.picsum.photos/id/192/400/400.jpg?hmac=HZGsmKTRYisDZ0Vb0pQag2HCE-MpmraqXT3HyNURPqI",
+    "banner": "https://fastly.picsum.photos/id/87/1200/400.jpg?hmac=w-U8ndHdt0Wt4d8NbWoaAOvp20QYX5X0I5MpH-TTiNw",
+    "isDeleted": false,
+    "createdAt": "2026-07-18T12:48:00.000Z",
+    "updatedAt": "2026-08-05T02:48:00.000Z"
+  },
+  {
+    "_id": "bb7fb6064b8e7803adb7842b",
+    "user": "102e4bec43409c87992b8e1d",
+    "name": "Helsinki Arctic Pure Living",
+    "email": "vendor88@gmail.com",
+    "phone": "+358 9 191 43",
+    "address": {
+      "street": "Pohjoisesplanadi 33",
+      "state": "Uusimaa",
+      "postalCode": "00100",
+      "country": "Finland"
+    },
+    "logo": "https://fastly.picsum.photos/id/193/400/400.jpg?hmac=O5w9OO_AF34Tn7ki7fn9K4sauEaUtlqIe9kORw0NdvY",
+    "banner": "https://fastly.picsum.photos/id/88/1200/400.jpg?hmac=Z8UDke_4_pBI1Z68jqUeBGXsT9UoQFcqJgJychEJ6M8",
+    "isDeleted": false,
+    "createdAt": "2026-07-20T17:36:00.000Z",
+    "updatedAt": "2026-08-07T08:36:00.000Z"
+  },
+  {
+    "_id": "46f669886e22e21e2aedef99",
+    "user": "e5e2848df91053567e59be10",
+    "name": "Prague Bohemian Crystal Works",
+    "email": "vendor89@gmail.com",
+    "phone": "+420 224 49 44",
+    "address": {
+      "street": "Celetná 19",
+      "state": "Prague",
+      "postalCode": "110 00",
+      "country": "Czech Republic"
+    },
+    "logo": "https://fastly.picsum.photos/id/194/400/400.jpg?hmac=9M4afVM4gcbNrK0jdWxStpZb97YStvTZPDV_zwfSe7c",
+    "banner": "https://fastly.picsum.photos/id/89/1200/400.jpg?hmac=3ixEZfQ0h7uEntZIjy-YIXKOVO0hdrfOl5yB5cMTiyA",
+    "isDeleted": false,
+    "createdAt": "2026-07-22T22:24:00.000Z",
+    "updatedAt": "2026-08-09T14:24:00.000Z"
+  },
+  {
+    "_id": "70d6101cb4461f3c4d720dd9",
+    "user": "ce8776a1a7cbf4ccc02380f2",
+    "name": "Aegean Olive & Sea Salt",
+    "email": "vendor90@gmail.com",
+    "phone": "+30 210 368 45",
+    "address": {
+      "street": "Voukourestiou 15",
+      "state": "Attica",
+      "postalCode": "106 71",
+      "country": "Greece"
+    },
+    "logo": "https://fastly.picsum.photos/id/195/400/400.jpg?hmac=Y84r3gSy17PW0dZ9VysjSaFc4v67rz2GxMMcGTKubQQ",
+    "banner": "https://fastly.picsum.photos/id/90/1200/400.jpg?hmac=pStWDQq15g6u5Lwo--RKgzvaHYMHC8jOzxIuxUNOSrI",
+    "isDeleted": false,
+    "createdAt": "2026-07-25T03:12:00.000Z",
+    "updatedAt": "2026-08-11T20:12:00.000Z"
+  },
+  {
+    "_id": "625b9b5174179b804ffde897",
+    "user": "a96e6ed50f4ab1736c77f4ca",
+    "name": "Black Forest Clock & Woodcraft",
+    "email": "vendor91@gmail.com",
+    "phone": "+49 761 203 46",
+    "address": {
+      "street": "Kaiser-Joseph-Straße 170",
+      "state": "Baden-Württemberg",
+      "postalCode": "79098",
+      "country": "Germany"
+    },
+    "logo": "https://fastly.picsum.photos/id/196/400/400.jpg?hmac=NlD6PK-DzbwawDylmqgXFHkAz5SBaLHuqm3lF6WL5Vo",
+    "banner": "https://fastly.picsum.photos/id/91/1200/400.jpg?hmac=EG3MkT6PiUHxxXeLArwyVh_xQ_RGyErtGqNcqDiMXDY",
+    "isDeleted": false,
+    "createdAt": "2026-07-27T08:00:00.000Z",
+    "updatedAt": "2026-08-14T02:00:00.000Z"
+  },
+  {
+    "_id": "a637e870e6438797e9ad5e14",
+    "user": "9de9183e88ee38d7ae14bdf8",
+    "name": "Provence Lavender Botanicals",
+    "email": "vendor92@gmail.com",
+    "phone": "+33 4 42 17 47",
+    "address": {
+      "street": "12 Cours Mirabeau",
+      "state": "Provence-Alpes-Côte d'Azur",
+      "postalCode": "13100",
+      "country": "France"
+    },
+    "logo": "https://fastly.picsum.photos/id/197/400/400.jpg?hmac=EMGJfztOncchyhxYLBig-GifHwLYkvPrZJvM_oDgYfQ",
+    "banner": "https://fastly.picsum.photos/id/92/1200/400.jpg?hmac=9TmWZuG7IfYUahKF3ywCrKoNCUoegk5Jjy_BHQdJzMA",
+    "isDeleted": false,
+    "createdAt": "2026-07-29T12:48:00.000Z",
+    "updatedAt": "2026-08-16T07:48:00.000Z"
+  },
+  {
+    "_id": "365bcedc365282888a910c87",
+    "user": "bd791c46a15a23935f0d87c1",
+    "name": "Tuscan Leather Workshop",
+    "email": "vendor93@gmail.com",
+    "phone": "+39 055 275 48",
+    "address": {
+      "street": "Borgo dei Greci 16R",
+      "state": "Tuscany",
+      "postalCode": "50122",
+      "country": "Italy"
+    },
+    "logo": "https://fastly.picsum.photos/id/198/400/400.jpg?hmac=6ulR3tL4MRrpH-YkPVzpxnqNB7WqjUoMn_XQX0OqgWA",
+    "banner": "https://fastly.picsum.photos/id/93/1200/400.jpg?hmac=tfiE7t6NtAWwzLjFY_2Qn8oNk95Mpsarr9_55zQKxrU",
+    "isDeleted": false,
+    "createdAt": "2026-07-31T17:36:00.000Z",
+    "updatedAt": "2026-08-18T13:36:00.000Z"
+  },
+  {
+    "_id": "5b7d75ac188727d87e7fc084",
+    "user": "261e7402ed8f5f7fc01ff325",
+    "name": "Barcelona Modernist Studio",
+    "email": "vendor94@gmail.com",
+    "phone": "+34 93 487 49",
+    "address": {
+      "street": "Rambla de Catalunya 57",
+      "state": "Catalonia",
+      "postalCode": "08007B",
+      "country": "Spain"
+    },
+    "logo": "https://fastly.picsum.photos/id/199/400/400.jpg?hmac=dubKLBc9PH-41dZHvK-vlc70tc7m3aOaOI8YuhFx1cI",
+    "banner": "https://fastly.picsum.photos/id/94/1200/400.jpg?hmac=p50yWT4L43pjkmmro8jxdx4eN3L8Ck5R9GavoFauYeI",
+    "isDeleted": false,
+    "createdAt": "2026-08-02T22:24:00.000Z",
+    "updatedAt": "2026-08-20T19:24:00.000Z"
+  },
+  {
+    "_id": "33fea4de4b1d483408e40d59",
+    "user": "7b977fb3487d4ff72690cb2b",
+    "name": "Rotterdam Port Logistics Tools",
+    "email": "vendor95@gmail.com",
+    "phone": "+31 10 408 50",
+    "address": {
+      "street": "Wilhelminakade 950",
+      "state": "South Holland",
+      "postalCode": "3072 AP",
+      "country": "Netherlands"
+    },
+    "logo": "https://fastly.picsum.photos/id/200/400/400.jpg?hmac=0WDd9kCBVyEsjSb4-mOMUiZBmJiAxVOmXyZVXBAB5Hk",
+    "banner": "https://fastly.picsum.photos/id/95/1200/400.jpg?hmac=Fnp7nw8hQpZU5OfcdAgB_Hd7tGj65yQDhyJAkeeLBc8",
+    "isDeleted": false,
+    "createdAt": "2026-08-05T03:12:00.000Z",
+    "updatedAt": "2026-08-23T01:12:00.000Z"
+  },
+  {
+    "_id": "a9a94ae6ef7e731ea371a13d",
+    "user": "ff282a5db3ec04b49fbfbbfa",
+    "name": "Stockholm Minimalist Homeware",
+    "email": "vendor96@gmail.com",
+    "phone": "+46 8 506 51",
+    "address": {
+      "street": "Biblioteksgatan 9",
+      "state": "Stockholm County",
+      "postalCode": "111 46",
+      "country": "Sweden"
+    },
+    "logo": "https://fastly.picsum.photos/id/201/400/400.jpg?hmac=FBmAp8pCOKUpdMCB7bMbP_Gnk_EFZscbJ96EoKV--aE",
+    "banner": "https://fastly.picsum.photos/id/96/1200/400.jpg?hmac=nHntqAkMQdiQc4GOQvf-yUpK-84gwqwWnQDjB4LqXOM",
+    "isDeleted": false,
+    "createdAt": "2026-08-07T08:00:00.000Z",
+    "updatedAt": "2026-08-25T07:00:00.000Z"
+  },
+  {
+    "_id": "01da0606f6797b8de8e23ce7",
+    "user": "1e764dd9e9ca6a8eb613576f",
+    "name": "Warsaw Digital Audio Labs",
+    "email": "vendor97@gmail.com",
+    "phone": "+48 22 552 52",
+    "address": {
+      "street": "Nowogrodzka 31",
+      "state": "Masovian",
+      "postalCode": "00-511",
+      "country": "Poland"
+    },
+    "logo": "https://fastly.picsum.photos/id/202/400/400.jpg?hmac=vG9jUJmx9DuzkAgvvYzAQFGNp-5aLRLcoSuI4VPXEtI",
+    "banner": "https://fastly.picsum.photos/id/98/1200/400.jpg?hmac=xZ8dop8IYW9Jh_NAydpkCmVgctECeezahwgTscR0sqA",
+    "isDeleted": false,
+    "createdAt": "2026-08-09T12:48:00.000Z",
+    "updatedAt": "2026-08-27T12:48:00.000Z"
+  },
+  {
+    "_id": "8f4234b67f5f2560dcc3db4f",
+    "user": "ff4623ffa880dede0b8f47ab",
+    "name": "Antwerp Diamond Polishers",
+    "email": "vendor98@gmail.com",
+    "phone": "+32 3 222 53",
+    "address": {
+      "street": "Hoveniersstraat 22",
+      "state": "Antwerp",
+      "postalCode": "2018",
+      "country": "Belgium"
+    },
+    "logo": "https://fastly.picsum.photos/id/203/400/400.jpg?hmac=OVK8wUTCKtGEVtdVdYzXIPvK6UvLAwGZGSRGenBgJ8E",
+    "banner": "https://fastly.picsum.photos/id/99/1200/400.jpg?hmac=XLKuYniqEiU8mOQipcz2o4p2DShMXeSKx-ZoPdjXtEM",
+    "isDeleted": false,
+    "createdAt": "2026-08-11T17:36:00.000Z",
+    "updatedAt": "2026-08-29T18:36:00.000Z"
+  },
+  {
+    "_id": "ba04ca83c6e1eea58541cbe4",
+    "user": "0340ac78d5a35de8d571e0cd",
+    "name": "Salzburg Alpine Herbs & Tea",
+    "email": "vendor99@gmail.com",
+    "phone": "+43 662 8044 54",
+    "address": {
+      "street": "Getreidegasse 31",
+      "state": "Salzburg",
+      "postalCode": "5020",
+      "country": "Austria"
+    },
+    "logo": "https://fastly.picsum.photos/id/204/400/400.jpg?hmac=KqqANeQnoq20mhaCP7hblGf_FWK85L30flhC_Zu5-tE",
+    "banner": "https://fastly.picsum.photos/id/100/1200/400.jpg?hmac=olrYtEuUucIFFc_-xt-TxZxa1AcI-BGz7188d-0mHzM",
+    "isDeleted": false,
+    "createdAt": "2026-08-13T22:24:00.000Z",
+    "updatedAt": "2026-09-01T00:24:00.000Z"
+  },
+  {
+    "_id": "300490effe2fe9a63c41887c",
+    "user": "c6c08fd5f5e0ca2fb453f9b9",
+    "name": "Lisbon Ceramic Tile Artisans",
+    "email": "vendor100@gmail.com",
+    "phone": "+351 21 392 55",
+    "address": {
+      "street": "Rua Garrett 48",
+      "state": "Lisbon District",
+      "postalCode": "1200-204",
+      "country": "Portugal"
+    },
+    "logo": "https://fastly.picsum.photos/id/206/400/400.jpg?hmac=ZfNzmwb_G-cENYBcFfGB0f-xCi3wb6TBkE-4eQGt7ys",
+    "banner": "https://fastly.picsum.photos/id/101/1200/400.jpg?hmac=XD7toxulNuM4Xrivwgu2TF2CZ_LwCz1s-6izKmbe9l4",
+    "isDeleted": false,
+    "createdAt": "2026-08-16T03:12:00.000Z",
+    "updatedAt": "2026-09-03T06:12:00.000Z"
+  }
+]

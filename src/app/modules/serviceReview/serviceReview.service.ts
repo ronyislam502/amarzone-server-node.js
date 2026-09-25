@@ -4,6 +4,7 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { TServiceReview } from "./serviceReview.interface";
 import { ServiceReview } from "./serviceReview.model";
 import { Vendor } from "../vendor/vendor.model";
+import { User } from "../user/user.model";
 
 const createServiceReviewIntoDB = async (payload: TServiceReview) => {
   const result = await ServiceReview.create(payload);
@@ -21,7 +22,7 @@ const allServiceReviewsByVendorFromDB = async (
   }
 
   const serviceReviewQuery = new QueryBuilder(
-    ServiceReview.find({ vendor: isVendor._id }).populate("user").populate("user").populate("order"),
+    ServiceReview.find({ vendor: isVendor?._id }).populate("user").populate("user").populate("order"),
     query
   )
     .search(["title", "review"])

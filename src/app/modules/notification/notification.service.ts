@@ -1,5 +1,6 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
+import { Types } from "mongoose";
 import { Notification } from "./notification.model";
 import { TNotification } from "./notification.interface";
 import { emitNotification } from "../../socket/socket";
@@ -7,6 +8,8 @@ import QueryBuilder from "../../builder/queryBuilder";
 import { JwtPayload } from "jsonwebtoken";
 import { USER_ROLE } from "../../interface/common";
 import { User } from "../user/user.model";
+import { Vendor } from "../vendor/vendor.model";
+import { Customer } from "../customer/customer.model";
 
 const createNotificationIntoDB = async (payload: Partial<TNotification>) => {
     const notification = await Notification.create(payload);
@@ -63,6 +66,18 @@ const getMyNotificationsFromDB = async (user: JwtPayload, query: Record<string, 
             { recipientRole: USER_ROLE.SUPER_ADMIN },
             { recipientId: isUserExists._id },
         ];
+    } else if (isUserExists.role === USER_ROLE.VENDOR) {
+        const vendorDoc = await Vendor.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (vendorDoc) possibleIds.push(vendorDoc._id as any);
+        filter.recipientRole = USER_ROLE.VENDOR;
+        filter.recipientId = { $in: possibleIds };
+    } else if (isUserExists.role === USER_ROLE.CUSTOMER) {
+        const customerDoc = await Customer.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (customerDoc) possibleIds.push(customerDoc._id as any);
+        filter.recipientRole = USER_ROLE.CUSTOMER;
+        filter.recipientId = { $in: possibleIds };
     } else {
         filter.recipientId = isUserExists._id;
         filter.recipientRole = isUserExists.role;
@@ -95,7 +110,20 @@ const markNotificationAsReadIntoDB = async (user: JwtPayload, notificationId: st
     }
 
     if (notification.recipientRole !== USER_ROLE.ADMIN && notification.recipientRole !== USER_ROLE.SUPER_ADMIN) {
-        if (notification.recipientId?.toString() !== isUserExists._id?.toString()) {
+        let authorized = notification.recipientId?.toString() === isUserExists._id?.toString();
+        if (!authorized && isUserExists.role === USER_ROLE.VENDOR) {
+            const vendorDoc = await Vendor.findOne({ user: isUserExists._id });
+            if (vendorDoc && notification.recipientId?.toString() === vendorDoc._id?.toString()) {
+                authorized = true;
+            }
+        }
+        if (!authorized && isUserExists.role === USER_ROLE.CUSTOMER) {
+            const customerDoc = await Customer.findOne({ user: isUserExists._id });
+            if (customerDoc && notification.recipientId?.toString() === customerDoc._id?.toString()) {
+                authorized = true;
+            }
+        }
+        if (!authorized) {
             throw new AppError(httpStatus.FORBIDDEN, "You do not have permission to mark this notification as read");
         }
     }
@@ -106,8 +134,117 @@ const markNotificationAsReadIntoDB = async (user: JwtPayload, notificationId: st
     return notification;
 };
 
+const markAllNotificationsAsReadIntoDB = async (user: JwtPayload) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const filter: Record<string, any> = { isDeleted: false, isRead: false };
+
+    if (isUserExists.role === USER_ROLE.ADMIN || isUserExists.role === USER_ROLE.SUPER_ADMIN) {
+        filter.$or = [
+            { recipientRole: USER_ROLE.ADMIN },
+            { recipientRole: USER_ROLE.SUPER_ADMIN },
+            { recipientId: isUserExists._id },
+        ];
+    } else if (isUserExists.role === USER_ROLE.VENDOR) {
+        const vendorDoc = await Vendor.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (vendorDoc) possibleIds.push(vendorDoc._id as any);
+        filter.recipientRole = USER_ROLE.VENDOR;
+        filter.recipientId = { $in: possibleIds };
+    } else if (isUserExists.role === USER_ROLE.CUSTOMER) {
+        const customerDoc = await Customer.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (customerDoc) possibleIds.push(customerDoc._id as any);
+        filter.recipientRole = USER_ROLE.CUSTOMER;
+        filter.recipientId = { $in: possibleIds };
+    } else {
+        filter.recipientId = isUserExists._id;
+        filter.recipientRole = isUserExists.role;
+    }
+
+    const result = await Notification.updateMany(filter, { $set: { isRead: true } });
+    return result;
+};
+
+const clearAllNotificationsIntoDB = async (user: JwtPayload) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const filter: Record<string, any> = { isDeleted: false };
+
+    if (isUserExists.role === USER_ROLE.ADMIN || isUserExists.role === USER_ROLE.SUPER_ADMIN) {
+        filter.$or = [
+            { recipientRole: USER_ROLE.ADMIN },
+            { recipientRole: USER_ROLE.SUPER_ADMIN },
+            { recipientId: isUserExists._id },
+        ];
+    } else if (isUserExists.role === USER_ROLE.VENDOR) {
+        const vendorDoc = await Vendor.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (vendorDoc) possibleIds.push(vendorDoc._id as any);
+        filter.recipientRole = USER_ROLE.VENDOR;
+        filter.recipientId = { $in: possibleIds };
+    } else if (isUserExists.role === USER_ROLE.CUSTOMER) {
+        const customerDoc = await Customer.findOne({ user: isUserExists._id });
+        const possibleIds = [isUserExists._id];
+        if (customerDoc) possibleIds.push(customerDoc._id as any);
+        filter.recipientRole = USER_ROLE.CUSTOMER;
+        filter.recipientId = { $in: possibleIds };
+    } else {
+        filter.recipientId = isUserExists._id;
+        filter.recipientRole = isUserExists.role;
+    }
+
+    const result = await Notification.updateMany(filter, { $set: { isDeleted: true } });
+    return result;
+};
+
+const deleteSingleNotificationIntoDB = async (user: JwtPayload, notificationId: string) => {
+    const isUserExists = await User.isUserExistsByEmail(user.email);
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const notification = await Notification.findById(notificationId);
+    if (!notification) {
+        throw new AppError(httpStatus.NOT_FOUND, "Notification not found");
+    }
+
+    if (notification.recipientRole !== USER_ROLE.ADMIN && notification.recipientRole !== USER_ROLE.SUPER_ADMIN) {
+        let authorized = notification.recipientId?.toString() === isUserExists._id?.toString();
+        if (!authorized && isUserExists.role === USER_ROLE.VENDOR) {
+            const vendorDoc = await Vendor.findOne({ user: isUserExists._id });
+            if (vendorDoc && notification.recipientId?.toString() === vendorDoc._id?.toString()) {
+                authorized = true;
+            }
+        }
+        if (!authorized && isUserExists.role === USER_ROLE.CUSTOMER) {
+            const customerDoc = await Customer.findOne({ user: isUserExists._id });
+            if (customerDoc && notification.recipientId?.toString() === customerDoc._id?.toString()) {
+                authorized = true;
+            }
+        }
+        if (!authorized) {
+            throw new AppError(httpStatus.FORBIDDEN, "You do not have permission to delete this notification");
+        }
+    }
+
+    notification.isDeleted = true;
+    await notification.save();
+
+    return notification;
+};
+
 export const NotificationServices = {
     createNotificationIntoDB,
     getMyNotificationsFromDB,
     markNotificationAsReadIntoDB,
+    markAllNotificationsAsReadIntoDB,
+    clearAllNotificationsIntoDB,
+    deleteSingleNotificationIntoDB,
 };

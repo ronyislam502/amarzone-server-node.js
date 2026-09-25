@@ -6,16 +6,11 @@ import { AccountHealthControllers } from "./health.controller";
 const router = express.Router();
 
 router.get(
-    "/",
+    "/my-health",
     auth(USER_ROLE.VENDOR),
     AccountHealthControllers.getMyHealth
 );
 
-router.get(
-    "/:vendorId",
-    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
-    AccountHealthControllers.getVendorHealth
-);
 
 router.post(
     "/:vendorId/recalculate",

@@ -20,6 +20,7 @@ import { FraudRoutes } from "../modules/fraud/fraud.route";
 import { AccountHealthRoutes } from "../modules/health/health.route";
 import { NotificationRoutes } from "../modules/notification/notification.route";
 import { SlaViolationRoutes } from "../modules/violation/violation.route";
+import { AiRoutes } from "../modules/artificial/ai.route";
 
 const router = Router();
 
@@ -97,14 +98,6 @@ const moduleRoutes = [
     route: FraudRoutes,
   },
   {
-    path: "/fraud",
-    route: FraudRoutes,
-  },
-  {
-    path: "/account-health",
-    route: AccountHealthRoutes,
-  },
-  {
     path: "/health",
     route: AccountHealthRoutes,
   },
@@ -113,12 +106,12 @@ const moduleRoutes = [
     route: NotificationRoutes,
   },
   {
-    path: "/sla-violations",
+    path: "/violations",
     route: SlaViolationRoutes,
   },
   {
-    path: "/violations",
-    route: SlaViolationRoutes,
+    path: "/ai",
+    route: AiRoutes,
   },
 ];
 

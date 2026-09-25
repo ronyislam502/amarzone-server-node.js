@@ -28,7 +28,7 @@ router.delete(
 );
 
 
-router.get("/:id", ProductReviewControllers.getSingleProductReview);
+router.get("/variant-reviews/:id", ProductReviewControllers.getSingleProductReview);
 
 
 

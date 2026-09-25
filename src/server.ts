@@ -4,6 +4,9 @@ import config from "./app/config";
 import mongoose from "mongoose";
 import { initializeSocket } from "./app/socket/socket";
 import { initializeOrderExpiryCron } from "./app/cron/orderExpiry.cron";
+import { initializeVendorHealthCron } from "./app/cron/vendorHealth.cron";
+import { initializeOrderStatusCron } from "./app/cron/orderStatus.cron";
+import "./app/redis/invoice.worker";
 
 let server: Server;
 
@@ -15,6 +18,8 @@ async function main() {
     });
     initializeSocket(server);
     initializeOrderExpiryCron();
+    initializeVendorHealthCron();
+    initializeOrderStatusCron();
   } catch (err) {
     console.log(err);
   }

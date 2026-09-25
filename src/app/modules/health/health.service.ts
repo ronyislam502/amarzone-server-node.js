@@ -6,6 +6,9 @@ import { ServiceReview } from "../serviceReview/serviceReview.model";
 import { SlaViolationServices } from "../violation/violation.service";
 import { calculateBuyBox } from "../../utilities/buyBox";
 import { VENDOR_HEALTH } from "../../interface/common";
+import { JwtPayload } from "jsonwebtoken";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 
 const calculateVendorHealth = async (vendorId: string, session?: mongoose.ClientSession) => {
@@ -232,10 +235,16 @@ const calculateVendorHealth = async (vendorId: string, session?: mongoose.Client
     return updatedHealth;
 };
 
-const getVendorHealthFromDB = async (vendorId: string) => {
-    let health = await AccountHealth.findOne({ vendor: vendorId });
+const getVendorHealthFromDB = async (user: JwtPayload) => {
+
+    const isUser = await User.isUserExistsByEmail(user?.email);
+
+    if (!isUser) {
+        throw new AppError(httpStatus.NOT_FOUND, "Vendor not found");
+    }
+    let health = await AccountHealth.findOne({ vendor: isUser._id });
     if (!health) {
-        health = await calculateVendorHealth(vendorId);
+        health = await calculateVendorHealth(isUser._id.toString());
     }
     return health;
 };

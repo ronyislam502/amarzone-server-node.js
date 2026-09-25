@@ -50,7 +50,11 @@ const createDecision = async (
   if (decision === "REFUNDED") {
     try {
       if ("refundOrder" in PaymentServices && typeof (PaymentServices as any).refundOrder === "function") {
-        await (PaymentServices as any).refundOrder(dispute.order.toString());
+        await (PaymentServices as any).refundOrder(dispute.order.toString(), {
+          disputeId: dispute._id,
+          reason: dispute.reason,
+          notes,
+        });
       }
     } catch (refundError: any) {
       console.error(
@@ -75,16 +79,26 @@ const getDecisionByDisputeId = async (
     throw new AppError(httpStatus.NOT_FOUND, "Dispute not found");
   }
 
+  const customerId =
+    (dispute.customer as any)?._id?.toString() ||
+    dispute.customer?.toString();
+
+  const vendorId =
+    (dispute.vendor as any)?._id?.toString() ||
+    dispute.vendor?.toString();
+
+  const currentUserId = userId.toString();
+
   if (
     userRole === "CUSTOMER" &&
-    dispute.customer.toString() !== userId.toString()
+    customerId !== currentUserId
   ) {
     throw new AppError(httpStatus.FORBIDDEN, "Access denied");
   }
 
   if (
     userRole === "VENDOR" &&
-    dispute.vendor.toString() !== userId.toString()
+    vendorId !== currentUserId
   ) {
     throw new AppError(httpStatus.FORBIDDEN, "Access denied");
   }

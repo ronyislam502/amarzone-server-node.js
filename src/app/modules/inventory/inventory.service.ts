@@ -12,7 +12,6 @@ import QueryBuilder from "../../builder/queryBuilder";
 const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
 
     const isUserExists = await User.isUserExistsByEmail(user?.email);
-    console.log("user", isUserExists)
 
     if (!isUserExists) {
         throw new AppError(httpStatus.NOT_FOUND, "this user not found");
@@ -86,6 +85,27 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
     return result;
 
 }
+
+const getInventoryByVariantAsinFromDB = async (asin: string) => {
+    const listings = await Inventory.find({
+        asin,
+        "seller.isStock": true,
+    })
+        .populate("product")
+        .populate("seller.vendor", "name avatar role")
+        .sort({ "seller.price": 1 });
+
+    const buyBoxWinner =
+        listings.find((l) => l.seller.isBuyBoxWinner) || listings[0] || null;
+
+    return {
+        asin,
+        buyBoxWinner,
+        totalSellers: listings.length,
+        sellers: listings,
+    };
+};
+
 
 const myInventoryFromDB = async (
     user: JwtPayload,
@@ -182,4 +202,5 @@ export const InventoryServices = {
     myInventoryFromDB,
     updatePriceIntoDB,
     updateQuantityIntoDB,
+    getInventoryByVariantAsinFromDB
 }

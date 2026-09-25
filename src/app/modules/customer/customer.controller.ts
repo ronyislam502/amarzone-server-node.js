@@ -17,6 +17,18 @@ const allCustomers = catchAsync(async (req, res) => {
 
 })
 
+const singleCustomer = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await CustomerServices.singleCustomerFromDB(id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Customer retrieved successfully",
+        data: result,
+    });
+});
+
 const deleteCustomer = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CustomerServices.deleteCustomerFromDB(id);
@@ -43,6 +55,7 @@ const updateCustomer = catchAsync(async (req, res) => {
 
 export const CustomerControllers = {
     allCustomers,
+    singleCustomer,
     updateCustomer,
     deleteCustomer,
 };

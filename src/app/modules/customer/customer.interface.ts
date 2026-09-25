@@ -7,7 +7,6 @@ export type TCustomer = {
     name: string;
     email: string;
     avatar?: string;
-    stripeCustomerId?: string;
     phone: string;
     address: TAddress;
     isDeleted: boolean;

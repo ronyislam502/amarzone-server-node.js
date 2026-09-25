@@ -1,7 +1,11 @@
 import { Worker, Job } from "bullmq";
 import { redisConnectionOptions } from "./redis";
+import "../modules/variant/variant.model";
+import "../modules/product/product.model";
+import "../modules/user/user.model";
 import { Order } from "../modules/order/order.model";
 import { Customer } from "../modules/customer/customer.model";
+import { Vendor } from "../modules/vendor/vendor.model";
 import {
   generateInvoicePdf,
   mapOrderToInvoiceData,
@@ -32,9 +36,12 @@ export const invoiceWorker = new Worker(
     }
 
     const customerId = (order.customer as any)?._id || order.customer;
-    const customerProfile = await Customer.findOne({ user: customerId });
+    const customerProfile = (await Customer.findOne({ user: customerId })) || (await Customer.findById(customerId));
 
-    const invoiceData = mapOrderToInvoiceData(order, customerProfile);
+    const vendorId = (order.vendor as any)?._id || order.vendor;
+    const vendorProfile = (await Vendor.findOne({ user: vendorId })) || (await Vendor.findById(vendorId));
+
+    const invoiceData = mapOrderToInvoiceData(order, customerProfile, vendorProfile);
     const pdfBuffer = await generateInvoicePdf(invoiceData);
 
     // 1. Upload PDF to Cloudinary

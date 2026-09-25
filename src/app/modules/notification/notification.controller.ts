@@ -27,7 +27,44 @@ const markAsRead = catchAsync(async (req, res) => {
     });
 });
 
+const markAllAsRead = catchAsync(async (req, res) => {
+    const result = await NotificationServices.markAllNotificationsAsReadIntoDB(req.user);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All notifications marked as read successfully",
+        data: result,
+    });
+});
+
+const clearAll = catchAsync(async (req, res) => {
+    const result = await NotificationServices.clearAllNotificationsIntoDB(req.user);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All notifications cleared successfully",
+        data: result,
+    });
+});
+
+const deleteSingle = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await NotificationServices.deleteSingleNotificationIntoDB(req.user, id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Notification deleted successfully",
+        data: result,
+    });
+});
+
 export const NotificationControllers = {
     getMyNotifications,
     markAsRead,
+    markAllAsRead,
+    clearAll,
+    deleteSingle,
 };

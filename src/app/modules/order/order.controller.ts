@@ -15,13 +15,14 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getAllOrders = catchAsync(async (req, res) => {
-    const result = await OrderServices.getAllOrdersFromDB();
+    const result = await OrderServices.getAllOrdersFromDB(req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "Orders retrieved successfully",
-        data: result,
+        meta: result.meta,
+        data: result.data,
     });
 });
 
@@ -49,11 +50,36 @@ const getSingleOrder = catchAsync(async (req, res) => {
     });
 });
 
+const updateOrder = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await OrderServices.updateOrderInDB(req.user, id, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Order updated successfully",
+        data: result,
+    });
+});
+
+const orderRefund = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await OrderServices.orderRefundFromDB(req.user, id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Order refunded successfully",
+        data: result,
+    });
+});
 
 export const OrderControllers = {
     createOrder,
     getAllOrders,
     allOrdersByUser,
     getSingleOrder,
+    updateOrder,
+    orderRefund,
 };
 

@@ -88,6 +88,16 @@ const updateCategoryIntoDB = async (
   return result;
 };
 
+
+const categoryByProductsFromDB = async (id: string) => {
+  const isCategory = await Category.findById(id);
+
+  if (!isCategory) {
+    throw new AppError(httpStatus.NOT_FOUND, "This category not found");
+  }
+
+}
+
 export const CategoryServices = {
   createCategoryIntoDB,
   AllCategoriesFromDB,

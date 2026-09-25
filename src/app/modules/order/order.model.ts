@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from "mongoose";
-import { TDateRange, TOrder, TTracking } from "./order.interface";
+import { TDateRange, TOrder, TRefund, TTracking } from "./order.interface";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 
 export const trackingSchema = new Schema<TTracking>(
@@ -31,11 +31,6 @@ export const trackingSchema = new Schema<TTracking>(
             type: Date,
             required: false,
         },
-        notes: {
-            type: String,
-            trim: true,
-            required: false,
-        },
     },
     {
         _id: false,
@@ -52,6 +47,43 @@ export const dateRangeSchema = new Schema<TDateRange>(
         to: {
             type: Date,
             required: true,
+        },
+    },
+    {
+        _id: false,
+    }
+);
+
+export const refundSchema = new Schema<TRefund>(
+    {
+        refundId: {
+            type: String,
+            required: true,
+        },
+        refundAmount: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+        refundedBy: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        refundInitiatorRole: {
+            type: String,
+            required: true,
+        },
+        refundReason: {
+            type: String,
+            trim: true,
+        },
+        refundedAt: {
+            type: Date,
+            default: Date.now,
+        },
+        stripeRefundStatus: {
+            type: String,
         },
     },
     {
@@ -126,7 +158,6 @@ const orderSchema = new Schema<TOrder>(
         vendorAmount: {
             type: Number,
             required: true,
-            min: 0,
         },
         shippedDate: {
             type: dateRangeSchema,
@@ -148,10 +179,6 @@ const orderSchema = new Schema<TOrder>(
             default: PAYMENT_STATUS.UNPAID,
             required: true,
         },
-        transactionId: {
-            type: String,
-            default: "",
-        },
         tracking: {
             type: trackingSchema,
             required: false,
@@ -159,6 +186,10 @@ const orderSchema = new Schema<TOrder>(
         invoiceUrl: {
             type: String,
             default: "",
+        },
+        refund: {
+            type: refundSchema,
+            required: false,
         },
         isDeleted: {
             type: Boolean,

@@ -18,6 +18,21 @@ const createVariant = catchAsync(async (req, res) => {
     });
 });
 
+const allVariantsByProduct = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await VariantServices.allVariantsByProductFromDB(id,
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Variants by product retrieved successfully",
+        data: result,
+    });
+});
+
 export const VariantControllers = {
     createVariant,
+    allVariantsByProduct
 };
