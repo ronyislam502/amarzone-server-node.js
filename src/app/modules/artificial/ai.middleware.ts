@@ -61,3 +61,42 @@ export const trackAiTelemetry = (
   next();
 };
 
+/**
+ * Middleware to handle multipart form data, parse stringified JSON if present,
+ * and extract uploaded file paths into req.body.imageUrl.
+ */
+export const parseAiMultipart = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
+  // If multipart data key was passed (e.g. JSON string inside FormData)
+  if (req.body?.data && typeof req.body.data === "string") {
+    try {
+      const parsed = JSON.parse(req.body.data);
+      req.body = { ...parsed, ...req.body };
+      delete req.body.data;
+    } catch {
+      // Continue with raw body if not valid JSON string
+    }
+  }
+
+  // Handle uploaded file from multer (checks req.file or req.files)
+  const file =
+    req.file ||
+    (req.files as any)?.images?.[0] ||
+    (req.files as any)?.image?.[0] ||
+    (req.files as any)?.file?.[0];
+
+  if (file?.path) {
+    req.body.imageUrl = file.path;
+  }
+
+  // Also support req.body.image if provided as a direct URL or Base64 string
+  if (!req.body.imageUrl && typeof req.body.image === "string" && req.body.image.trim() !== "") {
+    req.body.imageUrl = req.body.image.trim();
+  }
+
+  next();
+};
+

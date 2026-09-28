@@ -35,10 +35,12 @@ export type TProductSpecification = {
 };
 
 export type TProductContentInput = {
-  title: string;
-  category: string;
-  brand: string;
-  features: string[] | string;
+  title?: string;
+  category?: string;
+  brand?: string;
+  features?: string[] | string;
+  imageUrl?: string;
+  image?: string;
   specifications?: Record<string, any> | TProductSpecification[];
   targetAudience?: string;
   tone?: "professional" | "exciting" | "luxury" | "casual" | "technical" | string;
@@ -46,13 +48,21 @@ export type TProductContentInput = {
 };
 
 export type TProductContentOutput = {
-  seoTitle: string;
-  seoDescription: string;
+  title: string;
+  brand: string;
+  features: string[];
+  tags: string[];
+  suggestedDepartment: string;
+  suggestedCategory: string;
   shortDescription: string;
   longDescription: string;
-  bulletFeatures: string[];
+  seoTitle: string;
+  seoDescription: string;
   keywords: string[];
-  tags: string[];
+  imageUrl?: string;
+  department?: string;
+  category?: string;
+  description?: string;
 };
 
 // ==========================================

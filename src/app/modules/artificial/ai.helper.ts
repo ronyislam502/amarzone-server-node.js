@@ -18,7 +18,7 @@ export class AiHelper {
   /**
    * Recursively sanitizes input payloads, stripping null bytes and non-printable control characters.
    */
-  public static sanitizeInput<T = any>(input: T): T {
+  public static sanitizeInput = <T = any>(input: T): T => {
     if (typeof input === "string") {
       return input.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim() as any;
     }
@@ -33,12 +33,12 @@ export class AiHelper {
       return sanitized as T;
     }
     return input;
-  }
+  };
 
   /**
    * Safely parse JSON strings from LLM responses, stripping code fences and fixing minor syntax issues.
    */
-  public static safeJsonParse<T = any>(rawText: string): T {
+  public static safeJsonParse = <T = any>(rawText: string): T => {
     if (!rawText || rawText.trim() === "") {
       throw new AppError(
         httpStatus.UNPROCESSABLE_ENTITY,
@@ -130,72 +130,134 @@ export class AiHelper {
         `${AI_ERROR_MESSAGES.PARSING_FAILED}: Invalid JSON structure received from model.`
       );
     }
-  }
+  };
 
   /**
    * Validate and sanitize Product Content Generator Output
    */
-  public static sanitizeProductContentOutput(raw: any): TProductContentOutput {
+  public static sanitizeProductContentOutput = (raw: any): TProductContentOutput => {
+    const cleanString = (val: any, fallback = ""): string =>
+      typeof val === "string" && val.trim() !== "" ? val.trim() : fallback;
+
+    const cleanStringArray = (arr: any): string[] =>
+      Array.isArray(arr)
+        ? arr.map((item: any) => String(item).trim()).filter(Boolean)
+        : [];
+
+    const title = cleanString(
+      raw?.title,
+      cleanString(raw?.seoTitle, "Marketplace Product")
+    );
+
+    const brand = cleanString(raw?.brand, "Generic");
+
+    // Consolidate features, supporting raw.features or raw.bulletFeatures fallback
+    const rawFeatures =
+      Array.isArray(raw?.features) && raw.features.length > 0
+        ? raw.features
+        : raw?.bulletFeatures;
+    const features = cleanStringArray(rawFeatures);
+
+    const tags = cleanStringArray(raw?.tags);
+    const keywords = cleanStringArray(raw?.keywords);
+
+    const suggestedDepartment = cleanString(
+      raw?.suggestedDepartment,
+      cleanString(raw?.department, "General")
+    );
+
+    const suggestedCategory = cleanString(
+      raw?.suggestedCategory,
+      cleanString(raw?.category, "General")
+    );
+
+    const shortDescription = cleanString(
+      raw?.shortDescription,
+      cleanString(raw?.description, "")
+    );
+
+    const longDescription = cleanString(
+      raw?.longDescription,
+      cleanString(raw?.description, shortDescription)
+    );
+
+    const seoTitle = cleanString(
+      raw?.seoTitle,
+      cleanString(raw?.title, title)
+    );
+
+    const seoDescription = cleanString(
+      raw?.seoDescription,
+      shortDescription
+    );
+
+    const imageUrl =
+      typeof raw?.imageUrl === "string" && raw.imageUrl.trim() !== ""
+        ? raw.imageUrl.trim()
+        : undefined;
+
     return {
-      seoTitle: typeof raw?.seoTitle === "string" ? raw.seoTitle.trim() : "",
-      seoDescription: typeof raw?.seoDescription === "string" ? raw.seoDescription.trim() : "",
-      shortDescription: typeof raw?.shortDescription === "string" ? raw.shortDescription.trim() : "",
-      longDescription: typeof raw?.longDescription === "string" ? raw.longDescription.trim() : "",
-      bulletFeatures: Array.isArray(raw?.bulletFeatures)
-        ? raw.bulletFeatures.map((f: any) => String(f).trim())
-        : [],
-      keywords: Array.isArray(raw?.keywords)
-        ? raw.keywords.map((k: any) => String(k).trim())
-        : [],
-      tags: Array.isArray(raw?.tags)
-        ? raw.tags.map((t: any) => String(t).trim())
-        : [],
+      title,
+      brand,
+      features,
+      tags,
+      suggestedDepartment,
+      suggestedCategory,
+      shortDescription,
+      longDescription,
+      seoTitle,
+      seoDescription,
+      keywords,
+      imageUrl,
+      department: suggestedDepartment,
+      category: suggestedCategory,
+      description: shortDescription,
     };
-  }
+  };
 
   /**
    * Validate and sanitize Shopping Assistant Output
    */
-  public static sanitizeShoppingAssistantOutput(raw: any): TShoppingAssistantOutput {
+  public static sanitizeShoppingAssistantOutput = (raw: any): TShoppingAssistantOutput => {
     return {
       reply: typeof raw?.reply === "string" ? raw.reply.trim() : "How may I assist your shopping today?",
       intent: raw?.intent || "general_inquiry",
       extractedCriteria: raw?.extractedCriteria
         ? {
-            category: raw.extractedCriteria.category || undefined,
-            minPrice: typeof raw.extractedCriteria.minPrice === "number" ? raw.extractedCriteria.minPrice : undefined,
-            maxPrice: typeof raw.extractedCriteria.maxPrice === "number" ? raw.extractedCriteria.maxPrice : undefined,
-            currency: raw.extractedCriteria.currency || "USD",
-            brand: raw.extractedCriteria.brand || undefined,
-            keywords: Array.isArray(raw.extractedCriteria.keywords) ? raw.extractedCriteria.keywords : [],
-            keyAttributes: raw.extractedCriteria.keyAttributes || {},
-          }
+          category: raw.extractedCriteria.category || undefined,
+          minPrice: typeof raw.extractedCriteria.minPrice === "number" ? raw.extractedCriteria.minPrice : undefined,
+          maxPrice: typeof raw.extractedCriteria.maxPrice === "number" ? raw.extractedCriteria.maxPrice : undefined,
+          currency: raw.extractedCriteria.currency || "USD",
+          brand: raw.extractedCriteria.brand || undefined,
+          keywords: Array.isArray(raw.extractedCriteria.keywords) ? raw.extractedCriteria.keywords : [],
+          keyAttributes: raw.extractedCriteria.keyAttributes || {},
+        }
         : undefined,
       suggestions: Array.isArray(raw?.suggestions)
         ? raw.suggestions.map((s: any) => String(s).trim())
         : [
-            "Show me top customer-rated products",
-            "Filter by best deals and discounts",
-            "Compare top alternatives",
-          ],
+          "Show me top customer-rated products",
+          "Filter by best deals and discounts",
+          "Compare top alternatives",
+        ],
       comparisons: Array.isArray(raw?.comparisons)
         ? raw.comparisons.map((c: any) => ({
-            item: String(c.item || ""),
-            pros: Array.isArray(c.pros) ? c.pros.map(String) : [],
-            cons: Array.isArray(c.cons) ? c.cons.map(String) : [],
-            verdict: String(c.verdict || ""),
-          }))
+          item: String(c.item || ""),
+          pros: Array.isArray(c.pros) ? c.pros.map(String) : [],
+          cons: Array.isArray(c.cons) ? c.cons.map(String) : [],
+          verdict: String(c.verdict || ""),
+        }))
         : undefined,
       recommendedCategories: Array.isArray(raw?.recommendedCategories)
         ? raw.recommendedCategories.map(String)
         : undefined,
     };
-  }
+  };
 
   /**
    * Validate and sanitize Executive Dashboard Insights Output
    */
-  public static sanitizeDashboardInsightsOutput(raw: any): TDashboardInsightsOutput {
+  public static sanitizeDashboardInsightsOutput = (raw: any): TDashboardInsightsOutput => {
     const executiveSummary =
       typeof raw?.executiveSummary === "string" && raw.executiveSummary.trim()
         ? raw.executiveSummary.trim()
@@ -203,39 +265,39 @@ export class AiHelper {
 
     const businessInsights = Array.isArray(raw?.businessInsights)
       ? raw.businessInsights.map((item: any) => {
-          if (typeof item === "string") return item;
-          return {
-            category: String(item.category || "General"),
-            observation: String(item.observation || ""),
-            impact: String(item.impact || ""),
-          };
-        })
+        if (typeof item === "string") return item;
+        return {
+          category: String(item.category || "General"),
+          observation: String(item.observation || ""),
+          impact: String(item.impact || ""),
+        };
+      })
       : [];
 
     const recommendations = Array.isArray(raw?.recommendations)
       ? raw.recommendations.map((r: any) => ({
-          title: String(r.title || "Optimization Step"),
-          action: String(r.action || ""),
-          priority: ["HIGH", "MEDIUM", "LOW"].includes(r.priority) ? r.priority : "MEDIUM",
-          expectedImpact: String(r.expectedImpact || ""),
-        }))
+        title: String(r.title || "Optimization Step"),
+        action: String(r.action || ""),
+        priority: ["HIGH", "MEDIUM", "LOW"].includes(r.priority) ? r.priority : "MEDIUM",
+        expectedImpact: String(r.expectedImpact || ""),
+      }))
       : [];
 
     const warnings = Array.isArray(raw?.warnings)
       ? raw.warnings.map((w: any) => ({
-          alert: String(w.alert || ""),
-          severity: ["CRITICAL", "WARNING", "INFO"].includes(w.severity) ? w.severity : "WARNING",
-          metricTrigger: String(w.metricTrigger || ""),
-          suggestedRemediation: String(w.suggestedRemediation || ""),
-        }))
+        alert: String(w.alert || ""),
+        severity: ["CRITICAL", "WARNING", "INFO"].includes(w.severity) ? w.severity : "WARNING",
+        metricTrigger: String(w.metricTrigger || ""),
+        suggestedRemediation: String(w.suggestedRemediation || ""),
+      }))
       : [];
 
     const growthOpportunities = Array.isArray(raw?.growthOpportunities)
       ? raw.growthOpportunities.map((g: any) => ({
-          opportunity: String(g.opportunity || ""),
-          estimatedPotential: String(g.estimatedPotential || ""),
-          actionableNextStep: String(g.actionableNextStep || ""),
-        }))
+        opportunity: String(g.opportunity || ""),
+        estimatedPotential: String(g.estimatedPotential || ""),
+        actionableNextStep: String(g.actionableNextStep || ""),
+      }))
       : [];
 
     // Auto-compose formatted Markdown report if raw string is missing or truncated
@@ -248,12 +310,12 @@ export class AiHelper {
       naturalLanguageReport = `# Amarzone Executive Intelligence Report\n\n## 1. Executive Summary\n${executiveSummary}\n\n## 2. Business Insights\n${businessInsights
         .map((b: any) => `- **[${typeof b === "object" ? b.category : "General"}]**: ${typeof b === "object" ? b.observation : b}`)
         .join("\n")}\n\n## 3. Strategic Recommendations\n${recommendations
-        .map((r: any) => `- **[${r.priority}] ${r.title}**: ${r.action} *(Expected Impact: ${r.expectedImpact})*`)
-        .join("\n")}\n\n## 4. Operational Warnings\n${warnings
-        .map((w: any) => `- **[${w.severity}] ${w.alert}**: ${w.suggestedRemediation}`)
-        .join("\n")}\n\n## 5. Growth Opportunities\n${growthOpportunities
-        .map((g: any) => `- **${g.opportunity}**: ${g.actionableNextStep} *(Potential: ${g.estimatedPotential})*`)
-        .join("\n")}`;
+          .map((r: any) => `- **[${r.priority}] ${r.title}**: ${r.action} *(Expected Impact: ${r.expectedImpact})*`)
+          .join("\n")}\n\n## 4. Operational Warnings\n${warnings
+            .map((w: any) => `- **[${w.severity}] ${w.alert}**: ${w.suggestedRemediation}`)
+            .join("\n")}\n\n## 5. Growth Opportunities\n${growthOpportunities
+              .map((g: any) => `- **${g.opportunity}**: ${g.actionableNextStep} *(Potential: ${g.estimatedPotential})*`)
+              .join("\n")}`;
     }
 
     return {
@@ -264,5 +326,5 @@ export class AiHelper {
       growthOpportunities,
       naturalLanguageReport,
     };
-  }
+  };
 }

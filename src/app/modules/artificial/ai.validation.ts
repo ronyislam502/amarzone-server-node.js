@@ -17,31 +17,48 @@ const productSpecificationSchema = z.object({
 });
 
 const generateProductContentValidationSchema = z.object({
-  body: z.object({
-    title: z
-      .string({ required_error: "Product title is required" })
-      .min(2, "Product title must be at least 2 characters")
-      .max(300, "Product title cannot exceed 300 characters"),
-    category: z
-      .string({ required_error: "Category is required" })
-      .min(2, "Category name must be at least 2 characters"),
-    brand: z
-      .string({ required_error: "Brand is required" })
-      .min(1, "Brand name is required"),
-    features: z.union(
-      [
-        z.array(z.string().min(1)).min(1, "At least one feature is required"),
-        z.string().min(3, "Features description must be at least 3 characters"),
-      ],
-      { required_error: "Product features are required" }
+  body: z
+    .object({
+      imageUrl: z.string().optional(),
+      image: z.string().optional(),
+      title: z
+        .string()
+        .min(2, "Product title must be at least 2 characters")
+        .max(300, "Product title cannot exceed 300 characters")
+        .optional(),
+      category: z
+        .string()
+        .min(2, "Category name must be at least 2 characters")
+        .optional(),
+      brand: z.string().min(1, "Brand name is required").optional(),
+      features: z
+        .union([
+          z.array(z.string().min(1)).min(1, "At least one feature is required"),
+          z.string().min(3, "Features description must be at least 3 characters"),
+        ])
+        .optional(),
+      specifications: z
+        .union([z.record(z.any()), z.array(productSpecificationSchema)])
+        .optional(),
+      targetAudience: z.string().max(200).optional(),
+      tone: z.string().max(50).optional(),
+      keywords: z.array(z.string().min(1)).optional(),
+    })
+    .refine(
+      (data) => {
+        // If image is supplied, manual text inputs are completely optional
+        if (data.imageUrl || data.image) {
+          return true;
+        }
+        // Otherwise, enforce existing required text fields
+        return Boolean(data.title && data.category && data.brand && data.features);
+      },
+      {
+        message:
+          "Either a product image or required product information (title, category, brand, features) must be provided.",
+        path: ["title"],
+      }
     ),
-    specifications: z
-      .union([z.record(z.any()), z.array(productSpecificationSchema)])
-      .optional(),
-    targetAudience: z.string().max(200).optional(),
-    tone: z.string().max(50).optional(),
-    keywords: z.array(z.string().min(1)).optional(),
-  }),
 });
 
 // ==========================================

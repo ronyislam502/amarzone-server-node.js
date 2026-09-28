@@ -19,37 +19,74 @@ export const AiPrompts = {
 Your task is to take vendor-provided raw product information and transform it into high-converting, professional, and SEO-optimized e-commerce content.
 
 GUIDELINES:
+- "title": Clean, professional product title.
+- "brand": Product brand name.
+- "features": 5 to 7 high-impact bullet features highlighting key benefits first, followed by technical details (format: "[FEATURE]: explanation").
+- "tags": 6 to 10 relevant categorization and indexing tags.
+- "suggestedDepartment": Suggested parent department.
+- "suggestedCategory": Suggested subcategory.
 - "seoTitle": High-converting, keyword-rich title following Amazon Best Practices (Brand + Model/Style + Category + Key Features).
 - "shortDescription": Punchy 1-2 sentence overview summarizing core value propositions.
 - "longDescription": Detailed, structured, persuasive narrative with benefits, use-cases, and craftsmanship.
-- "bulletFeatures": 5 to 7 high-impact bullet points highlighting key benefits first, followed by technical details (format: "[FEATURE]: explanation").
 - "seoDescription": Engaging meta description with call-to-action.
 - "keywords": 8 to 15 high-volume search terms.
-- "tags": 6 to 10 relevant categorization and indexing tags.
 
 OUTPUT FORMAT:
 CRITICAL: Do NOT output any chain-of-thought, reasoning steps, or monologue outside the JSON. Return ONLY the strict JSON object starting with '{' and ending with '}'.
 {
-  "seoTitle": "string",
-  "seoDescription": "string",
+  "title": "string",
+  "brand": "string",
+  "features": ["string"],
+  "tags": ["string"],
+  "suggestedDepartment": "string",
+  "suggestedCategory": "string",
   "shortDescription": "string",
   "longDescription": "string",
-  "bulletFeatures": ["string"],
-  "keywords": ["string"],
-  "tags": ["string"]
+  "seoTitle": "string",
+  "seoDescription": "string",
+  "keywords": ["string"]
 }`,
 
-  buildProductContentUserPrompt(input: TProductContentInput): string {
+  PRODUCT_IMAGE_ANALYZER_SYSTEM: `You are an elite E-Commerce Catalog Specialist, Visual Product Analyst, and Amazon SEO Master.
+Your task is to thoroughly analyze the provided product image and generate complete, professional, and high-converting e-commerce catalog information.
+
+ANALYSIS GUIDELINES:
+1. Examine the product image in detail: identify the product type, visual style, materials, color, form factor, and any visible brand name, model, or text on the item or packaging.
+2. If brand name or logo is clearly visible, identify it under "brand". If not identifiable, set "brand" to "Generic".
+3. Formulate a compelling, descriptive, and SEO-optimized "title" (Product Name).
+4. Identify 5 to 7 key product "features" observed or standard for this item (materials, build quality, styling, functional capabilities, ergonomic design, use-cases).
+5. Generate 6 to 10 relevant discovery "tags" (e.g. category keywords, attributes, style tags).
+6. Recommend the most accurate e-commerce "suggestedDepartment" (e.g., Electronics, Fashion, Home & Kitchen, Sports & Outdoors, Beauty & Personal Care, Health & Household, Toys & Games, Automotive, Office Products, etc.).
+7. Recommend the most accurate "suggestedCategory" that naturally fits under that department (e.g., Department: "Electronics" -> Category: "Headphones" or "Smartphones"; Department: "Fashion" -> Category: "Men's Sneakers").
+8. Also generate complete e-commerce copy: "shortDescription", "longDescription", "seoTitle", "seoDescription", and "keywords".
+
+OUTPUT FORMAT:
+CRITICAL: Return ONLY a valid JSON object starting with '{' and ending with '}'. Do NOT include markdown code fences, thought tags, or text outside the JSON.
+{
+  "title": "string",
+  "brand": "string",
+  "features": ["string"],
+  "tags": ["string"],
+  "suggestedDepartment": "string",
+  "suggestedCategory": "string",
+  "shortDescription": "string",
+  "longDescription": "string",
+  "seoTitle": "string",
+  "seoDescription": "string",
+  "keywords": ["string"]
+}`,
+
+  buildProductContentUserPrompt: (input: TProductContentInput): string => {
     const formattedFeatures = Array.isArray(input.features)
       ? input.features.map((f, i) => `${i + 1}. ${f}`).join("\n")
-      : input.features;
+      : input.features || "Standard product features";
 
     const formattedSpecs = input.specifications
       ? Array.isArray(input.specifications)
         ? input.specifications.map((s) => `- ${s.key}: ${s.value}`).join("\n")
         : Object.entries(input.specifications)
-            .map(([k, v]) => `- ${k}: ${v}`)
-            .join("\n")
+          .map(([k, v]) => `- ${k}: ${v}`)
+          .join("\n")
       : "Not specified";
 
     const additionalKeywords =
@@ -59,9 +96,9 @@ CRITICAL: Do NOT output any chain-of-thought, reasoning steps, or monologue outs
 
     return `Please generate high-converting, SEO-optimized e-commerce content for the following product:
 
-PRODUCT TITLE / NAME: ${input.title}
-CATEGORY: ${input.category}
-BRAND: ${input.brand}
+PRODUCT TITLE / NAME: ${input.title || "Not provided"}
+CATEGORY: ${input.category || "General"}
+BRAND: ${input.brand || "Not provided"}
 TONE: ${input.tone || "Professional, Persuasive, and Engaging"}
 TARGET AUDIENCE: ${input.targetAudience || "General marketplace shoppers"}
 PROVIDED KEYWORDS: ${additionalKeywords}
@@ -73,6 +110,38 @@ SPECIFICATIONS:
 ${formattedSpecs}
 
 Remember to return ONLY the strict JSON object.`;
+  },
+
+  buildImageProductContentUserPrompt: (
+    input: TProductContentInput,
+    taxonomyHint: string = ""
+  ): string => {
+    const additionalKeywords =
+      input.keywords && input.keywords.length > 0
+        ? input.keywords.join(", ")
+        : "None provided";
+
+    return `Please analyze this uploaded product image carefully and generate the complete e-commerce catalog information.
+
+Extract and generate:
+1. Product Title
+2. Brand (if identifiable on the product, logo, or label; otherwise "Generic")
+3. 5-7 Key Product Features
+4. 6-10 Discovery Tags
+5. Suggested Department
+6. Suggested Category
+7. Full descriptions (short & long), SEO Title, Meta Description, and Search Keywords
+
+OPTIONAL USER HINTS (use if helpful):
+- Title Hint: ${input.title || "None provided"}
+- Brand Hint: ${input.brand || "None provided"}
+- Category Hint: ${input.category || "None provided"}
+- Target Audience: ${input.targetAudience || "General marketplace shoppers"}
+- Tone: ${input.tone || "Professional, Persuasive, and Engaging"}
+- Additional Keywords: ${additionalKeywords}
+${taxonomyHint}
+
+Remember: Return ONLY the strict JSON object starting with '{' and ending with '}'.`;
   },
 
   // =========================================================================
@@ -121,7 +190,7 @@ You MUST respond with a JSON object matching this schema:
   "recommendedCategories": ["Category 1", "Category 2"]
 }`,
 
-  buildShoppingAssistantUserPrompt(input: TShoppingAssistantInput): string {
+  buildShoppingAssistantUserPrompt: (input: TShoppingAssistantInput): string => {
     let contextStr = "";
     if (input.context) {
       contextStr = `\n[SHOPPING CONTEXT]: ${JSON.stringify(input.context)}`;
@@ -186,7 +255,7 @@ CRITICAL: Do NOT output any chain-of-thought, reasoning steps, or monologue outs
   "naturalLanguageReport": "string"
 }`,
 
-  buildDashboardInsightsUserPrompt(input: TDashboardInsightsInput): string {
+  buildDashboardInsightsUserPrompt: (input: TDashboardInsightsInput): string => {
     const timeframe = input.timeframe || "monthly";
     const focusArea = input.focusArea || "all";
     const comparison = input.comparisonTimeframe || "previous equivalent period";

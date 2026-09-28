@@ -9,19 +9,22 @@ import { Router } from "express";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { AiControllers } from "./ai.controller";
 import { AiValidation } from "./ai.validation";
-import { sanitizeAiInput, trackAiTelemetry } from "./ai.middleware";
+import { sanitizeAiInput, trackAiTelemetry, parseAiMultipart } from "./ai.middleware";
 import { USER_ROLE } from "../../interface/common";
 import auth from "../../middlewares/auth";
+import { multerUpload } from "../../config/multer.config";
 
 const router = Router();
 
 /**
- * 1. AI PRODUCT CONTENT GENERATOR
+ * 1. AI PRODUCT CONTENT GENERATOR (Text & Image-based)
  * POST /api/v1/ai/product-content
  */
 router.post(
   "/product-content",
   auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
+  multerUpload.fields([{ name: "images", maxCount: 4 }]),
+  parseAiMultipart,
   trackAiTelemetry,
   sanitizeAiInput,
   validateRequest(AiValidation.generateProductContentValidationSchema),

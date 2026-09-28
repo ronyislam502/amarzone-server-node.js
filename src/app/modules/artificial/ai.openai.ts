@@ -21,14 +21,14 @@ export class OpenAiClientService {
     this.initializeClient();
   }
 
-  public static getInstance(): OpenAiClientService {
+  public static getInstance = (): OpenAiClientService => {
     if (!OpenAiClientService.instance) {
       OpenAiClientService.instance = new OpenAiClientService();
     }
     return OpenAiClientService.instance;
-  }
+  };
 
-  private initializeClient(): void {
+  private initializeClient = (): void => {
     const apiKey = config.openai_api_key || process.env.OPENAI_API_KEY;
     const baseURL =
       (config as any).openai_base_url ||
@@ -50,21 +50,21 @@ export class OpenAiClientService {
       this.client = null;
       this.isInitialized = false;
     }
-  }
+  };
 
-  public isAvailable(): boolean {
+  public isAvailable = (): boolean => {
     if (!this.client || !this.isInitialized) {
       this.initializeClient();
     }
     return Boolean(this.client && this.isInitialized);
-  }
+  };
 
   /**
    * Primary method to execute OpenAI chat completions with automatic retries and JSON support.
    */
-  public async createChatCompletion(
+  public createChatCompletion = async (
     options: TOpenAiRequestOptions
-  ): Promise<{ content: string; usage?: any }> {
+  ): Promise<{ content: string; usage?: any }> => {
     const {
       model = config.openai_model || AI_DEFAULT_CONFIG.DEFAULT_MODEL,
       temperature = AI_DEFAULT_CONFIG.TEMPERATURE.BALANCED,
@@ -159,12 +159,12 @@ export class OpenAiClientService {
       httpStatus.SERVICE_UNAVAILABLE,
       AI_ERROR_MESSAGES.SERVICE_UNAVAILABLE
     );
-  }
+  };
 
   /**
    * Centralized OpenAI Error Handler
    */
-  private handleOpenAiError(error: any): never {
+  private handleOpenAiError = (error: any): never => {
     if (error instanceof AppError) {
       throw error;
     }
@@ -194,18 +194,64 @@ export class OpenAiClientService {
       httpStatus.INTERNAL_SERVER_ERROR,
       error?.message || AI_ERROR_MESSAGES.GENERATION_FAILED
     );
-  }
+  };
 
   /**
    * Graceful fallback generator for development/staging environments when OPENAI_API_KEY is not yet provisioned.
    */
-  private handleFallbackGeneration(
+  private handleFallbackGeneration = (
     options: TOpenAiRequestOptions
-  ): { content: string; usage: any } {
-    const userPrompt = options.messages.find((m) => m.role === "user")?.content || "";
+  ): { content: string; usage: any } => {
+    const rawUserContent = options.messages.find((m) => m.role === "user")?.content;
+    const userPrompt =
+      typeof rawUserContent === "string"
+        ? rawUserContent
+        : Array.isArray(rawUserContent)
+        ? rawUserContent.find((p: any) => p.type === "text")?.text || ""
+        : "";
     const systemPrompt = options.systemPrompt || "";
 
-    // 1. Check if product content prompt
+    // 1. Check if image-based product analyzer prompt
+    if (
+      systemPrompt.includes("Visual Product Analyst") ||
+      systemPrompt.includes("PRODUCT_IMAGE_ANALYZER") ||
+      userPrompt.includes("uploaded product image")
+    ) {
+      const fallbackImageContent = {
+        title: "Smart Wireless Noise-Cancelling Bluetooth Headphones",
+        brand: "SoundWave",
+        features: [
+          "Active noise cancellation technology with dual ambient monitoring mics",
+          "Custom-tuned 40mm high-fidelity dynamic acoustic drivers",
+          "Up to 35 hours of continuous wireless playback on a single charge",
+          "Ultra-soft breathable memory foam ear cushions for prolonged comfort",
+          "Bluetooth 5.3 multi-device pairing with low-latency gaming mode",
+          "Built-in quad microphone array with AI background noise filtering"
+        ],
+        tags: ["headphones", "wireless", "audio", "noise-cancelling", "bluetooth", "gadgets", "electronics"],
+        suggestedDepartment: "Electronics",
+        suggestedCategory: "Headphones & Audio",
+        seoTitle: "SoundWave Pro Wireless Active Noise-Cancelling Bluetooth Headphones | Fast Charging",
+        seoDescription: "Shop SoundWave Wireless Noise-Cancelling Headphones with 35-hour battery and studio-quality sound. Order now on Amarzone with fast shipping!",
+        shortDescription: "Immerse yourself in crystal-clear sound with advanced active noise cancellation, custom 40mm acoustic drivers, and up to 35 hours of battery life.",
+        longDescription: "Engineered for pure acoustic excellence, these wireless noise-cancelling headphones deliver deep, rich bass, pristine mids, and balanced trebles. Whether commuting, working in busy spaces, or relaxing at home, experience premium ergonomic comfort and uninterrupted high-definition sound backed by comprehensive marketplace guarantees.",
+        keywords: [
+          "wireless headphones",
+          "noise cancelling headphones",
+          "bluetooth audio",
+          "over ear headphones",
+          "soundwave audio",
+          "high fidelity headphones"
+        ],
+      };
+
+      return {
+        content: JSON.stringify(fallbackImageContent),
+        usage: { promptTokens: 300, completionTokens: 400, totalTokens: 700 },
+      };
+    }
+
+    // 2. Check if product content prompt
     if (systemPrompt.includes("E-Commerce Copywriter") || userPrompt.includes("PRODUCT TITLE")) {
       const match = userPrompt.match(/PRODUCT TITLE \/ NAME:\s*([^\n\r]+)/i);
       const title = match ? match[1].trim() : "Premium Marketplace Product";
@@ -215,17 +261,22 @@ export class OpenAiClientService {
       const brand = brandMatch ? brandMatch[1].trim() : "Amarzone Certified";
 
       const fallbackContent = {
+        title,
+        brand,
+        features: [
+          `Crafted with reinforced materials for maximum longevity and everyday durability.`,
+          `Engineered to exceed industry standards with responsive and dependable output.`,
+          `Modern aesthetic that seamlessly integrates into your daily lifestyle.`,
+          `Ready to use out of the box with comprehensive instructions and accessories included.`,
+          `Backed by manufacturer warranty and verified marketplace customer protection.`
+        ],
+        tags: [category.toLowerCase(), brand.toLowerCase(), "featured", "top-seller", "new-arrival"],
+        suggestedDepartment: "General",
+        suggestedCategory: category,
         seoTitle: `${brand} ${title} - Premium Quality ${category} | Official Store`,
         seoDescription: `Discover the top-rated ${brand} ${title}. Enjoy outstanding durability, high performance, and rapid marketplace shipping. Order online today!`,
         shortDescription: `Experience unmatched performance and premium craftsmanship with the all-new ${brand} ${title}. Designed for reliability and effortless everyday use.`,
         longDescription: `Elevate your standard with the ${brand} ${title}. Precision-engineered using top-tier components, this ${category} solution delivers industry-leading dependability, elegant ergonomics, and seamless utility. Whether for everyday personal routines or demanding professional environments, it ensures long-lasting satisfaction backed by comprehensive marketplace guarantees.`,
-        bulletFeatures: [
-          `[PREMIUM DESIGN & BUILD]: Crafted with reinforced materials for maximum longevity and everyday durability.`,
-          `[SUPERIOR PERFORMANCE]: Engineered to exceed industry standards with responsive and dependable output.`,
-          `[USER-CENTRIC ERGONOMICS]: Modern aesthetic that seamlessly integrates into your daily lifestyle.`,
-          `[HASSLE-FREE SETUP]: Ready to use out of the box with comprehensive instructions and accessories included.`,
-          `[SATISFACTION GUARANTEED]: Backed by manufacturer warranty and verified marketplace customer protection.`,
-        ],
         keywords: [
           title.toLowerCase(),
           brand.toLowerCase(),
@@ -236,7 +287,6 @@ export class OpenAiClientService {
           "top rated",
           "fast shipping",
         ],
-        tags: [category.toLowerCase(), brand.toLowerCase(), "featured", "top-seller", "new-arrival"],
       };
 
       return {
@@ -358,7 +408,7 @@ export class OpenAiClientService {
       content: JSON.stringify({ message: "AI response processed successfully." }),
       usage: { promptTokens: 100, completionTokens: 100, totalTokens: 200 },
     };
-  }
+  };
 }
 
 export const openAiClient = OpenAiClientService.getInstance();

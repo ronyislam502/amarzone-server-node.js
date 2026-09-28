@@ -25,9 +25,13 @@ export type TWarningSeverity =
 
 export type TChatRole = "system" | "user" | "assistant" | "function" | "tool";
 
+export type TChatContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string; detail?: "auto" | "low" | "high" } };
+
 export type TChatMessage = {
   role: TChatRole;
-  content: string;
+  content: string | TChatContentPart[] | any;
   name?: string;
 };
 

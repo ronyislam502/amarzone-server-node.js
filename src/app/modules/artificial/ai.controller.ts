@@ -1,16 +1,25 @@
-/**
- * Artificial Intelligence Module Controllers
- *
- * Handles HTTP requests, coordinates with AiServices, and sends standardized JSON responses.
- */
 
 import httpStatus from "http-status";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
 import { AiServices } from "./ai.service";
+import { TImageFiles } from "../../interface/image.interface";
+import { TProductContentInput } from "./ai.interface";
 
 const generateProductContent = catchAsync(async (req, res) => {
-  const result = await AiServices.generateProductContent(req.body);
+  const files = req.files as TImageFiles | undefined;
+  const file =
+    req.file ||
+    files?.images?.[0] ||
+    files?.image?.[0] ||
+    (files as any)?.file?.[0];
+
+  const payload: TProductContentInput = {
+    ...req.body,
+    ...(file?.path && !req.body.imageUrl ? { imageUrl: file.path } : {}),
+  };
+
+  const result = await AiServices.generateProductContent(payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,3 +80,5 @@ export const AiControllers = {
   moderateReview,
   analyzeFraudRisk,
 };
+
+export const aiControllers = AiControllers;
