@@ -200,6 +200,7 @@ export class AiHelper {
       title,
       brand,
       features,
+      bulletFeatures: features,
       tags,
       suggestedDepartment,
       suggestedCategory,

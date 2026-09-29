@@ -59,6 +59,9 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     ];
   }
 
+  if (config.NODE_ENV !== "production") {
+    console.error("[Global Error Handler]", error);
+  }
   return res.status(statusCode).json({
     success: false,
     message,

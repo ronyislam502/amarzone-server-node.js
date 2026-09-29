@@ -22,7 +22,7 @@ const router = Router();
  */
 router.post(
   "/product-content",
-  auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
+  auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN, USER_ROLE.VENDOR),
   multerUpload.fields([{ name: "images", maxCount: 4 }]),
   parseAiMultipart,
   trackAiTelemetry,

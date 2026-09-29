@@ -81,6 +81,44 @@ export const parseAiMultipart = (
     }
   }
 
+  // Handle stringified arrays or objects in multipart form data
+  if (typeof req.body?.features === "string") {
+    const trimmed = req.body.features.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        req.body.features = JSON.parse(trimmed);
+      } catch {
+        // keep raw
+      }
+    }
+  }
+
+  if (typeof req.body?.keywords === "string") {
+    const trimmed = req.body.keywords.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        req.body.keywords = JSON.parse(trimmed);
+      } catch {
+        // fallback
+      }
+    } else if (trimmed.includes(",")) {
+      req.body.keywords = trimmed.split(",").map((k: string) => k.trim()).filter(Boolean);
+    } else if (trimmed) {
+      req.body.keywords = [trimmed];
+    }
+  }
+
+  if (typeof req.body?.specifications === "string") {
+    const trimmed = req.body.specifications.trim();
+    if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+      try {
+        req.body.specifications = JSON.parse(trimmed);
+      } catch {
+        // keep raw
+      }
+    }
+  }
+
   // Handle uploaded file from multer (checks req.file or req.files)
   const file =
     req.file ||

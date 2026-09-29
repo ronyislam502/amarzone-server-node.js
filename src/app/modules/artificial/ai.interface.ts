@@ -51,6 +51,7 @@ export type TProductContentOutput = {
   title: string;
   brand: string;
   features: string[];
+  bulletFeatures?: string[];
   tags: string[];
   suggestedDepartment: string;
   suggestedCategory: string;

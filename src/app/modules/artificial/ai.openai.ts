@@ -144,9 +144,9 @@ export class OpenAiClientService {
           continue;
         }
 
-        // If client fails due to authentication or invalid key in non-production, offer fallback
-        if ((error?.status === 401 || error?.status === 403) && config.NODE_ENV !== "production") {
-          console.warn("[AI OpenAI Client] Invalid or unauthenticated OpenAI API key, switching to development fallback.");
+        // In non-production, if upstream API fails (e.g. rate limit, free tier capacity, or model vision capability), gracefully use fallback
+        if (config.NODE_ENV !== "production") {
+          console.warn("[AI OpenAI Client] Upstream AI error (" + (error?.message || error?.status) + "), switching to fallback generator.");
           return this.handleFallbackGeneration(options);
         }
 
