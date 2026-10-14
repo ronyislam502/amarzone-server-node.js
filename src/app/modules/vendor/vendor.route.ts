@@ -7,9 +7,9 @@ import { USER_ROLE } from "../../interface/common";
 
 const router = Router();
 
-router.get("/", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), VendorControllers.allVendors);
+router.get("/", VendorControllers.allVendors);
 
-router.get("/vendor/:id", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN), VendorControllers.vendor);
+router.get("/vendor/:id", VendorControllers.vendor);
 
 router.patch(
     "/update/:id", auth(USER_ROLE.VENDOR),

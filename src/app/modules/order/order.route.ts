@@ -9,7 +9,7 @@ const router = Router();
 
 router.post(
     "/create-order",
-    auth(USER_ROLE.CUSTOMER),
+    auth(USER_ROLE.CUSTOMER, USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
     OrderControllers.createOrder
 );
 
@@ -21,7 +21,7 @@ router.get(
 
 router.get(
     "/my-orders",
-    auth(USER_ROLE.CUSTOMER, USER_ROLE.VENDOR),
+    auth(USER_ROLE.CUSTOMER, USER_ROLE.VENDOR, USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
     OrderControllers.allOrdersByUser
 );
 

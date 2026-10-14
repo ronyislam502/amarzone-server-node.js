@@ -61,10 +61,38 @@ const productSchema = new Schema<TProduct>(
             type: Boolean,
             default: false
         },
+        minPrice: {
+            type: Number,
+            default: 0,
+        },
+        maxPrice: {
+            type: Number,
+            default: 0,
+        },
+        price: {
+            type: Number,
+            default: 0,
+        },
+        averageRating: {
+            type: Number,
+            default: 0,
+        },
+        reviewCount: {
+            type: Number,
+            default: 0,
+        },
+        inStock: {
+            type: Boolean,
+            default: true,
+        },
     },
     {
         timestamps: true,
     }
 );
+
+productSchema.index({ minPrice: 1 });
+productSchema.index({ averageRating: -1 });
+productSchema.index({ inStock: 1 });
 
 export const Product = model<TProduct>("Product", productSchema);

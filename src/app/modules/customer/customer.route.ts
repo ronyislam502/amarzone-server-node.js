@@ -9,7 +9,7 @@ const router = Router();
 
 router.get("/", CustomerControllers.allCustomers);
 
-router.get("/single/:id", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER), CustomerControllers.singleCustomer);
+router.get("/single/:id", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER, USER_ROLE.VENDOR), CustomerControllers.singleCustomer);
 
 router.patch(
     "/update/:id",

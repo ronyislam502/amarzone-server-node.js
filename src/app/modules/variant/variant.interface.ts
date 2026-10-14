@@ -12,6 +12,5 @@ export type TVariant = {
     attributes: TVariantAttribute[];
     images: string[];
     isPrivateLevel: boolean;
-    inventories?: Types.ObjectId[];
     isDeleted?: boolean;
 };

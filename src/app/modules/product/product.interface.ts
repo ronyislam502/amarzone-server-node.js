@@ -19,6 +19,12 @@ export type TProduct = {
     tags: string[];
     isBestSeller?: boolean;
     isDeleted: boolean;
+    minPrice?: number;
+    maxPrice?: number;
+    price?: number;
+    averageRating?: number;
+    reviewCount?: number;
+    inStock?: boolean;
 };
 
 

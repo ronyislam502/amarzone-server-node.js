@@ -1,4 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
+import { Types } from "mongoose";
 import { TInventory } from "./inventory.interface";
 import { User } from "../user/user.model";
 import AppError from "../../errors/AppError";
@@ -55,9 +56,10 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
         }
     }
 
-    const isAlreadyListed = await Inventory.findById(isVariantProduct?._id);
-
-    console.log('is', isAlreadyListed)
+    const isAlreadyListed = await Inventory.findOne({
+        variant: isVariantProduct._id,
+        "seller.vendor": isUserExists._id,
+    });
 
     if (isAlreadyListed) {
         throw new AppError(
@@ -87,16 +89,46 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
 }
 
 const getInventoryByVariantAsinFromDB = async (asin: string) => {
-    const listings = await Inventory.find({
-        asin,
-        "seller.isStock": true,
-    })
-        .populate("product")
+    const isObjectId = Types.ObjectId.isValid(asin);
+    const variant = await Variant.findOne({
+        $or: [
+            { asin },
+            ...(isObjectId ? [{ _id: asin }] : [])
+        ]
+    });
+
+    const variantConditions: any[] = [{ asin }];
+    if (variant) {
+        variantConditions.push({ variant: variant._id });
+        if (variant.asin && variant.asin !== asin) {
+            variantConditions.push({ asin: variant.asin });
+        }
+    }
+    if (isObjectId) {
+        variantConditions.push({ variant: asin });
+    }
+
+    const filter: any = {
+        isDeleted: { $ne: true },
+        $or: variantConditions,
+        $and: [
+            {
+                $or: [
+                    { "seller.isStock": true },
+                    { "seller.quantity": { $gt: 0 } },
+                    { "seller.isStock": { $exists: false } }
+                ]
+            }
+        ]
+    };
+
+    const listings = await Inventory.find(filter)
+        .populate("variant")
         .populate("seller.vendor", "name avatar role")
         .sort({ "seller.price": 1 });
 
     const buyBoxWinner =
-        listings.find((l) => l.seller.isBuyBoxWinner) || listings[0] || null;
+        listings.find((l) => l.seller?.isBuyBoxWinner) || listings[0] || null;
 
     return {
         asin,

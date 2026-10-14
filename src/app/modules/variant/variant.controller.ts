@@ -28,11 +28,28 @@ const allVariantsByProduct = catchAsync(async (req, res) => {
         statusCode: httpStatus.OK,
         success: true,
         message: "Variants by product retrieved successfully",
-        data: result,
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const allVariantsProductsByDepartment = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await VariantServices.allVariantsProductsByDepartmentFromDB(id,
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Variants products by department retrieved successfully",
+        meta: result.meta,
+        data: result.data,
     });
 });
 
 export const VariantControllers = {
     createVariant,
-    allVariantsByProduct
+    allVariantsByProduct,
+    allVariantsProductsByDepartment
 };

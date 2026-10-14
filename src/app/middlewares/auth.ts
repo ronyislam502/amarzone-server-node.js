@@ -6,36 +6,58 @@ import AppError from "../errors/AppError";
 import config from "../config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { User } from "../modules/user/user.model";
+import { USER_STATUS } from "../interface/common";
 
 const auth = (...requiredRoles: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization;
+        let token =
+            req.headers.authorization ||
+            req.cookies?.accessToken ||
+            req.cookies?.token ||
+            (req.headers.token as string) ||
+            (req.headers["x-access-token"] as string);
 
-        // checking if the token is missing
-        if (!token) {
+        // Strip Bearer prefix if present
+        if (token && typeof token === "string") {
+            if (token.startsWith("Bearer ") || token.startsWith("bearer ")) {
+                token = token.slice(7).trim();
+            }
+        }
+
+        // checking if the token is missing or an invalid placeholder
+        if (!token || token === "undefined" || token === "null" || (typeof token === "string" && token.trim() === "")) {
             throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
         }
 
         // checking if the given token is valid
-        const decoded = jwt.verify(
-            token,
-            config.access_token_secret as string
-        ) as JwtPayload;
+        let decoded: JwtPayload;
+        try {
+            decoded = jwt.verify(
+                token as string,
+                config.access_token_secret as string
+            ) as JwtPayload;
+        } catch {
+            throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
+        }
 
         const { role, email, iat } = decoded;
 
-        // checking if the user is exist
+        // checking if the user exists
         const user = await User.isUserExistsByEmail(email);
 
         if (!user) {
             throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
         }
+
         // checking if the user is already deleted
-
         const isDeleted = user?.isDeleted;
-
         if (isDeleted) {
             throw new AppError(httpStatus.FORBIDDEN, "This user is deleted !");
+        }
+
+        // checking if the user is blocked
+        if (user?.status === USER_STATUS.BLOCKED) {
+            throw new AppError(httpStatus.FORBIDDEN, "This user is blocked !");
         }
 
         if (
@@ -48,9 +70,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
             throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized !");
         }
 
-        // checking if the user is blocked
-
-        if (requiredRoles && !requiredRoles.includes(role)) {
+        if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.includes(role)) {
             throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
         }
 
@@ -60,3 +80,4 @@ const auth = (...requiredRoles: TUserRole[]) => {
 };
 
 export default auth;
+

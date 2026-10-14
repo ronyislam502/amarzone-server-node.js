@@ -7,6 +7,7 @@ import { Variant } from "./variant.model";
 import { generateSKU } from "../../utilities/generateSku";
 import { generateASIN } from "../../utilities/generateAsin";
 import QueryBuilder from "../../builder/queryBuilder";
+import { Department } from "../department/department.model";
 
 
 const createVariantIntoDB = async (images: TImageFiles, payload: TVariant) => {
@@ -78,7 +79,46 @@ const allVariantsByProductFromDB = async (id: string, query: Record<string, unkn
     return { meta, data }
 }
 
+
+
+const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<string, unknown>) => {
+    // 1. Prothome department check kora
+    const isDepartment = await Department.findById(id);
+    if (!isDepartment) {
+        throw new AppError(httpStatus.NOT_FOUND, "Department not found");
+    }
+
+    // 2. Oi department-er under-e sob product-er ID gulo ber kore newa
+    const productsInDepartment = await Product.find({ department: isDepartment._id, isDeleted: false }).select('_id');
+    const productIds = productsInDepartment.map(product => product._id);
+
+    // 3. Ekhon sei product IDs gulo diye Variant model-e QueryBuilder chalano
+    const variantProductQuery = new QueryBuilder(
+        Variant.find({ product: { $in: productIds } }).populate({
+            path: "product",
+            match: { isDeleted: false } // Safety-r jonno product delete na thakle populate hobe
+        }),
+        query
+    )
+        .search(["sku", "asin"]) // Apnar proyojon moto search fields add korben
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const meta = await variantProductQuery.countTotal();
+    const data = await variantProductQuery.modelQuery;
+
+    return {
+        meta,
+        data
+    };
+};
+
+export default allVariantsProductsByDepartmentFromDB;
+
 export const VariantServices = {
     createVariantIntoDB,
-    allVariantsByProductFromDB
+    allVariantsByProductFromDB,
+    allVariantsProductsByDepartmentFromDB
 };

@@ -26,7 +26,6 @@ router.post(
 
 router.post(
   "/refresh-token",
-  auth(USER_ROLE.VENDOR, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER),
   validateRequestCookies(AuthValidations.refreshTokenValidationSchema),
   AuthControllers.refreshToken
 );

@@ -38,9 +38,54 @@ class QueryBuilder<T> {
       "deptName",
       "categoryName",
       "all",
+      "minPrice",
+      "maxPrice",
+      "minRating",
+      "inStock",
+      "brands",
     ];
 
     excludeFields.forEach((el) => delete queryObj[el]);
+
+    // Handle minPrice and maxPrice range filtering
+    if (
+      (this.query.minPrice !== undefined && this.query.minPrice !== "") ||
+      (this.query.maxPrice !== undefined && this.query.maxPrice !== "")
+    ) {
+      const priceFilter: Record<string, number> = {};
+      if (this.query.minPrice !== undefined && this.query.minPrice !== "") {
+        priceFilter.$gte = Number(this.query.minPrice);
+      }
+      if (this.query.maxPrice !== undefined && this.query.maxPrice !== "") {
+        priceFilter.$lte = Number(this.query.maxPrice);
+      }
+      if (Object.keys(priceFilter).length > 0) {
+        (queryObj as any).minPrice = priceFilter;
+      }
+    }
+
+    // Handle customer rating filtering (e.g. 4★ & Up)
+    if (this.query.minRating !== undefined && this.query.minRating !== "") {
+      (queryObj as any).averageRating = { $gte: Number(this.query.minRating) };
+    }
+
+    // Handle in-stock filter
+    if (this.query.inStock === "true" || this.query.inStock === true) {
+      (queryObj as any).inStock = true;
+    }
+
+    // Handle brands filter (supports comma-separated list or array)
+    if (this.query.brands) {
+      const brandList = Array.isArray(this.query.brands)
+        ? this.query.brands
+        : (this.query.brands as string)
+            .split(",")
+            .map((b) => b.trim())
+            .filter(Boolean);
+      if (brandList.length > 0) {
+        (queryObj as any).brand = { $in: brandList };
+      }
+    }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
 

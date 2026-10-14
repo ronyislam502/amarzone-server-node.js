@@ -20,4 +20,10 @@ router.get(
     VariantControllers.allVariantsByProduct
 );
 
+router.get(
+    "/variants-products-department/:id",
+    VariantControllers.allVariantsProductsByDepartment
+);
+
+
 export const VariantRoutes = router;
