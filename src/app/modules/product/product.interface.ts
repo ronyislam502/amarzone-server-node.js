@@ -17,14 +17,8 @@ export type TProduct = {
     brand: string;
     variants: Types.ObjectId[];
     tags: string[];
-    isBestSeller?: boolean;
+    // isBestSeller?: boolean;
     isDeleted: boolean;
-    minPrice?: number;
-    maxPrice?: number;
-    price?: number;
-    averageRating?: number;
-    reviewCount?: number;
-    inStock?: boolean;
 };
 
 
