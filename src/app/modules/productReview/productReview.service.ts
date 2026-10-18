@@ -91,8 +91,13 @@ const updateProductReviewInDB = async (
 
 
 const allReviewsByProductFromDB = async (id: string, query: Record<string, unknown>) => {
+  const isVariant = await Variant.findById(id);
+
+  if (!isVariant) {
+    throw new AppError(httpStatus.NOT_FOUND, "this variant not found")
+  }
   const reviewProductQuery = new QueryBuilder(
-    ProductReview.find({ product: id, isDeleted: false })
+    ProductReview.find({ product: isVariant?._id, isDeleted: false })
       .populate("customer", "name email avatar")
       .populate("order"),
     query

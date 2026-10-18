@@ -153,19 +153,11 @@ const productFromDB = async (id: string) => {
             }
         }
     }
-    const minPrice = prodObj.minPrice || (allPrices.length > 0 ? Math.min(...allPrices) : 0);
-    const maxPrice = prodObj.maxPrice || (allPrices.length > 0 ? Math.max(...allPrices) : minPrice);
-    const inStock = prodObj.inStock !== undefined ? prodObj.inStock : (allPrices.length > 0 ? hasInStock : true);
+
 
     return {
         ...prodObj,
         variants: variantsWithInventory,
-        minPrice,
-        maxPrice,
-        price: minPrice,
-        inStock,
-        averageRating: prodObj.averageRating || 0,
-        reviewCount: prodObj.reviewCount || 0,
     };
 };
 
