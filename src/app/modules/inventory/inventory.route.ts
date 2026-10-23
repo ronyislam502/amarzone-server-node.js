@@ -16,7 +16,7 @@ router.post(
 
 router.get(
     "/variant/:asin",
-    InventoryControllers.getInventoryByVariantAsin
+    InventoryControllers.getInventoryByVariant
 );
 
 

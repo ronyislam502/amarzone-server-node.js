@@ -16,37 +16,31 @@ const createProductReviewIntoDB = async (user: JwtPayload, payload: Partial<TPro
   }
 
   const isOrder = await Order.findById(payload.order);
-
   if (!isOrder) {
     throw new AppError(httpStatus.NOT_FOUND, "This order not found");
   }
 
-  const isproduct = await Variant.findById(payload.product);
-
-  if (!isproduct) {
-    throw new AppError(httpStatus.NOT_FOUND, "This product not found");
+  const isVariant = await Variant.findById(payload.variant);
+  if (!isVariant) {
+    throw new AppError(httpStatus.NOT_FOUND, "This variant not found");
   }
 
   if (isOrder?.status !== ORDER_STATUS.DELIVERED) {
-
-    throw new AppError(httpStatus.BAD_REQUEST, "you can only review this product after order delivered")
-
+    throw new AppError(httpStatus.BAD_REQUEST, "You can only review this product variant after the order is delivered");
   }
 
-  // Prevent duplicate reviews for the same product by the same customer
+  // Prevent duplicate reviews for the same variant by the same customer
   const existingReview = await ProductReview.findOne({
     customer: isUser._id,
-    product: isproduct._id,
+    variant: isVariant._id,
     isDeleted: false,
   });
 
   if (existingReview) {
-    throw new AppError(httpStatus.BAD_REQUEST, "You have already reviewed this product");
+    throw new AppError(httpStatus.BAD_REQUEST, "You have already reviewed this product variant");
   }
 
-
   const result = await ProductReview.create(payload);
-
   return result;
 };
 
@@ -75,9 +69,9 @@ const updateProductReviewInDB = async (
     throw new AppError(httpStatus.BAD_REQUEST, "Cannot change the order associated with this review");
   }
 
-  // Check same product
-  if (payload.product && review.product.toString() !== payload.product.toString()) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Cannot change the product associated with this review");
+  // Check same variant
+  if (payload.variant && review.variant.toString() !== payload.variant.toString()) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Cannot change the variant associated with this review");
   }
 
   const result = await ProductReview.findByIdAndUpdate(
@@ -89,7 +83,6 @@ const updateProductReviewInDB = async (
   return result;
 };
 
-
 const allReviewsByProductFromDB = async (id: string, query: Record<string, unknown>) => {
   const isVariant = await Variant.findById(id);
 
@@ -97,9 +90,10 @@ const allReviewsByProductFromDB = async (id: string, query: Record<string, unkno
     throw new AppError(httpStatus.NOT_FOUND, "this variant not found")
   }
   const reviewProductQuery = new QueryBuilder(
-    ProductReview.find({ product: isVariant?._id, isDeleted: false })
+    ProductReview.find({ variant: isVariant?._id, isDeleted: false })
       .populate("customer", "name email avatar")
-      .populate("order"),
+      .populate("order")
+      .populate("variant"),
     query
   )
     .search([])
@@ -154,6 +148,3 @@ export const ProductReviewServices = {
   deleteProductReviewFromDB,
   allReviewsByProductFromDB,
 };
-
-
-

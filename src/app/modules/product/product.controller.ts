@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utilities/catchAsync";
 import sendResponse from "../../utilities/sendResponse";
-import { ProductServices } from "./product.service";
 import { JwtPayload } from "jsonwebtoken";
 import { TImageFile } from "../../interface/image.interface";
+import { ProductServices } from "./product.service";
 
 const createProduct = catchAsync(async (req, res) => {
     const result = await ProductServices.createProductIntoDB(req.user as JwtPayload, req.file as TImageFile, req.body);
@@ -28,15 +28,15 @@ const allProducts = catchAsync(async (req, res) => {
     });
 });
 
-const singleProduct = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await ProductServices.productFromDB(id);
+const allVariantProducts = catchAsync(async (req, res) => {
+    const result = await ProductServices.allVariantProductsFromDB(req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Product retrieved successfully",
-        data: result,
+        message: "Products retrieved successfully",
+        meta: result.meta,
+        data: result.data,
     });
 });
 
@@ -51,28 +51,52 @@ const updateProduct = catchAsync(async (req, res) => {
     });
 });
 
-const getProductsByVendor = catchAsync(async (req, res) => {
+const allProductsByDepartment = catchAsync(async (req, res) => {
     const { id } = req.params;
-
-    const result = await ProductServices.productsByVendorFromDB(
-        id as string,
-        req.query
-    );
+    const result = await ProductServices.allProductsByDepartment(id, req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Products by vendor retrieved successfully",
+        message: "Products by department retrieved successfully",
         meta: result.meta,
         data: result.data,
+    });
+});
+
+
+const allProductsByCategory = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ProductServices.allProductsByCategoryFromDB(id, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Products by category retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const singleProduct = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ProductServices.singleProductFromDB(id);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Product retrieved successfully",
+        data: result,
     });
 });
 
 export const ProductControllers = {
     createProduct,
     allProducts,
-    singleProduct,
+    allVariantProducts,
     updateProduct,
-    getProductsByVendor,
+    allProductsByDepartment,
+    allProductsByCategory,
+    singleProduct
 };
 

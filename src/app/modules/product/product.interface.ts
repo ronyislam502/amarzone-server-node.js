@@ -15,9 +15,8 @@ export type TProduct = {
     features: string[];
     thumbnail: string;
     brand: string;
-    variants: Types.ObjectId[];
     tags: string[];
-    // isBestSeller?: boolean;
+    isBestSeller?: boolean;
     isDeleted: boolean;
 };
 

@@ -7,22 +7,11 @@ const validateImageFileRequest = (
   schema: AnyZodObject | ZodEffects<any> | ZodArray<any> | ZodRecord<any>
 ) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    if (req.file) {
-      const parsedFile = await schema.parseAsync({
-        file: req.file,
-      });
+    const parsedFile = await schema.parseAsync({
+      files: req.files,
+    });
 
-      req.file = parsedFile.file;
-    }
-
-    // array() / fields()
-    if (req.files) {
-      const parsedFiles = await schema.parseAsync({
-        files: req.files,
-      });
-
-      req.files = parsedFiles.files;
-    }
+    req.files = parsedFile.files;
 
     next();
   });

@@ -11,6 +11,101 @@ import {
   TDashboardInsightsInput,
 } from "./ai.interface";
 
+const buildProductContentUserPrompt = (input: TProductContentInput): string => {
+  const formattedFeatures = Array.isArray(input.features)
+    ? input.features.map((f, i) => `${i + 1}. ${f}`).join("\n")
+    : input.features || "Standard product features";
+
+  const formattedSpecs = input.specifications
+    ? Array.isArray(input.specifications)
+      ? input.specifications.map((s) => `- ${s.key}: ${s.value}`).join("\n")
+      : Object.entries(input.specifications)
+        .map(([k, v]) => `- ${k}: ${v}`)
+        .join("\n")
+    : "Not specified";
+
+  const additionalKeywords =
+    input.keywords && input.keywords.length > 0
+      ? input.keywords.join(", ")
+      : "None provided";
+
+  return `Please generate high-converting, SEO-optimized e-commerce content for the following product:
+
+PRODUCT TITLE / NAME: ${input.title || "Not provided"}
+CATEGORY: ${input.category || "General"}
+BRAND: ${input.brand || "Not provided"}
+TONE: ${input.tone || "Professional, Persuasive, and Engaging"}
+TARGET AUDIENCE: ${input.targetAudience || "General marketplace shoppers"}
+PROVIDED KEYWORDS: ${additionalKeywords}
+
+KEY FEATURES:
+${formattedFeatures}
+
+SPECIFICATIONS:
+${formattedSpecs}
+
+Remember to return ONLY the strict JSON object.`;
+};
+
+const buildImageProductContentUserPrompt = (
+  input: TProductContentInput,
+  taxonomyHint: string = ""
+): string => {
+  const additionalKeywords =
+    input.keywords && input.keywords.length > 0
+      ? input.keywords.join(", ")
+      : "None provided";
+
+  return `Please analyze this uploaded product image carefully and generate the complete e-commerce catalog information.
+
+Extract and generate:
+1. Product Title
+2. Brand (if identifiable on the product, logo, or label; otherwise "Generic")
+3. 5-7 Key Product Features
+4. 6-10 Discovery Tags
+5. Suggested Department
+6. Suggested Category
+7. Full descriptions (short & long), SEO Title, Meta Description, and Search Keywords
+
+OPTIONAL USER HINTS (use if helpful):
+- Title Hint: ${input.title || "None provided"}
+- Brand Hint: ${input.brand || "None provided"}
+- Category Hint: ${input.category || "None provided"}
+- Target Audience: ${input.targetAudience || "General marketplace shoppers"}
+- Tone: ${input.tone || "Professional, Persuasive, and Engaging"}
+- Additional Keywords: ${additionalKeywords}
+${taxonomyHint}
+
+Remember: Return ONLY the strict JSON object starting with '{' and ending with '}'.`;
+};
+
+const buildShoppingAssistantUserPrompt = (input: TShoppingAssistantInput): string => {
+  let contextStr = "";
+  if (input.context) {
+    contextStr = `\n[SHOPPING CONTEXT]: ${JSON.stringify(input.context)}`;
+  }
+  if (input.filters) {
+    contextStr += `\n[ACTIVE FILTERS]: ${JSON.stringify(input.filters)}`;
+  }
+
+  return `CUSTOMER MESSAGE: "${input.message}"${contextStr}
+
+Respond with natural advice and strict JSON output as defined in your instructions.`;
+};
+
+const buildDashboardInsightsUserPrompt = (input: TDashboardInsightsInput): string => {
+  const timeframe = input.timeframe || "monthly";
+  const focusArea = input.focusArea || "all";
+  const comparison = input.comparisonTimeframe || "previous equivalent period";
+
+  return `Analyze the following marketplace metrics for the "${timeframe}" timeframe (Focus Area: ${focusArea}, Comparison baseline: ${comparison}).
+
+MARKETPLACE STATISTICS DATA:
+${JSON.stringify(input.stats, null, 2)}
+
+Produce a rigorous, data-driven executive intelligence report strictly adhering to the JSON schema.`;
+};
+
 export const AiPrompts = {
   // =========================================================================
   // 1. PRODUCT CONTENT GENERATOR PROMPTS
@@ -76,73 +171,8 @@ CRITICAL: Return ONLY a valid JSON object starting with '{' and ending with '}'.
   "keywords": ["string"]
 }`,
 
-  buildProductContentUserPrompt: (input: TProductContentInput): string => {
-    const formattedFeatures = Array.isArray(input.features)
-      ? input.features.map((f, i) => `${i + 1}. ${f}`).join("\n")
-      : input.features || "Standard product features";
-
-    const formattedSpecs = input.specifications
-      ? Array.isArray(input.specifications)
-        ? input.specifications.map((s) => `- ${s.key}: ${s.value}`).join("\n")
-        : Object.entries(input.specifications)
-          .map(([k, v]) => `- ${k}: ${v}`)
-          .join("\n")
-      : "Not specified";
-
-    const additionalKeywords =
-      input.keywords && input.keywords.length > 0
-        ? input.keywords.join(", ")
-        : "None provided";
-
-    return `Please generate high-converting, SEO-optimized e-commerce content for the following product:
-
-PRODUCT TITLE / NAME: ${input.title || "Not provided"}
-CATEGORY: ${input.category || "General"}
-BRAND: ${input.brand || "Not provided"}
-TONE: ${input.tone || "Professional, Persuasive, and Engaging"}
-TARGET AUDIENCE: ${input.targetAudience || "General marketplace shoppers"}
-PROVIDED KEYWORDS: ${additionalKeywords}
-
-KEY FEATURES:
-${formattedFeatures}
-
-SPECIFICATIONS:
-${formattedSpecs}
-
-Remember to return ONLY the strict JSON object.`;
-  },
-
-  buildImageProductContentUserPrompt: (
-    input: TProductContentInput,
-    taxonomyHint: string = ""
-  ): string => {
-    const additionalKeywords =
-      input.keywords && input.keywords.length > 0
-        ? input.keywords.join(", ")
-        : "None provided";
-
-    return `Please analyze this uploaded product image carefully and generate the complete e-commerce catalog information.
-
-Extract and generate:
-1. Product Title
-2. Brand (if identifiable on the product, logo, or label; otherwise "Generic")
-3. 5-7 Key Product Features
-4. 6-10 Discovery Tags
-5. Suggested Department
-6. Suggested Category
-7. Full descriptions (short & long), SEO Title, Meta Description, and Search Keywords
-
-OPTIONAL USER HINTS (use if helpful):
-- Title Hint: ${input.title || "None provided"}
-- Brand Hint: ${input.brand || "None provided"}
-- Category Hint: ${input.category || "None provided"}
-- Target Audience: ${input.targetAudience || "General marketplace shoppers"}
-- Tone: ${input.tone || "Professional, Persuasive, and Engaging"}
-- Additional Keywords: ${additionalKeywords}
-${taxonomyHint}
-
-Remember: Return ONLY the strict JSON object starting with '{' and ending with '}'.`;
-  },
+  buildProductContentUserPrompt,
+  buildImageProductContentUserPrompt,
 
   // =========================================================================
   // 2. SHOPPING ASSISTANT PROMPTS
@@ -190,19 +220,7 @@ You MUST respond with a JSON object matching this schema:
   "recommendedCategories": ["Category 1", "Category 2"]
 }`,
 
-  buildShoppingAssistantUserPrompt: (input: TShoppingAssistantInput): string => {
-    let contextStr = "";
-    if (input.context) {
-      contextStr = `\n[SHOPPING CONTEXT]: ${JSON.stringify(input.context)}`;
-    }
-    if (input.filters) {
-      contextStr += `\n[ACTIVE FILTERS]: ${JSON.stringify(input.filters)}`;
-    }
-
-    return `CUSTOMER MESSAGE: "${input.message}"${contextStr}
-
-Respond with natural advice and strict JSON output as defined in your instructions.`;
-  },
+  buildShoppingAssistantUserPrompt,
 
   // =========================================================================
   // 3. EXECUTIVE DASHBOARD INSIGHTS PROMPTS
@@ -255,18 +273,7 @@ CRITICAL: Do NOT output any chain-of-thought, reasoning steps, or monologue outs
   "naturalLanguageReport": "string"
 }`,
 
-  buildDashboardInsightsUserPrompt: (input: TDashboardInsightsInput): string => {
-    const timeframe = input.timeframe || "monthly";
-    const focusArea = input.focusArea || "all";
-    const comparison = input.comparisonTimeframe || "previous equivalent period";
-
-    return `Analyze the following marketplace metrics for the "${timeframe}" timeframe (Focus Area: ${focusArea}, Comparison baseline: ${comparison}).
-
-MARKETPLACE STATISTICS DATA:
-${JSON.stringify(input.stats, null, 2)}
-
-Produce a rigorous, data-driven executive intelligence report strictly adhering to the JSON schema.`;
-  },
+  buildDashboardInsightsUserPrompt,
 
   // =========================================================================
   // 4. FUTURE EXPANSION PROMPT TEMPLATES (SCALABILITY HOOKS)
@@ -278,4 +285,11 @@ Analyze incoming reviews for profanity, hate speech, spam, competitor manipulati
 Evaluate transaction parameters, anomaly patterns, and velocity metrics to output JSON with { "riskScore": number (0-100), "riskLevel": "LOW"|"MEDIUM"|"HIGH"|"CRITICAL", "riskFactors": string[], "recommendedAction": "ALLOW"|"REVIEW"|"DECLINE"|"REQUIRE_2FA" }.`,
 
   TRANSLATION_SYSTEM: `You are a professional multi-language localization expert for e-commerce listings. Translate the provided content while preserving product nuances, units, and brand terms.`,
-} as const;
+};
+
+export {
+  buildProductContentUserPrompt,
+  buildImageProductContentUserPrompt,
+  buildShoppingAssistantUserPrompt,
+  buildDashboardInsightsUserPrompt,
+};

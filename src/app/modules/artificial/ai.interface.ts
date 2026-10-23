@@ -319,5 +319,5 @@ export interface IDynamicPricingOutput {
 }
 
 export interface IRagRetriever {
-  retrieveRelevantContext(query: string, limit?: number): Promise<string[]>;
+  retrieveRelevantContext: (query: string, limit?: number) => Promise<string[]>;
 }

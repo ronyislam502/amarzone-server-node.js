@@ -11,7 +11,7 @@ class QueryBuilder<T> {
 
   search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
-    if (searchTerm && searchableFields.length > 0) {
+    if (searchTerm) {
       this.modelQuery = this.modelQuery.find({
         $or: searchableFields.map(
           (field) =>
@@ -28,63 +28,23 @@ class QueryBuilder<T> {
   filter() {
     const queryObj = { ...this.query }; // copy
 
-    // Filtering
-    const excludeFields = [
-      "searchTerm",
-      "sort",
-      "limit",
-      "page",
-      "fields",
-      "deptName",
-      "categoryName",
-      "all",
-      "minPrice",
-      "maxPrice",
-      "minRating",
-      "inStock",
-      "brands",
-    ];
-
+    // Remove special query params that are not filters
+    const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
     excludeFields.forEach((el) => delete queryObj[el]);
 
-    // Handle minPrice and maxPrice range filtering
-    if (
-      (this.query.minPrice !== undefined && this.query.minPrice !== "") ||
-      (this.query.maxPrice !== undefined && this.query.maxPrice !== "")
-    ) {
-      const priceFilter: Record<string, number> = {};
-      if (this.query.minPrice !== undefined && this.query.minPrice !== "") {
-        priceFilter.$gte = Number(this.query.minPrice);
-      }
-      if (this.query.maxPrice !== undefined && this.query.maxPrice !== "") {
-        priceFilter.$lte = Number(this.query.maxPrice);
-      }
-      if (Object.keys(priceFilter).length > 0) {
-        (queryObj as any).minPrice = priceFilter;
-      }
+    // Handle minPrice and maxPrice for price range filtering
+    const priceFilter: Record<string, unknown> = {};
+    if (queryObj.minPrice) {
+      priceFilter.$gte = Number(queryObj.minPrice);
+      delete queryObj.minPrice;
+    }
+    if (queryObj.maxPrice) {
+      priceFilter.$lte = Number(queryObj.maxPrice);
+      delete queryObj.maxPrice;
     }
 
-    // Handle customer rating filtering (e.g. 4★ & Up)
-    if (this.query.minRating !== undefined && this.query.minRating !== "") {
-      (queryObj as any).averageRating = { $gte: Number(this.query.minRating) };
-    }
-
-    // Handle in-stock filter
-    if (this.query.inStock === "true" || this.query.inStock === true) {
-      (queryObj as any).inStock = true;
-    }
-
-    // Handle brands filter (supports comma-separated list or array)
-    if (this.query.brands) {
-      const brandList = Array.isArray(this.query.brands)
-        ? this.query.brands
-        : (this.query.brands as string)
-            .split(",")
-            .map((b) => b.trim())
-            .filter(Boolean);
-      if (brandList.length > 0) {
-        (queryObj as any).brand = { $in: brandList };
-      }
+    if (Object.keys(priceFilter).length > 0) {
+      queryObj.price = priceFilter;
     }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
@@ -101,18 +61,8 @@ class QueryBuilder<T> {
   }
 
   paginate() {
-    const limitParam = this?.query?.limit;
-    if (
-      limitParam === "all" ||
-      limitParam === "0" ||
-      limitParam === 0 ||
-      this?.query?.all === "true" ||
-      this?.query?.all === true
-    ) {
-      return this;
-    }
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(limitParam) || 10;
+    const limit = Number(this?.query?.limit) || 100;
     const skip = (page - 1) * limit;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
@@ -127,26 +77,12 @@ class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.select(fields);
     return this;
   }
+
   async countTotal() {
     const totalQueries = this.modelQuery.getFilter();
     const total = await this.modelQuery.model.countDocuments(totalQueries);
-    const limitParam = this?.query?.limit;
-    if (
-      limitParam === "all" ||
-      limitParam === "0" ||
-      limitParam === 0 ||
-      this?.query?.all === "true" ||
-      this?.query?.all === true
-    ) {
-      return {
-        page: 1,
-        limit: total,
-        total,
-        totalPage: 1,
-      };
-    }
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(limitParam) || 100;
+    const limit = Number(this?.query?.limit) || 100;
     const totalPage = Math.ceil(total / limit);
 
     return {

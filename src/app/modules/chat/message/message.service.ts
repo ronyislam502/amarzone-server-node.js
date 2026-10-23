@@ -4,8 +4,8 @@ import { Message } from "./message.model";
 import { TMessage } from "./message.interface";
 import { Types } from "mongoose";
 import QueryBuilder from "../../../builder/queryBuilder";
-import { checkConversationParticipant } from "../../../utilities/chat";
 import { Conversation } from "../conversation/conversation.model";
+import { checkConversationParticipant } from "../../../utilities/chat";
 
 const getConversationMessages = async (
   userId: Types.ObjectId,

@@ -9,7 +9,7 @@ import { TVendor } from "./vendor.interface";
 
 const allVendorsFromDB = async (query: Record<string, unknown>) => {
     const vendorsQuery = new QueryBuilder(Vendor.find(), query)
-        .search([])
+        .search(["name"])
         .filter()
         .sort()
         .paginate()
@@ -26,13 +26,17 @@ const allVendorsFromDB = async (query: Record<string, unknown>) => {
 
 
 const vendorFromDB = async (id: string) => {
-    const isVendorExists = await Vendor.findById(id);
-    if (isVendorExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "this vendor not found")
-    }
+    const isUser = await User.findById(id);
 
-    return isVendorExists;
-}
+    if (!isUser) {
+        throw new AppError(httpStatus.NOT_FOUND, "not found")
+    }
+    const result = await Vendor.findOne({ user: isUser?._id })
+
+    return result;
+
+};
+
 
 const updateVendorIntoDB = async (
     id: string,
@@ -135,5 +139,6 @@ export const VendorServices = {
     allVendorsFromDB,
     vendorFromDB,
     updateVendorIntoDB,
-    deleteVendorFromDB
-}
+    deleteVendorFromDB,
+
+};

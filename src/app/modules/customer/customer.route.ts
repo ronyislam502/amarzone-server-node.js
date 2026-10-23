@@ -2,14 +2,10 @@ import { Router } from "express";
 import { CustomerControllers } from "./customer.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { CustomerValidations } from "./customer.validation";
-import auth from "../../middlewares/auth";
-import { USER_ROLE } from "../../interface/common";
 
 const router = Router();
 
 router.get("/", CustomerControllers.allCustomers);
-
-router.get("/single/:id", auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.CUSTOMER, USER_ROLE.VENDOR), CustomerControllers.singleCustomer);
 
 router.patch(
     "/update/:id",

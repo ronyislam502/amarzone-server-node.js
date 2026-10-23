@@ -1,26 +1,25 @@
 import { Router } from "express";
 import { UserRoutes } from "../modules/user/user.route";
+import { AuthRoutes } from "../modules/auth/auth.route";
+import { DepartmentRoutes } from "../modules/department/department.route";
+import { CategoryRoutes } from "../modules/category/category.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { VendorRoutes } from "../modules/vendor/vendor.route";
 import { CustomerRoutes } from "../modules/customer/customer.route";
-import { DepartmentRoutes } from "../modules/department/department.route";
-import { CategoryRoutes } from "../modules/category/category.route";
 import { ProductRoutes } from "../modules/product/product.route";
 import { VariantRoutes } from "../modules/variant/variant.route";
-import { AuthRoutes } from "../modules/auth/auth.route";
 import { InventoryRoutes } from "../modules/inventory/inventory.route";
 import { OrderRoutes } from "../modules/order/order.route";
-import { ServiceReviewRoutes } from "../modules/serviceReview/serviceReview.route";
-import { PaymentRoutes } from "../modules/payment/payment.route";
-import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
 import { ProductReviewRoutes } from "../modules/productReview/productReview.route";
+import { ServiceReviewRoutes } from "../modules/serviceReview/serviceReview.route";
+import { DashboardRoutes } from "../modules/dashboard/dashboard.route";
+import { AiRoutes } from "../modules/artificial/ai.route";
+import { AccountHealthRoutes } from "../modules/health/health.route";
+import { SlaViolationRoutes } from "../modules/violation/violation.route";
 import { DisputeRoutes } from "../modules/dispute/dispute.route";
 import { DisputeDecisionRoutes } from "../modules/disputeDecision/disputeDecision.route";
 import { FraudRoutes } from "../modules/fraud/fraud.route";
-import { AccountHealthRoutes } from "../modules/health/health.route";
-import { NotificationRoutes } from "../modules/notification/notification.route";
-import { SlaViolationRoutes } from "../modules/violation/violation.route";
-import { AiRoutes } from "../modules/artificial/ai.route";
+
 
 const router = Router();
 
@@ -78,12 +77,20 @@ const moduleRoutes = [
     route: ServiceReviewRoutes,
   },
   {
-    path: "/payments",
-    route: PaymentRoutes,
-  },
-  {
     path: "/dashboard",
     route: DashboardRoutes,
+  },
+  {
+    path: "/artificial",
+    route: AiRoutes,
+  },
+  {
+    path: "/healths",
+    route: AccountHealthRoutes,
+  },
+  {
+    path: "/violations",
+    route: SlaViolationRoutes,
   },
   {
     path: "/disputes",
@@ -97,24 +104,8 @@ const moduleRoutes = [
     path: "/frauds",
     route: FraudRoutes,
   },
-  {
-    path: "/health",
-    route: AccountHealthRoutes,
-  },
-  {
-    path: "/notifications",
-    route: NotificationRoutes,
-  },
-  {
-    path: "/violations",
-    route: SlaViolationRoutes,
-  },
-  {
-    path: "/ai",
-    route: AiRoutes,
-  },
-];
 
-moduleRoutes.forEach((route) => router.use(route.path, route.route));
+]
+moduleRoutes.forEach((route) => router.use(route?.path, route?.route));
 
 export default router;

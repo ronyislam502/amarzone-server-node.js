@@ -7,56 +7,141 @@ import { Variant } from "./variant.model";
 import { generateSKU } from "../../utilities/generateSku";
 import { generateASIN } from "../../utilities/generateAsin";
 import QueryBuilder from "../../builder/queryBuilder";
-import { Department } from "../department/department.model";
+import { Vendor } from "../vendor/vendor.model";
+import { Inventory } from "../inventory/inventory.model";
+import { USER_ROLE } from "../../interface/common";
+import { User } from "../user/user.model";
 
 
-const createVariantIntoDB = async (images: TImageFiles, payload: TVariant) => {
+const createVariantIntoDB = async (
+    images: TImageFiles,
+    payload: TVariant
+) => {
+    // Check product exists and get department/category information
+    const product = await Product.findById(payload.product)
+        .populate("department")
+        .populate("category");
 
-    const isProductExists = await Product.findById(payload?.product).populate("department").populate("category");
-
-    if (!isProductExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "this product not found");
+    if (!product) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "This product was not found"
+        );
     }
 
-    if (isProductExists.variants && isProductExists.variants.length > 0) {
-        for (const variantId of isProductExists.variants) {
-            const existingVariant = await Variant.findById(variantId);
-            if (existingVariant) {
-                // Check for duplicate attributes
-                const attributeMatches = existingVariant.attributes.every(attr =>
-                    payload.attributes.some(
-                        (pAttr: any) => pAttr.type === attr.type && pAttr.value === attr.value
-                    )
-                );
+    // Validate department
+    const department = product.department;
 
-                if (attributeMatches) {
-                    throw new AppError(httpStatus.BAD_REQUEST, "Variant with same attributes already exists for this product");
-                }
+    if (!department) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "This product department was not found"
+        );
+    }
+
+    // Validate category
+    const category = product.category;
+
+    if (!category) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "This product category was not found"
+        );
+    }
+
+    // Get existing variants for this product
+    const existingVariants = await Variant.find({
+        product: payload.product,
+        isDeleted: { $ne: true },
+    });
+
+    // Maximum 2 variants per product
+    if (existingVariants.length >= 2) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "This product already has 2 variants"
+        );
+    }
+
+    // Check duplicate attributes
+    const isDuplicateAttributes = existingVariants.some(
+        (existingVariant) => {
+            if (
+                existingVariant.attributes.length !==
+                payload.attributes.length
+            ) {
+                return false;
             }
+
+            return existingVariant.attributes.every(
+                (existingAttribute) =>
+                    payload.attributes.some(
+                        (newAttribute) =>
+                            newAttribute.type === existingAttribute.type &&
+                            newAttribute.value === existingAttribute.value
+                    )
+            );
         }
+    );
+
+    if (isDuplicateAttributes) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Variant with the same attributes already exists for this product"
+        );
     }
 
-
-    if (images && images.images) {
+    // Add uploaded images
+    if (images?.images?.length) {
         payload.images = images.images.map((img) => img.path);
     }
 
-    const department = isProductExists?.department;
-
-    if (!department) {
-        throw new AppError(httpStatus.NOT_FOUND, "this product department not found");
-    }
-    const category = isProductExists?.category;
-
-    if (!category) {
-        throw new AppError(httpStatus.NOT_FOUND, "this product category not found");
+    // Validate images
+    if (!payload.images || payload.images.length === 0) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "At least one variant image is required"
+        );
     }
 
-    payload.asin = await generateASIN((department as any).name, (category as any).name);
+    // Check duplicate images inside the new variant
+    const uniqueImages = new Set(payload.images);
 
-    payload.sku = generateSKU(payload.asin, payload.attributes);
+    if (uniqueImages.size !== payload.images.length) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Duplicate images are not allowed in a variant"
+        );
+    }
 
-    const result = await Variant.create(payload)
+    // Check whether any image is already used by another variant
+    const imageAlreadyExists = existingVariants.some((existingVariant) =>
+        existingVariant.images.some((existingImage) =>
+            payload.images.includes(existingImage)
+        )
+    );
+
+    if (imageAlreadyExists) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "One or more variant images are already used by another variant of this product"
+        );
+    }
+
+    // Generate ASIN
+    payload.asin = await generateASIN(
+        (department as any).name,
+        (category as any).name
+    );
+
+    // Generate SKU
+    payload.sku = generateSKU(
+        payload.asin,
+        payload.attributes
+    );
+
+    // Create variant
+    const result = await Variant.create(payload);
 
     return result;
 };
@@ -66,7 +151,16 @@ const allVariantsByProductFromDB = async (id: string, query: Record<string, unkn
     if (!isProductExists) {
         throw new AppError(httpStatus.NOT_FOUND, "this product not found");
     }
-    const variantProductQuery = new QueryBuilder(Variant.find({ product: isProductExists._id }).populate("product"), query)
+    const variantProductQuery = new QueryBuilder(
+        Variant.find({ product: isProductExists._id }).populate({
+            path: "product",
+            populate: [
+                { path: "department" },
+                { path: "category" }
+            ]
+        }),
+        query
+    )
         .search([""])
         .filter()
         .sort()
@@ -81,44 +175,8 @@ const allVariantsByProductFromDB = async (id: string, query: Record<string, unkn
 
 
 
-const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<string, unknown>) => {
-    // 1. Prothome department check kora
-    const isDepartment = await Department.findById(id);
-    if (!isDepartment) {
-        throw new AppError(httpStatus.NOT_FOUND, "Department not found");
-    }
-
-    // 2. Oi department-er under-e sob product-er ID gulo ber kore newa
-    const productsInDepartment = await Product.find({ department: isDepartment._id, isDeleted: false }).select('_id');
-    const productIds = productsInDepartment.map(product => product._id);
-
-    // 3. Ekhon sei product IDs gulo diye Variant model-e QueryBuilder chalano
-    const variantProductQuery = new QueryBuilder(
-        Variant.find({ product: { $in: productIds } }).populate({
-            path: "product",
-            match: { isDeleted: false } // Safety-r jonno product delete na thakle populate hobe
-        }),
-        query
-    )
-        .search(["sku", "asin"]) // Apnar proyojon moto search fields add korben
-        .filter()
-        .sort()
-        .paginate()
-        .fields();
-
-    const meta = await variantProductQuery.countTotal();
-    const data = await variantProductQuery.modelQuery;
-
-    return {
-        meta,
-        data
-    };
-};
-
-export default allVariantsProductsByDepartmentFromDB;
 
 export const VariantServices = {
     createVariantIntoDB,
     allVariantsByProductFromDB,
-    allVariantsProductsByDepartmentFromDB
 };

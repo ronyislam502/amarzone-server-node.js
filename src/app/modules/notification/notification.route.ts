@@ -12,27 +12,9 @@ router.get(
 );
 
 router.patch(
-    "/read-all",
-    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN, USER_ROLE.VENDOR, USER_ROLE.CUSTOMER),
-    NotificationControllers.markAllAsRead
-);
-
-router.patch(
     "/:id/read",
     auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN, USER_ROLE.VENDOR, USER_ROLE.CUSTOMER),
     NotificationControllers.markAsRead
-);
-
-router.delete(
-    "/clear-all",
-    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN, USER_ROLE.VENDOR, USER_ROLE.CUSTOMER),
-    NotificationControllers.clearAll
-);
-
-router.delete(
-    "/:id",
-    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN, USER_ROLE.VENDOR, USER_ROLE.CUSTOMER),
-    NotificationControllers.deleteSingle
 );
 
 export const NotificationRoutes = router;

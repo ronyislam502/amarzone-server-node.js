@@ -13,7 +13,6 @@ import { Vendor } from "../vendor/vendor.model";
 import QueryBuilder from "../../builder/queryBuilder";
 import { stripe } from "../../utilities/stripe";
 import Stripe from "stripe";
-import { Payment } from "../payment/payment.model";
 import { AccountHealthServices } from "../health/health.service";
 import { calculateBuyBox } from "../../utilities/buyBox";
 import { recalculateBestSellers } from "../../utilities/calculate";
@@ -21,7 +20,7 @@ import { NotificationServices } from "../notification/notification.service";
 import { emitNotification } from "../../socket/socket";
 import sendEmail from "../../utilities/sendEmail";
 import { invoiceQueue } from "../../redis/invoice.queue";
-import config from "../../config";
+import { Payment } from "../payment/payment.model";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -163,79 +162,40 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
 
         let clientSecret = "";
         if (order) {
-            // Retrieve or create Stripe Customer using the authenticated customer's email
-            let stripeCustomerId: string | undefined = undefined;
-            try {
-                const existingCustomers = await stripe.customers.list({
-                    email: isUserExists.email,
-                    limit: 1,
-                });
-
-                if (existingCustomers.data && existingCustomers.data.length > 0) {
-                    const existingCust = existingCustomers.data[0];
-                    stripeCustomerId = existingCust.id;
-                    if (!existingCust.name && isUserExists.name) {
-                        await stripe.customers.update(existingCust.id, {
-                            name: isUserExists.name,
-                        });
-                    }
-                } else {
-                    const newCustomer = await stripe.customers.create({
-                        email: isUserExists.email,
-                        name: isUserExists.name,
-                        metadata: {
-                            userId: isUserExists._id.toString(),
-                        },
-                    });
-                    stripeCustomerId = newCustomer.id;
-                }
-            } catch (custError) {
-                console.error("Failed to associate Stripe customer:", custError);
-            }
-
-            const checkoutSession = await stripe.checkout.sessions.create({
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: Math.round(order[0].totalPrice * 100), // Stripe expects cents
+                currency: "usd",
                 payment_method_types: ["card"],
-                mode: "payment",
-                ...(stripeCustomerId
-                    ? { customer: stripeCustomerId }
-                    : { customer_email: isUserExists.email }),
-                line_items: [
-                    {
-                        price_data: {
-                            currency: "usd",
-                            product_data: {
-                                name: `Order #${orderNo}`,
-                                description: `Amarzone Order #${orderNo} (${order[0].totalQuantity} item${order[0].totalQuantity > 1 ? "s" : ""})`,
-                            },
-                            unit_amount: Math.round(order[0].totalPrice * 100),
-                        },
-                        quantity: 1,
-                    },
-                ],
-                client_reference_id: order[0]._id.toString(),
                 metadata: {
                     orderId: order[0]._id.toString(),
-                    orderNo: order[0].orderNo,
-                    customerEmail: isUserExists.email,
-                    customerName: isUserExists.name,
-                    customerId: isUserExists._id.toString(),
                 },
-                payment_intent_data: {
-                    metadata: {
-                        orderId: order[0]._id.toString(),
-                        orderNo: order[0].orderNo,
-                        customerEmail: isUserExists.email,
-                        customerName: isUserExists.name,
-                        customerId: isUserExists._id.toString(),
-                    },
-                    description: `Order #${orderNo} by ${isUserExists.name} (${isUserExists.email})`,
-                },
-                success_url: `${config.frontend_url || "http://localhost:3000"}/payment/success?orderId=${order[0]._id}&session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${config.frontend_url || "http://localhost:3000"}/cart?canceled=true`,
             });
+            clientSecret = paymentIntent.client_secret as string;
+            //     const checkoutSession = await stripe.checkout.sessions.create({
+            //         payment_method_types: ["card"],
+            //         mode: "payment",
 
-            console.log("checkoutSession", checkoutSession);
-            clientSecret = checkoutSession.url as string;
+            //         line_items: [
+            //             {
+            //                 price_data: {
+            //                     currency: "usd",
+            //                     product_data: {
+            //                         name: "Order Payment",
+            //                     },
+            //                     unit_amount: Math.round(totalPrice * 100),
+            //                 },
+            //                 quantity: 1,
+            //             },
+            //         ],
+
+            //         metadata: {
+            //             orderId: order[0]._id.toString(),
+            //         },
+
+            //         success_url: "http://localhost:3000/payment/success",
+            //         cancel_url: "http://localhost:3000/payment/cancel",
+            //     });
+            //     clientSecret = checkoutSession.url as string;
         }
 
         if (order[0]) {
@@ -279,8 +239,6 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
         );
     }
 };
-
-
 
 const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
     const ordersQuery = new QueryBuilder(

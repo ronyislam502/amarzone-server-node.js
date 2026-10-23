@@ -22,9 +22,6 @@ const serviceReviewSchema = new Schema<TServiceReview>(
       type: Number,
       required: [true, "Rating is required"],
     },
-    title: {
-      type: String,
-    },
     review: {
       type: String,
       required: [true, "Review is required"],

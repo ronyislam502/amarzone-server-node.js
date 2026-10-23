@@ -9,7 +9,7 @@ import { TImageFile } from "../../interface/image.interface";
 
 const allCustomersFromDB = async (query: Record<string, unknown>) => {
     const customersQuery = new QueryBuilder(Customer.find(), query)
-        .search([''])
+        .search(['name'])
         .filter()
         .sort()
         .paginate()
@@ -20,18 +20,6 @@ const allCustomersFromDB = async (query: Record<string, unknown>) => {
 
     return { meta, data }
 }
-
-const singleCustomerFromDB = async (id: string) => {
-    const isCustomerExists = await Customer.findById(id);
-
-    if (!isCustomerExists) {
-        throw new AppError(httpStatus.NOT_FOUND, "This customer was not found");
-    }
-
-    const result = await Customer.findById(isCustomerExists._id).populate("user");
-
-    return result;
-};
 
 const updateCustomerIntoDB = async (id: string, image: TImageFile, payload: Partial<TCustomer>) => {
     const session = await mongoose.startSession();
@@ -136,7 +124,6 @@ const deleteCustomerFromDB = async (id: string) => {
 
 export const CustomerServices = {
     allCustomersFromDB,
-    singleCustomerFromDB,
     deleteCustomerFromDB,
     updateCustomerIntoDB
 }

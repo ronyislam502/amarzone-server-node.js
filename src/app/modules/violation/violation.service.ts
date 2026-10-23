@@ -11,6 +11,7 @@ import {
 import { USER_STATUS, SLA_SEVERITY, SLA_METRIC, VENDOR_HEALTH, USER_ROLE } from "../../interface/common";
 import QueryBuilder from "../../builder/queryBuilder";
 import { NotificationServices } from "../notification/notification.service";
+import { disableAllBuyBoxForVendorAndReassign, calculateBuyBox } from "../../utilities/buyBox";
 
 const SLA_CONFIG = {
   [SLA_METRIC.ORDER_DEFECT_RATE]: {
@@ -178,11 +179,23 @@ const evaluateSla = async (
     if (vendor.status !== USER_STATUS.SUSPENDED && vendor.status !== USER_STATUS.BLOCKED) {
       vendor.status = USER_STATUS.SUSPENDED as any;
       await vendor.save({ session });
+
+      try {
+        await disableAllBuyBoxForVendorAndReassign(vendorId, session);
+      } catch (bbError) {
+        console.error("[SLA Suspension Buy Box] Failed to reassign Buy Box on suspension:", bbError);
+      }
     }
   } else {
     if (vendor.status === USER_STATUS.SUSPENDED) {
       vendor.status = USER_STATUS.ACTIVE as any;
       await vendor.save({ session });
+
+      try {
+        await calculateBuyBox(vendorId, session);
+      } catch (bbError) {
+        console.error("[SLA Reinstatement Buy Box] Failed to recalculate Buy Box on reinstatement:", bbError);
+      }
     }
   }
 };

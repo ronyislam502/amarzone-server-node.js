@@ -12,5 +12,6 @@ export type TVariant = {
     attributes: TVariantAttribute[];
     images: string[];
     isPrivateLevel: boolean;
+    isBuyBoxEligible: boolean;
     isDeleted?: boolean;
 };

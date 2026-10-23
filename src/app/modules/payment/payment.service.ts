@@ -1,9 +1,8 @@
 import Stripe from "stripe";
 import { stripe } from "../../utilities/stripe";
-import { ProcessedEvent } from "../processedEvent/processedEvent.model";
 import mongoose from "mongoose";
 import { Order } from "../order/order.model";
-import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../interface/common";
+import { ORDER_STATUS, PAYMENT_STATUS } from "../../interface/common";
 import { Payment } from "./payment.model";
 import { OrderServices } from "../order/order.service";
 import { emitNotification } from "../../socket/socket";
@@ -25,11 +24,11 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
     }
 
     // Idempotency check: check if the event was already processed
-    const existingEvent = await ProcessedEvent.findOne({ eventId: event.id });
-    if (existingEvent) {
-        console.log(`[Webhook Service] Duplicate event detected and ignored: ${event.id}`);
-        return;
-    }
+    // const existingEvent = await ProcessedEvent.findOne({ eventId: event.id });
+    // if (existingEvent) {
+    //     console.log(`[Webhook Service] Duplicate event detected and ignored: ${event.id}`);
+    //     return;
+    // }
 
     // console.log(`[Webhook Service] Processing Stripe Event: ${event.type} (${event.id})`);
 
@@ -57,6 +56,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                         $set: {
                             paymentStatus: isPaid ? PAYMENT_STATUS.PAID : PAYMENT_STATUS.UNPAID,
                             ...(isPaid && { status: ORDER_STATUS.UNSHIPPED }),
+                            transactionId: transactionId,
                         },
                     },
                     { session: dbSession, new: true }
@@ -68,11 +68,10 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
                 // Create or update Payment using the local database order grandAmount instead of Stripe amount_total
                 await Payment.findOneAndUpdate(
-                    { orderId: new mongoose.Types.ObjectId(orderId) },
+                    { transactionId },
                     {
                         $set: {
                             orderId: new mongoose.Types.ObjectId(orderId),
-                            transactionId: transactionId,
                             amount: updatedOrder.totalPrice,
                             currency: session.currency || "usd",
                             status: isPaid ? PAYMENT_STATUS.PAID : PAYMENT_STATUS.UNPAID,
@@ -84,7 +83,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 );
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
@@ -155,6 +154,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                         $set: {
                             paymentStatus: isPaid ? PAYMENT_STATUS.PAID : PAYMENT_STATUS.UNPAID,
                             ...(isPaid && { status: ORDER_STATUS.UNSHIPPED }),
+                            transactionId: transactionId,
                         },
                     },
                     { session: dbSession, new: true }
@@ -166,11 +166,10 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
                 // Create or update Payment using the local database order grandAmount
                 await Payment.findOneAndUpdate(
-                    { orderId: new mongoose.Types.ObjectId(orderId) },
+                    { transactionId },
                     {
                         $set: {
                             orderId: new mongoose.Types.ObjectId(orderId),
-                            transactionId: transactionId,
                             amount: updatedOrder.totalPrice,
                             currency: paymentIntent.currency || "usd",
                             status: isPaid ? PAYMENT_STATUS.PAID : PAYMENT_STATUS.UNPAID,
@@ -265,11 +264,10 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
                 // Update Payment to FAILED using the database order grandAmount
                 await Payment.findOneAndUpdate(
-                    { orderId: new mongoose.Types.ObjectId(orderId) },
+                    { transactionId },
                     {
                         $set: {
                             orderId: new mongoose.Types.ObjectId(orderId),
-                            transactionId: transactionId,
                             amount: orderData.totalPrice,
                             currency: paymentIntent.currency || "usd",
                             status: PAYMENT_STATUS.UNPAID,
@@ -296,7 +294,7 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 }
 
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
@@ -330,39 +328,13 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
         case "charge.refunded": {
             const charge = event.data.object as Stripe.Charge;
             let orderId = charge.metadata?.orderId;
-            const transactionId = (charge.payment_intent as string) || charge.id;
+            const transactionId = charge.payment_intent as string || charge.id;
 
             if (!orderId && charge.payment_intent) {
-                try {
-                    const paymentIntent = await stripe.paymentIntents.retrieve(
-                        charge.payment_intent as string
-                    );
-                    orderId = paymentIntent.metadata?.orderId;
-                } catch (err) {
-                    console.warn("[Webhook Service] Failed to retrieve payment intent for charge.refunded:", err);
-                }
-            }
-
-            // Fallback resolution if orderId is missing from charge/intent metadata
-            if (!orderId) {
-                const foundPayment = await Payment.findOne({
-                    $or: [
-                        { transactionId },
-                        { "paymentGatewayData.id": charge.id },
-                        { "paymentGatewayData.payment_intent": charge.payment_intent },
-                    ],
-                });
-
-                if (foundPayment?.orderId) {
-                    orderId = foundPayment.orderId.toString();
-                } else {
-                    const foundOrder = await Order.findOne({
-                        "refund.refundId": charge.id,
-                    });
-                    if (foundOrder) {
-                        orderId = foundOrder._id.toString();
-                    }
-                }
+                const paymentIntent = await stripe.paymentIntents.retrieve(
+                    charge.payment_intent as string
+                );
+                orderId = paymentIntent.metadata?.orderId;
             }
 
             if (!orderId) {
@@ -370,56 +342,19 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 break;
             }
 
-            const existingOrder = await Order.findById(orderId);
-            if (!existingOrder) {
-                console.warn(`[Webhook Service] Order not found for charge.refunded: ${orderId}`);
-                break;
-            }
-
-            const latestRefund = charge.refunds?.data?.[0];
-            const initiatorRole = latestRefund?.metadata?.refundInitiatorRole || "ADMIN";
-            let vendorCharge = 0;
-            let vendorProfit = 0;
-
-            if (latestRefund?.metadata?.vendorCharge) {
-                vendorCharge = parseFloat(latestRefund.metadata.vendorCharge);
-            }
-            if (latestRefund?.metadata?.vendorProfit) {
-                vendorProfit = parseFloat(latestRefund.metadata.vendorProfit);
-            } else if (initiatorRole === USER_ROLE.VENDOR) {
-                vendorCharge = +(existingOrder.totalPrice * 0.05).toFixed(2);
-                vendorProfit = -vendorCharge;
-            }
-
             const dbSession = await mongoose.startSession();
             dbSession.startTransaction();
 
             try {
-                const updateQuery: Record<string, any> = {
-                    paymentStatus: PAYMENT_STATUS.REFUNDED,
-                    status: ORDER_STATUS.REFUNDED,
-                };
-
-                // If refund subdocument was not already set, populate it
-                if (!existingOrder.refund) {
-                    updateQuery.vendorAmount = vendorProfit;
-                    updateQuery.refund = {
-                        refundId: latestRefund?.id || charge.id,
-                        refundAmount: (charge.amount_refunded || charge.amount) / 100,
-                        vendorCharge,
-                        vendorProfit,
-                        refundedBy: latestRefund?.metadata?.refundInitiatorId || existingOrder.customer,
-                        refundInitiatorRole: initiatorRole,
-                        refundReason: "Refund processed via Stripe",
-                        refundedAt: new Date(),
-                        stripeRefundStatus: latestRefund?.status || "succeeded",
-                    };
-                }
-
                 // Update Order
                 const updatedOrder = await Order.findByIdAndUpdate(
                     orderId,
-                    { $set: updateQuery },
+                    {
+                        $set: {
+                            paymentStatus: PAYMENT_STATUS.REFUNDED,
+                            status: ORDER_STATUS.REFUNDED,
+                        },
+                    },
                     { session: dbSession, new: true }
                 );
 
@@ -430,37 +365,14 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                         $set: {
                             status: PAYMENT_STATUS.REFUNDED,
                             stripeEventId: event.id,
-                            paymentGatewayData: {
-                                charge,
-                                refund: latestRefund,
-                                vendorCharge,
-                                vendorProfit,
-                            },
+                            paymentGatewayData: charge,
                         },
                     },
-                    { session: dbSession, upsert: true }
+                    { session: dbSession }
                 );
 
-                // Restore inventory if order was unshipped and not already refunded
-                const wasUnshipped = [ORDER_STATUS.PENDING, ORDER_STATUS.UNSHIPPED].includes(existingOrder.status as any);
-                if (wasUnshipped && existingOrder.products && existingOrder.products.length > 0 && !existingOrder.refund) {
-                    for (const item of existingOrder.products) {
-                        await Inventory.findOneAndUpdate(
-                            {
-                                variant: item.variant,
-                                "seller.vendor": existingOrder.vendor,
-                            },
-                            {
-                                $inc: { "seller.quantity": item.quantity },
-                                $set: { "seller.isStock": true },
-                            },
-                            { session: dbSession }
-                        );
-                    }
-                }
-
                 // Store the Processed Stripe Event inside the same MongoDB transaction
-                await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
+                // await ProcessedEvent.create([{ eventId: event.id }], { session: dbSession });
 
                 await dbSession.commitTransaction();
                 dbSession.endSession();
@@ -473,28 +385,15 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
                 }
 
                 if (updatedOrder) {
-                    // Emit notification via Socket.IO
+                    // Emit notification via Socket.IO (wrapped in try/catch to isolate errors)
                     try {
                         emitNotification(`customer:${updatedOrder.customer}`, "payment_refunded", {
                             orderId,
                             orderNo: updatedOrder.orderNo,
-                            refundAmount: updatedOrder.refund?.refundAmount || updatedOrder.totalPrice,
                             message: "Your order payment has been refunded.",
                         });
                     } catch (socketError) {
                         console.error(`[Webhook Service] Socket notification failed for customer:`, socketError);
-                    }
-
-                    try {
-                        emitNotification(`vendor:${updatedOrder.vendor}`, "order_refunded", {
-                            orderId,
-                            orderNo: updatedOrder.orderNo,
-                            vendorCharge,
-                            vendorProfit,
-                            message: `Order #${updatedOrder.orderNo} has been refunded.`,
-                        });
-                    } catch (socketError) {
-                        console.error(`[Webhook Service] Socket notification failed for vendor:`, socketError);
                     }
                 }
 
@@ -513,7 +412,6 @@ const stripeWebhookPayment = async (rawBody: Buffer, signature: string, secret: 
 
     console.log(`[Webhook Service] Event ${event.id} marked as successfully processed.`);
 };
-
 
 export const PaymentServices = {
     stripeWebhookPayment

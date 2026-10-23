@@ -36,12 +36,10 @@ const variantSchema = new Schema<TVariant>(
       type: Boolean,
       default: false
     },
-    inventories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Inventory",
-      },
-    ],
+    isBuyBoxEligible: {
+      type: Boolean,
+      default: false
+    },
     isDeleted: {
       type: Boolean,
       default: false

@@ -8,10 +8,10 @@ const productReviewSchema = new Schema<TProductReview>(
       ref: "User",
       required: [true, "Customer is required"],
     },
-    product: {
+    variant: {
       type: Schema.Types.ObjectId,
       ref: "Variant",
-      required: [true, "Product is required"],
+      required: [true, "Variant is required"],
     },
     order: {
       type: Schema.Types.ObjectId,
@@ -23,10 +23,6 @@ const productReviewSchema = new Schema<TProductReview>(
       required: [true, "Rating is required"],
       min: [1, "Rating must be at least 1"],
       max: [5, "Rating cannot be more than 5"],
-    },
-    title: {
-      type: String,
-      trim: true,
     },
     review: {
       type: String,

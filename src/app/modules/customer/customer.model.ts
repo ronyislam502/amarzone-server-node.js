@@ -36,6 +36,7 @@ const customerSchema = new Schema<TCustomer, CustomerModel>(
             type: addressSchema,
             required: [true, "address is required"],
         },
+        stripeCustomerId: { type: String },
         isDeleted: {
             type: Boolean,
             default: false,

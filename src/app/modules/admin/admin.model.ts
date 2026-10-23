@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { AdminModel, TAdmin } from "./admin.interface";
+import { addressSchema } from "../user/user.model";
 
 const adminSchema = new Schema<TAdmin, AdminModel>(
     {
@@ -30,6 +31,10 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
         phone: {
             type: String,
             required: [true, "Phone is required"],
+        },
+        address: {
+            type: addressSchema,
+            required: [true, "address is required"],
         },
         isDeleted: {
             type: Boolean,

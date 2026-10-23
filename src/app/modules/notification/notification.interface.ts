@@ -5,8 +5,9 @@ export type TNotificationType =
     | "NEW_ORDER" 
     | "ORDER_DELIVERED"
     | "ORDER_SHIPPED"
-    | "SLA_SUSPENDED"
-    | string;
+    | "ORDER_CANCELLED"
+    | "SLA_WARNING"
+    | "SLA_SUSPENDED";
 
 export type TNotification = {
     recipientRole: string; // "ADMIN", "VENDOR", "CUSTOMER"

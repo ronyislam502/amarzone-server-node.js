@@ -1,5 +1,4 @@
 import { JwtPayload } from "jsonwebtoken";
-import { Types } from "mongoose";
 import { TInventory } from "./inventory.interface";
 import { User } from "../user/user.model";
 import AppError from "../../errors/AppError";
@@ -8,11 +7,14 @@ import { USER_ROLE, USER_STATUS } from "../../interface/common";
 import { Product } from "../product/product.model";
 import { Variant } from "../variant/variant.model";
 import { Inventory } from "./inventory.model";
+import { recalculateBuyBoxForVariant } from "../../utilities/buyBox";
 import QueryBuilder from "../../builder/queryBuilder";
+
 
 const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
 
     const isUserExists = await User.isUserExistsByEmail(user?.email);
+
 
     if (!isUserExists) {
         throw new AppError(httpStatus.NOT_FOUND, "this user not found");
@@ -56,10 +58,7 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
         }
     }
 
-    const isAlreadyListed = await Inventory.findOne({
-        variant: isVariantProduct._id,
-        "seller.vendor": isUserExists._id,
-    });
+    const isAlreadyListed = await Inventory.findById(isVariantProduct?._id);
 
     if (isAlreadyListed) {
         throw new AppError(
@@ -81,61 +80,41 @@ const listProductIntoDB = async (user: JwtPayload, payload: TInventory) => {
         }
     }
 
+
     const result = await Inventory.create(data);
-    console.log('result', result)
+
+    try {
+        await recalculateBuyBoxForVariant(isVariantProduct._id);
+    } catch (bbErr) {
+        console.error("[Inventory listProduct] Buy Box recalculation error:", bbErr);
+    }
 
     return result;
 
 }
 
-const getInventoryByVariantAsinFromDB = async (asin: string) => {
-    const isObjectId = Types.ObjectId.isValid(asin);
-    const variant = await Variant.findOne({
-        $or: [
-            { asin },
-            ...(isObjectId ? [{ _id: asin }] : [])
-        ]
-    });
+const getInventoryByVariantFromDB = async (asin: string, query: any) => {
 
-    const variantConditions: any[] = [{ asin }];
-    if (variant) {
-        variantConditions.push({ variant: variant._id });
-        if (variant.asin && variant.asin !== asin) {
-            variantConditions.push({ asin: variant.asin });
-        }
-    }
-    if (isObjectId) {
-        variantConditions.push({ variant: asin });
+    const isVariantProduct = await Variant.findOne({ asin });
+
+    if (!isVariantProduct) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Product variant not found"
+        );
     }
 
-    const filter: any = {
-        isDeleted: { $ne: true },
-        $or: variantConditions,
-        $and: [
-            {
-                $or: [
-                    { "seller.isStock": true },
-                    { "seller.quantity": { $gt: 0 } },
-                    { "seller.isStock": { $exists: false } }
-                ]
-            }
-        ]
-    };
+    // console.log("variant", isVariantProduct)
 
-    const listings = await Inventory.find(filter)
-        .populate("variant")
-        .populate("seller.vendor", "name avatar role")
-        .sort({ "seller.price": 1 });
+    const invVariantQuery = new QueryBuilder(Inventory.find({ variant: isVariantProduct?._id }).populate("variant"), query)
+        .filter().sort().fields()
 
-    const buyBoxWinner =
-        listings.find((l) => l.seller?.isBuyBoxWinner) || listings[0] || null;
 
-    return {
-        asin,
-        buyBoxWinner,
-        totalSellers: listings.length,
-        sellers: listings,
-    };
+    const meta = await invVariantQuery.countTotal();
+    const data = await invVariantQuery.modelQuery;
+
+    return { meta, data }
+
 };
 
 
@@ -201,6 +180,13 @@ const updatePriceIntoDB = async (
 
     inventory.seller.price = payload.price;
     await inventory.save();
+
+    try {
+        await recalculateBuyBoxForVariant(inventory.variant);
+    } catch (bbErr) {
+        console.error("[Inventory updatePrice] Buy Box recalculation error:", bbErr);
+    }
+
     return inventory;
 };
 
@@ -226,6 +212,13 @@ const updateQuantityIntoDB = async (
     inventory.seller.quantity = payload.quantity;
     inventory.seller.isStock = payload.quantity > 0;
     await inventory.save();
+
+    try {
+        await recalculateBuyBoxForVariant(inventory.variant);
+    } catch (bbErr) {
+        console.error("[Inventory updateQuantity] Buy Box recalculation error:", bbErr);
+    }
+
     return inventory;
 };
 
@@ -234,5 +227,5 @@ export const InventoryServices = {
     myInventoryFromDB,
     updatePriceIntoDB,
     updateQuantityIntoDB,
-    getInventoryByVariantAsinFromDB
+    getInventoryByVariantFromDB
 }

@@ -138,3 +138,9 @@ export const parseAiMultipart = (
   next();
 };
 
+export const AiMiddlewares = {
+  sanitizeAiInput,
+  trackAiTelemetry,
+  parseAiMultipart,
+};
+

@@ -3,7 +3,7 @@ import { TVendor, VendorModel } from "./vendor.interface";
 import { addressSchema } from "../user/user.model";
 
 
-const VendorSchema = new Schema<TVendor, VendorModel>(
+const vendorSchema = new Schema<TVendor, VendorModel>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -50,25 +50,25 @@ const VendorSchema = new Schema<TVendor, VendorModel>(
   }
 );
 
-VendorSchema.pre("find", function (next) {
+vendorSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-VendorSchema.pre("findOne", function (next) {
+vendorSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-VendorSchema.pre("aggregate", function (next) {
+vendorSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-VendorSchema.statics.isUserExists = async function (email: string) {
+vendorSchema.statics.isUserExists = async function (email: string) {
   const existingUser = await Vendor.findOne({ email });
 
   return existingUser;
 };
 
-export const Vendor = model<TVendor, VendorModel>("Vendor", VendorSchema);
+export const Vendor = model<TVendor, VendorModel>("Vendor", vendorSchema);

@@ -1,4 +1,5 @@
 import { Model, Types } from "mongoose";
+import { TAddress } from "../user/user.interface";
 
 export type TAdmin = {
     user: Types.ObjectId;
@@ -6,6 +7,7 @@ export type TAdmin = {
     email: string;
     avatar?: string;
     phone: string;
+    address: TAddress;
     isDeleted: boolean;
 };
 

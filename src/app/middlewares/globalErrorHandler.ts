@@ -59,15 +59,6 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     ];
   }
 
-  if (config.NODE_ENV !== "production") {
-    if (statusCode >= 500) {
-      console.error("[Global Error Handler] Server Error:", error);
-    } else {
-      console.warn(
-        `[Global Error Handler] [${statusCode}] ${message} (${req.method} ${req.originalUrl})`
-      );
-    }
-  }
   return res.status(statusCode).json({
     success: false,
     message,

@@ -1,0 +1,110 @@
+[
+  {
+    "_id": "6a8e13b11eaec64f9e497dcf",
+    "name": "Sports",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551157/wpuof3w1008-1790551155980-icon-sports.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:14:09.403Z",
+    "updatedAt": "2026-09-27T23:19:18.027Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e14751eaec64f9e497dd3",
+    "name": "Electronics",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551147/wfpnj5qz8bq-1790551145374-icon-electronics.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:17:25.179Z",
+    "updatedAt": "2026-09-27T23:19:07.799Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1801ba44acc89eb408586",
+    "name": "Fashion",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551450/ruwaqxgoys-1790551448922-icon-fashion.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:49:47.056Z",
+    "updatedAt": "2026-09-27T23:24:11.021Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18027a44acc89eb40858b",
+    "name": "Home & Kitchen",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551513/v1jmhlzqlhs-1790551512023-icon-home_kitchen.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:49:59.318Z",
+    "updatedAt": "2026-09-27T23:25:14.165Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1802fa44acc89eb408590",
+    "name": "Beauty",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551311/m6j3q1otg5-1790551309827-icon-beauty.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:07.293Z",
+    "updatedAt": "2026-09-27T23:21:52.194Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18046a44acc89eb40859a",
+    "name": "Automotive",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551288/1lad5thhdbei-1790551286935-icon-automotive.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:30.157Z",
+    "updatedAt": "2026-09-27T23:21:29.067Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18037a44acc89eb408595",
+    "name": "Grocery",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551299/wk296nf95a-1790551297688-icon-grocery.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:15.692Z",
+    "updatedAt": "2026-09-27T23:21:39.776Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1804da44acc89eb40859f",
+    "name": "Toys",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551217/b9maf10pirk-1790551215923-icon-toys.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:37.212Z",
+    "updatedAt": "2026-09-27T23:20:18.537Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1805ca44acc89eb4085a4",
+    "name": "Health",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551207/a0jdlkhpfsk-1790551205564-icon-health.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:52.021Z",
+    "updatedAt": "2026-09-27T23:20:08.047Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18062a44acc89eb4085a9",
+    "name": "Jewelry",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551191/lhldo7vnhm-1790551190199-icon-jewelry.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:50:58.518Z",
+    "updatedAt": "2026-09-27T23:19:52.280Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18069a44acc89eb4085ae",
+    "name": "Baby",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551180/69y0gy42gu-1790551178957-icon-baby.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:51:05.949Z",
+    "updatedAt": "2026-09-27T23:19:40.902Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa18073a44acc89eb4085b3",
+    "name": "Pet Supplies",
+    "icon": "https://res.cloudinary.com/dbljkyof7/image/upload/v1790551169/rpfpqmx8pgn-1790551168071-icon-pet_supplies.jpg",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T15:51:15.390Z",
+    "updatedAt": "2026-09-27T23:19:30.263Z",
+    "__v": 0
+  }
+]

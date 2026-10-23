@@ -3,17 +3,17 @@ import cors from "cors";
 import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
-import { PaymentControllers } from "./app/modules/payment/payment.controller";
+// import { PaymentControllers } from "./app/modules/payment/payment.controller";
 import cookieParser from "cookie-parser";
 
 const app: Application = express();
 
 // Webhook route must use express.raw before express.json() parses it
-app.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  PaymentControllers.stripeWebhook
-);
+// app.post(
+//   "/webhook",
+//   express.raw({ type: "application/json" }),
+//   PaymentControllers.stripeWebhook
+// );
 
 app.use(express.json());
 app.use(cookieParser());

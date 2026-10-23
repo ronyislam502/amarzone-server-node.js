@@ -14,7 +14,6 @@ const createServiceReviewValidationSchema = z.object({
     rating: z.number({
       invalid_type_error: "Rating must be number",
     }),
-    title: z.string().optional(),
     review: z.string({
       invalid_type_error: "Review must be string",
     }),

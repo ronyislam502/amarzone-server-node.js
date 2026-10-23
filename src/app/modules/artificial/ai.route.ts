@@ -1,9 +1,4 @@
-/**
- * Artificial Intelligence Routes
- *
- * Exposes REST API endpoints for Product Content Generation, Shopping Assistant,
- * Executive Dashboard Insights, and future AI capabilities.
- */
+
 
 import { Router } from "express";
 import { validateRequest } from "../../middlewares/validateRequest";

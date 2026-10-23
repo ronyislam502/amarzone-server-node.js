@@ -4,7 +4,7 @@ import { ServiceReviewServices } from "./serviceReview.service";
 import catchAsync from "./../../utilities/catchAsync";
 
 const createServiceReview = catchAsync(async (req, res) => {
-  const result = await ServiceReviewServices.createServiceReviewIntoDB(req.body);
+  const result = await ServiceReviewServices.createServiceReviewIntoDB(req.user, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

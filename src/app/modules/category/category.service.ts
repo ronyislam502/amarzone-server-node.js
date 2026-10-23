@@ -19,7 +19,7 @@ const createCategoryIntoDB = async (payload: TCategory) => {
 
 const AllCategoriesFromDB = async (query: Record<string, unknown>) => {
   const categoryQuery = new QueryBuilder(
-    Category.find().populate("department"),
+    Category.find().populate("department", "name icon"),
     query
   )
     .search(["name"])

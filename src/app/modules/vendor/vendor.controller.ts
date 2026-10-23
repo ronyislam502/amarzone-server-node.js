@@ -51,13 +51,14 @@ const deleteVendor = catchAsync(async (req, res) => {
         statusCode: httpStatus.OK,
         success: true,
         message: "Vendor deleted successfully",
-        data: result
-    })
-})
+        data: result,
+    });
+});
+
 
 export const VendorControllers = {
     allVendors,
     vendor,
     updateVendor,
-    deleteVendor
-}
+    deleteVendor,
+};

@@ -38,15 +38,16 @@ const deleteProductReview = catchAsync(async (req, res) => {
   });
 });
 
-const getSingleProductReview = catchAsync(async (req, res) => {
+const allReviewsByProduct = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await ProductReviewServices.allReviewsByProductFromDB(id, req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Product review retrieved successfully",
-    data: result,
+    message: "Product reviews retrieved successfully",
+    meta: result.meta,
+    data: result.data,
   });
 });
 
@@ -56,5 +57,5 @@ export const ProductReviewControllers = {
   createProductReview,
   updateProductReview,
   deleteProductReview,
-  getSingleProductReview,
+  allReviewsByProduct,
 }

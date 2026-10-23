@@ -1,0 +1,762 @@
+[
+  {
+    "_id": "6a8e16c0909b7a241a0be748",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Headphones",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:27:12.632Z",
+    "updatedAt": "2026-08-25T22:27:12.632Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e1777909b7a241a0be769",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Cycling",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:30:15.272Z",
+    "updatedAt": "2026-08-25T22:30:15.272Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e16f0909b7a241a0be754",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Televisions",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:28:00.464Z",
+    "updatedAt": "2026-08-25T22:28:00.464Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e1727909b7a241a0be757",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Fitness Equipment",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:28:55.599Z",
+    "updatedAt": "2026-08-25T22:28:55.599Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e175a909b7a241a0be760",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Indoor Games",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:29:46.381Z",
+    "updatedAt": "2026-08-25T22:29:46.381Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e16e4909b7a241a0be751",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Smart Watches",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:27:48.421Z",
+    "updatedAt": "2026-08-25T22:27:48.421Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e1735909b7a241a0be75a",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Exercise Machines",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:29:09.650Z",
+    "updatedAt": "2026-08-25T22:29:09.650Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e174b909b7a241a0be75d",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Outdoor Sports",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:29:31.583Z",
+    "updatedAt": "2026-08-25T22:29:31.583Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e16ce909b7a241a0be74b",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Speakers",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:27:26.097Z",
+    "updatedAt": "2026-08-25T22:27:26.097Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e16d9909b7a241a0be74e",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Cameras",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:27:37.360Z",
+    "updatedAt": "2026-08-25T22:27:37.360Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e1767909b7a241a0be763",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Cricket",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:29:59.604Z",
+    "updatedAt": "2026-08-25T22:29:59.604Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8e176f909b7a241a0be766",
+    "department": "6a8e13b11eaec64f9e497dcf",
+    "name": "Football",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-08-25T22:30:07.561Z",
+    "updatedAt": "2026-08-25T22:30:07.561Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1865605533d21f779a29a",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Gaming Consoles",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:16:22.401Z",
+    "updatedAt": "2026-09-09T16:16:22.401Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1865f05533d21f779a2a0",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Accessories",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:16:31.349Z",
+    "updatedAt": "2026-09-09T16:16:31.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1868205533d21f779a2ac",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Women's Clothing",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:17:06.121Z",
+    "updatedAt": "2026-09-09T16:17:06.121Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1867a05533d21f779a2a6",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Men's Clothing",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:16:58.872Z",
+    "updatedAt": "2026-09-09T16:16:58.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1868905533d21f779a2b2",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Kids' Clothing",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:17:13.209Z",
+    "updatedAt": "2026-09-09T16:17:13.209Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186a805533d21f779a2b8",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Bags",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:17:44.561Z",
+    "updatedAt": "2026-09-09T16:17:44.561Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186b005533d21f779a2be",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Watches",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:17:52.728Z",
+    "updatedAt": "2026-09-09T16:17:52.728Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186b605533d21f779a2c4",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Sunglasses",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:17:58.615Z",
+    "updatedAt": "2026-09-09T16:17:58.615Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186c505533d21f779a2ca",
+    "department": "6aa1801ba44acc89eb408586",
+    "name": "Winter Wear",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:18:13.073Z",
+    "updatedAt": "2026-09-09T16:18:13.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186e005533d21f779a2d0",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Furniture",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:18:40.396Z",
+    "updatedAt": "2026-09-09T16:18:40.396Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186e805533d21f779a2d6",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Kitchen Appliances",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:18:48.160Z",
+    "updatedAt": "2026-09-09T16:18:48.160Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186ef05533d21f779a2dc",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Cookware",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:18:55.176Z",
+    "updatedAt": "2026-09-09T16:18:55.176Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186f505533d21f779a2e2",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Dining",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:01.007Z",
+    "updatedAt": "2026-09-09T16:19:01.007Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa186fa05533d21f779a2e8",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Home Decor",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:06.488Z",
+    "updatedAt": "2026-09-09T16:19:06.488Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1870105533d21f779a2ee",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Bedding",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:13.176Z",
+    "updatedAt": "2026-09-09T16:19:13.176Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1870905533d21f779a2f4",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Storage & Organization",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:21.648Z",
+    "updatedAt": "2026-09-09T16:19:21.648Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1871505533d21f779a2fa",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Cleaning Supplies",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:33.513Z",
+    "updatedAt": "2026-09-09T16:19:33.513Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1874d05533d21f779a318",
+    "department": "6aa1802fa44acc89eb408590",
+    "name": "Hair Care",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:20:29.735Z",
+    "updatedAt": "2026-09-09T16:20:29.735Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1874305533d21f779a312",
+    "department": "6aa1802fa44acc89eb408590",
+    "name": "Skincare",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:20:19.154Z",
+    "updatedAt": "2026-09-09T16:20:19.154Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1872205533d21f779a306",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Bathroom Accessories",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:46.951Z",
+    "updatedAt": "2026-09-09T16:19:46.951Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1873c05533d21f779a30c",
+    "department": "6aa1802fa44acc89eb408590",
+    "name": "Makeup",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:20:12.767Z",
+    "updatedAt": "2026-09-09T16:20:12.767Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1871b05533d21f779a300",
+    "department": "6aa18027a44acc89eb40858b",
+    "name": "Lighting",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:19:39.735Z",
+    "updatedAt": "2026-09-09T16:19:39.735Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1875b05533d21f779a31e",
+    "department": "6aa1802fa44acc89eb408590",
+    "name": "Personal Care",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:20:43.655Z",
+    "updatedAt": "2026-09-09T16:20:43.655Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1876505533d21f779a324",
+    "department": "6aa1802fa44acc89eb408590",
+    "name": "Nail Care",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:20:53.510Z",
+    "updatedAt": "2026-09-09T16:20:53.510Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1877005533d21f779a32a",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Beverages",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:04.310Z",
+    "updatedAt": "2026-09-09T16:21:04.310Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1877505533d21f779a330",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Snacks",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:09.743Z",
+    "updatedAt": "2026-09-09T16:21:09.743Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1878405533d21f779a33c",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Cooking Oil",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:24.017Z",
+    "updatedAt": "2026-09-09T16:21:24.017Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1877c05533d21f779a336",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Rice & Grains",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:16.495Z",
+    "updatedAt": "2026-09-09T16:21:16.495Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1878a05533d21f779a342",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Spices",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:30.552Z",
+    "updatedAt": "2026-09-09T16:21:30.552Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1879005533d21f779a348",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Dairy",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:36.224Z",
+    "updatedAt": "2026-09-09T16:21:36.224Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1879605533d21f779a34e",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Frozen Foods",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:42.601Z",
+    "updatedAt": "2026-09-09T16:21:42.601Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187a105533d21f779a354",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Organic Foods",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:21:53.031Z",
+    "updatedAt": "2026-09-09T16:21:53.031Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187a905533d21f779a35a",
+    "department": "6aa18037a44acc89eb408595",
+    "name": "Baby Food",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:01.489Z",
+    "updatedAt": "2026-09-09T16:22:01.489Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187b905533d21f779a360",
+    "department": "6aa18046a44acc89eb40859a",
+    "name": "Car Accessories",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:17.553Z",
+    "updatedAt": "2026-09-09T16:22:17.553Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187c205533d21f779a366",
+    "department": "6aa18046a44acc89eb40859a",
+    "name": "Motorcycle Accessories",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:26.536Z",
+    "updatedAt": "2026-09-09T16:22:26.536Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187cc05533d21f779a36c",
+    "department": "6aa18046a44acc89eb40859a",
+    "name": "Engine Oil",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:36.296Z",
+    "updatedAt": "2026-09-09T16:22:36.296Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1884c05533d21f779a391",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Mobile",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:24:44.268Z",
+    "updatedAt": "2026-09-09T16:24:44.268Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188b405533d21f779a3cd",
+    "department": "6aa1805ca44acc89eb4085a4",
+    "name": "Vitamins",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:26:28.256Z",
+    "updatedAt": "2026-09-09T16:26:28.256Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188f705533d21f779a3f1",
+    "department": "6aa18062a44acc89eb4085a9",
+    "name": "Earrings",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:35.822Z",
+    "updatedAt": "2026-09-09T16:27:35.822Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1891f05533d21f779a403",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Baby Clothing",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:15.991Z",
+    "updatedAt": "2026-09-09T16:28:15.991Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1897005533d21f779a439",
+    "department": "6aa18073a44acc89eb4085b3",
+    "name": "Pet Beds",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:29:36.368Z",
+    "updatedAt": "2026-09-09T16:29:36.368Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187e005533d21f779a378",
+    "department": "6aa18046a44acc89eb40859a",
+    "name": "Spare Parts",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:56.536Z",
+    "updatedAt": "2026-09-09T16:22:56.536Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1887f05533d21f779a3a9",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Mouse",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:25:35.240Z",
+    "updatedAt": "2026-09-09T16:25:35.240Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188db05533d21f779a3df",
+    "department": "6aa1805ca44acc89eb4085a4",
+    "name": "Nutrition",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:07.642Z",
+    "updatedAt": "2026-09-09T16:27:07.642Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188fd05533d21f779a3f7",
+    "department": "6aa18062a44acc89eb4085a9",
+    "name": "Bracelets",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:41.504Z",
+    "updatedAt": "2026-09-09T16:27:41.504Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1892d05533d21f779a409",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Diapers",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:29.127Z",
+    "updatedAt": "2026-09-09T16:28:29.127Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1893405533d21f779a40f",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Strollers",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:36.998Z",
+    "updatedAt": "2026-09-09T16:28:36.998Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1894205533d21f779a41b",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Baby Feeding",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:50.064Z",
+    "updatedAt": "2026-09-09T16:28:50.064Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1896805533d21f779a433",
+    "department": "6aa18073a44acc89eb4085b3",
+    "name": "Cat Food",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:29:28.765Z",
+    "updatedAt": "2026-09-09T16:29:28.765Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188bc05533d21f779a3d3",
+    "department": "6aa1805ca44acc89eb4085a4",
+    "name": "Medical Equipment",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:26:36.704Z",
+    "updatedAt": "2026-09-09T16:26:36.704Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188d405533d21f779a3d9",
+    "department": "6aa1805ca44acc89eb4085a4",
+    "name": "First Aid",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:00.191Z",
+    "updatedAt": "2026-09-09T16:27:00.191Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188f105533d21f779a3eb",
+    "department": "6aa18062a44acc89eb4085a9",
+    "name": "Rings",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:29.223Z",
+    "updatedAt": "2026-09-09T16:27:29.223Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1890305533d21f779a3fd",
+    "department": "6aa18062a44acc89eb4085a9",
+    "name": "Pendants",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:47.510Z",
+    "updatedAt": "2026-09-09T16:27:47.510Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1894905533d21f779a421",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Baby Furniture",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:57.271Z",
+    "updatedAt": "2026-09-09T16:28:57.271Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1895a05533d21f779a427",
+    "department": "6aa18073a44acc89eb4085b3",
+    "name": "Dog Food",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:29:14.951Z",
+    "updatedAt": "2026-09-09T16:29:14.951Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa187d505533d21f779a372",
+    "department": "6aa18046a44acc89eb40859a",
+    "name": "Helmets",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:22:45.072Z",
+    "updatedAt": "2026-09-09T16:22:45.072Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1885305533d21f779a397",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Laptop",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:24:51.657Z",
+    "updatedAt": "2026-09-09T16:24:51.657Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1885c05533d21f779a39d",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Monitor",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:25:00.378Z",
+    "updatedAt": "2026-09-09T16:25:00.378Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1887805533d21f779a3a3",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Keyboard",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:25:28.435Z",
+    "updatedAt": "2026-09-09T16:25:28.435Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1888605533d21f779a3af",
+    "department": "6a8e14751eaec64f9e497dd3",
+    "name": "Printers",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:25:42.587Z",
+    "updatedAt": "2026-09-09T16:25:42.587Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa188eb05533d21f779a3e5",
+    "department": "6aa18062a44acc89eb4085a9",
+    "name": "Necklaces",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:27:23.400Z",
+    "updatedAt": "2026-09-09T16:27:23.400Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1893b05533d21f779a415",
+    "department": "6aa18069a44acc89eb4085ae",
+    "name": "Baby Care",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:28:43.664Z",
+    "updatedAt": "2026-09-09T16:28:43.664Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1896305533d21f779a42d",
+    "department": "6aa18073a44acc89eb4085b3",
+    "name": "Pet Toys",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:29:23.318Z",
+    "updatedAt": "2026-09-09T16:29:23.318Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aa1897805533d21f779a43f",
+    "department": "6aa18073a44acc89eb4085b3",
+    "name": "Pet Healthcare",
+    "icon": "",
+    "isDeleted": false,
+    "createdAt": "2026-09-09T16:29:44.398Z",
+    "updatedAt": "2026-10-21T14:27:45.479Z",
+    "__v": 0
+  }
+]

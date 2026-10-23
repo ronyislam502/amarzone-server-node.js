@@ -9,7 +9,6 @@ const createProductValidationSchema = z.object({
     features: z.array(z.string()).min(1, "At least one feature is required"),
     brand: z.string({ required_error: "Brand is required" }),
     tags: z.array(z.string()).min(1, "At least one tag is required"),
-    isBestSeller: z.boolean().optional(),
   }),
 });
 
@@ -21,7 +20,6 @@ const updateProductValidationSchema = z.object({
     features: z.array(z.string()).min(1, "At least one feature is required").optional(),
     brand: z.string().optional(),
     tags: z.array(z.string()).min(1, "At least one tag is required").optional(),
-    isBestSeller: z.boolean().optional(),
   }),
 });
 
