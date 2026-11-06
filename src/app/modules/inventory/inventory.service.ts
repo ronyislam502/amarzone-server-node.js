@@ -159,6 +159,48 @@ const myInventoryFromDB = async (
     };
 };
 
+
+const vendorVariantProductsFromDB = async (
+    id: string,
+    query: Record<string, unknown>
+) => {
+    const isUser = await User.findById(id);
+
+    if (!isUser) {
+        throw new AppError(httpStatus.NOT_FOUND, "not found")
+    }
+
+    if (isUser.role !== USER_ROLE.VENDOR) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only vendors can view their inventory"
+        );
+    }
+
+    const myInventoryQuery = new QueryBuilder(
+        Inventory.find({ "seller.vendor": isUser._id }).populate({
+            path: "variant",
+            populate: {
+                path: "product",
+            },
+        }),
+        query
+    )
+        .search(["asin"])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const meta = await myInventoryQuery.countTotal();
+    const data = await myInventoryQuery.modelQuery;
+
+    return {
+        meta,
+        data,
+    };
+};
+
 const updatePriceIntoDB = async (
     user: JwtPayload,
     id: string,
@@ -227,5 +269,6 @@ export const InventoryServices = {
     myInventoryFromDB,
     updatePriceIntoDB,
     updateQuantityIntoDB,
-    getInventoryByVariantFromDB
+    getInventoryByVariantFromDB,
+    vendorVariantProductsFromDB
 }

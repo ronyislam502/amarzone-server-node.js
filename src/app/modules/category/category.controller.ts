@@ -2,9 +2,10 @@ import httpStatus from "http-status";
 import sendResponse from "../../utilities/sendResponse";
 import { CategoryServices } from "./category.service";
 import catchAsync from "./../../utilities/catchAsync";
+import { TImageFile } from "../../interface/image.interface";
 
 const createCategory = catchAsync(async (req, res) => {
-  const result = await CategoryServices.createCategoryIntoDB(req.body);
+  const result = await CategoryServices.createCategoryIntoDB(req.file as TImageFile, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

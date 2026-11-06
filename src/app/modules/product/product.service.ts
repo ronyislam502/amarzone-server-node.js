@@ -295,6 +295,7 @@ const allProductsByDepartment = async (id: string, query: Record<string, unknown
         const buyBoxWinner = variantListings.find(
             (l: any) => l.seller?.isBuyBoxWinner === true && typeof l.seller?.price === "number"
         );
+
         const isEligible = typeof variant.isBuyBoxEligible === "boolean"
             ? variant.isBuyBoxEligible
             : Boolean(buyBoxWinner);
@@ -526,8 +527,6 @@ const allProductsByCategoryFromDB = async (id: string, query: Record<string, unk
 }
 
 
-
-
 const allVariantProductsFromDB = async (query: Record<string, unknown>) => {
     const productsQuery = new QueryBuilder(
         Product.find({ isDeleted: { $ne: true } })
@@ -567,7 +566,7 @@ const allVariantProductsFromDB = async (query: Record<string, unknown>) => {
         "seller.isStock": { $ne: false },
         "seller.price": { $gt: 0 },
     })
-        .select("variant asin seller.price seller.isBuyBoxWinner")
+        .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
         .lean();
 
     // Index inventory listings by variant ID and ASIN
@@ -638,30 +637,39 @@ const allVariantProductsFromDB = async (query: Record<string, unknown>) => {
         }
         const variantListings = Array.from(matchedListingsMap.values());
 
-        const availablePrices = variantListings
-            .map((l: any) => l.seller?.price)
-            .filter((p: any) => typeof p === "number" && !isNaN(p) && p > 0);
-
-        const buyBoxWinner = variantListings.find(
-            (l: any) => l.seller?.isBuyBoxWinner === true && typeof l.seller?.price === "number"
+        // Filter in-stock listings with valid positive prices
+        const validListings = variantListings.filter(
+            (l: any) => typeof l.seller?.price === "number" && !isNaN(l.seller.price) && l.seller.price > 0
         );
+
+        // Find the lowest-priced seller listing
+        let lowestPriceListing: any = null;
+        for (const listing of validListings) {
+            if (!lowestPriceListing || listing.seller.price < lowestPriceListing.seller.price) {
+                lowestPriceListing = listing;
+            }
+        }
+
+        // Find the Buy Box Winner listing
+        const buyBoxWinner = validListings.find(
+            (l: any) => l.seller?.isBuyBoxWinner === true
+        );
+
         const isEligible = typeof variant.isBuyBoxEligible === "boolean"
             ? variant.isBuyBoxEligible
             : Boolean(buyBoxWinner);
 
-        let price: number | null = null;
+        // When eligible: use Buy Box Winner (or fallback to lowest price seller if no winner)
+        // When not eligible: use the lowest-priced seller
+        let selectedListing: any = null;
         if (isEligible) {
-            if (buyBoxWinner) {
-                price = buyBoxWinner.seller.price;
-            } else if (availablePrices.length > 0) {
-                price = Math.min(...availablePrices);
-            }
+            selectedListing = buyBoxWinner || lowestPriceListing;
         } else {
-            if (availablePrices.length > 0) {
-                price = Math.min(...availablePrices);
-            }
+            selectedListing = lowestPriceListing;
         }
 
+        const price: number | null = selectedListing?.seller?.price ?? null;
+        const vendorId = selectedListing?.seller?.vendor ?? null;
         const rating = ratingsByVariantId.get(vIdStr) ?? 0;
 
         const enrichedVariant = {
@@ -669,6 +677,7 @@ const allVariantProductsFromDB = async (query: Record<string, unknown>) => {
             isBuyBoxEligible: isEligible,
             price,
             rating,
+            vendorId,
         };
 
         const prodId = variant.product.toString();
@@ -706,10 +715,11 @@ const allVariantProductsFromDB = async (query: Record<string, unknown>) => {
             sku: variant.sku,
             attributes: variant.attributes,
             images: variant.images,
-            thumbnail: variant.images?.[0] || product.thumbnail,
+            thumbnail: variant.images?.[0],
             price: variant.price,
             rating: variant.rating,
             isBuyBoxEligible: variant.isBuyBoxEligible,
+            vendorId: variant.vendorId,
         }));
     });
 

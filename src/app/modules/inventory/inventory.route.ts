@@ -26,6 +26,12 @@ router.get(
     InventoryControllers.myInventory
 );
 
+router.get(
+    "/vendor-variant-products/:id",
+    InventoryControllers.vendorVariantProducts
+);
+
+
 router.patch(
     "/update-price/:id",
     auth(USER_ROLE.VENDOR),

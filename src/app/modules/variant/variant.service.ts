@@ -7,10 +7,7 @@ import { Variant } from "./variant.model";
 import { generateSKU } from "../../utilities/generateSku";
 import { generateASIN } from "../../utilities/generateAsin";
 import QueryBuilder from "../../builder/queryBuilder";
-import { Vendor } from "../vendor/vendor.model";
-import { Inventory } from "../inventory/inventory.model";
-import { USER_ROLE } from "../../interface/common";
-import { User } from "../user/user.model";
+
 
 
 const createVariantIntoDB = async (

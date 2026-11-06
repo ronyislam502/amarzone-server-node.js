@@ -4,15 +4,22 @@ import { TCategory } from "./category.interface";
 import { Category } from "./category.model";
 import { Department } from "../department/department.model";
 import QueryBuilder from "../../builder/queryBuilder";
+import { TImageFile } from "../../interface/image.interface";
 
-const createCategoryIntoDB = async (payload: TCategory) => {
+const createCategoryIntoDB = async (icon: TImageFile, payload: TCategory) => {
   const isDepartment = await Department.findById(payload?.department);
 
   if (!isDepartment) {
     throw new AppError(httpStatus.NOT_FOUND, "Department not found");
   }
 
+  if (icon && icon.path) {
+    payload.icon = icon.path;
+  }
+
   const result = await Category.create(payload);
+
+  console.log("result", result)
 
   return result;
 };

@@ -30,6 +30,22 @@ const myInventory = catchAsync(async (req, res) => {
     });
 });
 
+const vendorVariantProducts = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await InventoryServices.vendorVariantProductsFromDB(
+        id,
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "vendor Variant Products retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
 const updatePrice = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await InventoryServices.updatePriceIntoDB(
@@ -80,5 +96,6 @@ export const InventoryControllers = {
     myInventory,
     updatePrice,
     updateQuantity,
-    getInventoryByVariant
+    getInventoryByVariant,
+    vendorVariantProducts
 }
