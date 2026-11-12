@@ -16,9 +16,23 @@ router.post(
 );
 
 router.get(
-    "/variant-product/:id",
+    "/variants-product/:id",
     VariantControllers.allVariantsByProduct
 );
 
+router.get(
+    "/all-variants-products",
+    VariantControllers.allVariantsProducts
+);
+
+router.get(
+    "/all-variants-products-department/:id",
+    VariantControllers.allVariantsProductsByDepartment
+);
+
+router.get(
+    "/all-variants-products-category/:id",
+    VariantControllers.allVariantsProductsByCategory
+);
 
 export const VariantRoutes = router;

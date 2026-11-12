@@ -34,8 +34,53 @@ const allVariantsByProduct = catchAsync(async (req, res) => {
 });
 
 
+const allVariantsProducts = catchAsync(async (req, res) => {
+    const result = await VariantServices.allVariantsProductsFromDB(
+        req.query
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Variants products retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+
+const allVariantsProductsByDepartment = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await VariantServices.allVariantsProductsByDepartmentFromDB(id, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "variants products by department retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const allVariantsProductsByCategory = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await VariantServices.allVariantsProductsByCategoryFromDB(id, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "variants products by category retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+
 
 export const VariantControllers = {
     createVariant,
     allVariantsByProduct,
+    allVariantsProducts,
+    allVariantsProductsByDepartment,
+    allVariantsProductsByCategory
 };

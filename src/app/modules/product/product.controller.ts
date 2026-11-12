@@ -28,17 +28,7 @@ const allProducts = catchAsync(async (req, res) => {
     });
 });
 
-const allVariantProducts = catchAsync(async (req, res) => {
-    const result = await ProductServices.allVariantProductsFromDB(req.query);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Products retrieved successfully",
-        meta: result.meta,
-        data: result.data,
-    });
-});
 
 const updateProduct = catchAsync(async (req, res) => {
     const result = await ProductServices.updateProductIntoDB(req.user as JwtPayload, req.params.id, req.file as TImageFile, req.body);
@@ -51,32 +41,8 @@ const updateProduct = catchAsync(async (req, res) => {
     });
 });
 
-const allProductsByDepartment = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await ProductServices.allProductsByDepartment(id, req.query);
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Products by department retrieved successfully",
-        meta: result.meta,
-        data: result.data,
-    });
-});
 
 
-const allProductsByCategory = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await ProductServices.allProductsByCategoryFromDB(id, req.query);
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Products by category retrieved successfully",
-        meta: result.meta,
-        data: result.data,
-    });
-});
 
 const singleProduct = catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -93,10 +59,7 @@ const singleProduct = catchAsync(async (req, res) => {
 export const ProductControllers = {
     createProduct,
     allProducts,
-    allVariantProducts,
     updateProduct,
-    allProductsByDepartment,
-    allProductsByCategory,
     singleProduct
 };
 

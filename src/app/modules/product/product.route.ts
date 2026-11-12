@@ -17,11 +17,6 @@ router.post(
 
 router.get("/", ProductControllers.allProducts);
 
-router.get("/all-variant-products", ProductControllers.allVariantProducts);
-
-router.get("/department/:id", ProductControllers.allProductsByDepartment);
-
-router.get("/category/:id", ProductControllers.allProductsByCategory);
 
 router.get("/:id", ProductControllers.singleProduct);
 

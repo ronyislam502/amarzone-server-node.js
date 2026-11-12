@@ -21,6 +21,7 @@ import { emitNotification } from "../../socket/socket";
 import sendEmail from "../../utilities/sendEmail";
 import { invoiceQueue } from "../../redis/invoice.queue";
 import { Payment } from "../payment/payment.model";
+import { Customer } from "../customer/customer.model";
 
 const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => {
     const isUserExists = await User.isUserExistsByEmail(user.email);
@@ -55,7 +56,7 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             quantity: number;
             price: number;
         }[] = [];
-        let totalPrice = 0;
+        let subtotal = 0;
         let totalQuantity = 0;
         let maxShippingTime = 0;
         const tax = 0.88;
@@ -98,7 +99,8 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
                 price: unitPrice,
             });
 
-            totalPrice = itemSubtotal + tax;
+            // Calculate subtotal of all product variants combined
+            subtotal += itemSubtotal;
             totalQuantity += item.quantity;
 
             const shippingTime = isInventoryProduct.seller.shippingTime || 0;
@@ -122,8 +124,11 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
             );
         }
 
+        // Add tax only once to the combined subtotal of all product variants
+        subtotal = +subtotal.toFixed(2);
+        const totalPrice = +(subtotal + tax).toFixed(2);
         const commission = +(totalPrice * 0.15).toFixed(2);
-        const vendorAmount = totalPrice - commission;
+        const vendorAmount = +(totalPrice - commission).toFixed(2);
 
         const orderNo = await generateOrderNo();
         const today = new Date();
@@ -161,15 +166,70 @@ const createOrderIntoDB = async (user: JwtPayload, payload: Partial<TOrder>) => 
         );
 
         let clientSecret = "";
-        if (order) {
-            const paymentIntent = await stripe.paymentIntents.create({
+        if (order && order[0]) {
+            // Retrieve or create Stripe customer so customer name and email are linked and displayed in Stripe Dashboard
+            let stripeCustomerId: string | undefined;
+            try {
+                const customerProfile = await Customer.findOne({ user: isUserExists._id }).session(session);
+
+                if (customerProfile?.stripeCustomerId) {
+                    stripeCustomerId = customerProfile.stripeCustomerId;
+                } else {
+                    const existingCustomers = await stripe.customers.list({
+                        email: isUserExists.email,
+                        limit: 1,
+                    });
+
+                    if (existingCustomers.data.length > 0) {
+                        stripeCustomerId = existingCustomers.data[0].id;
+                        if (!existingCustomers.data[0].name && isUserExists.name) {
+                            await stripe.customers.update(stripeCustomerId, {
+                                name: isUserExists.name,
+                            });
+                        }
+                    } else {
+                        const newCustomer = await stripe.customers.create({
+                            email: isUserExists.email,
+                            name: isUserExists.name,
+                            metadata: {
+                                userId: isUserExists._id.toString(),
+                            },
+                        });
+                        stripeCustomerId = newCustomer.id;
+                    }
+
+                    if (customerProfile && stripeCustomerId && !customerProfile.stripeCustomerId) {
+                        await Customer.findByIdAndUpdate(
+                            customerProfile._id,
+                            { stripeCustomerId },
+                            { session }
+                        );
+                    }
+                }
+            } catch (stripeCustErr) {
+                console.warn("[Order Service] Could not link Stripe customer:", stripeCustErr);
+            }
+
+            const paymentIntentParams: Stripe.PaymentIntentCreateParams = {
                 amount: Math.round(order[0].totalPrice * 100), // Stripe expects cents
                 currency: "usd",
                 payment_method_types: ["card"],
+                description: `Order #${orderNo} by ${isUserExists.name} (${isUserExists.email})`,
+                receipt_email: isUserExists.email,
                 metadata: {
                     orderId: order[0]._id.toString(),
+                    orderNo: order[0].orderNo,
+                    customerEmail: isUserExists.email,
+                    customerName: isUserExists.name,
+                    customerId: isUserExists._id.toString(),
                 },
-            });
+            };
+
+            if (stripeCustomerId) {
+                paymentIntentParams.customer = stripeCustomerId;
+            }
+
+            const paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
             clientSecret = paymentIntent.client_secret as string;
             //     const checkoutSession = await stripe.checkout.sessions.create({
             //         payment_method_types: ["card"],
