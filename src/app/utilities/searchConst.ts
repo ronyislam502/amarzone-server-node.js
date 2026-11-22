@@ -1,0 +1,1 @@
+export const searchProduct = ["asin", "sku", "product.title", "product.brand", "product.tags", "attributes", "product.features", "product.category.name", "product.department.name"]

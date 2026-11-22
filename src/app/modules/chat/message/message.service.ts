@@ -26,7 +26,7 @@ const getConversationMessages = async (
     .fields();
 
   const meta = await messageQuery.countTotal();
-  const data = await messageQuery.modelQuery.populate(
+  const data = await (messageQuery.modelQuery as any).populate(
     "sender",
     "name email role"
   );

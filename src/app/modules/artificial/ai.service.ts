@@ -1,9 +1,4 @@
-/**
- * Artificial Intelligence Core Service Layer
- *
- * Orchestrates business logic, prompt preparation, OpenAI execution,
- * response sanitization, caching, and future capabilities integration.
- */
+
 
 import config from "../../config";
 import { openAiClient } from "./ai.openai";

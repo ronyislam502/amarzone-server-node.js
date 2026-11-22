@@ -13,6 +13,7 @@ import { Types } from "mongoose";
 import { ProductReview } from "../productReview/productReview.model";
 import { Department } from "../department/department.model";
 import { Category } from "../category/category.model";
+import { searchProduct } from "../../utilities/searchConst";
 
 
 
@@ -164,7 +165,7 @@ const allVariantsByProductFromDB = async (id: string, query: Record<string, unkn
         }),
         query
     )
-        .search([""])
+        .search(["product.title", "product.description", "product.department", "product.category", "product.brand"])
         .filter()
         .sort()
         .paginate()
@@ -189,9 +190,8 @@ const allVariantsProductsFromDB = async (query: Record<string, unknown>) => {
         }),
         query
     )
-        // Note: Configure your search fields here matching Variant fields 
-        // or product fields if populated, e.g. ["asin", "sku"] or custom filters
-        .search(["asin", "sku"])
+
+        .search(searchProduct)
         .filter()
         .sort()
         .paginate()
@@ -221,6 +221,22 @@ const allVariantsProductsFromDB = async (query: Record<string, unknown>) => {
     })
         .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
         .lean();
+
+    // Fallback: If any variant has no listing from non-suspended vendors, get any available positive price listing
+    const coveredVariantIds = new Set(inventoryListings.map((l: any) => l.variant?.toString()));
+    const missingVariantIds = variantIds.filter((id: any) => !coveredVariantIds.has(id.toString()));
+    if (missingVariantIds.length > 0) {
+        const fallbackListings = await Inventory.find({
+            variant: { $in: missingVariantIds },
+            isDeleted: { $ne: true },
+            "seller.price": { $gt: 0 },
+        })
+            .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
+            .lean();
+        for (const fb of fallbackListings) {
+            inventoryListings.push(fb);
+        }
+    }
 
     // Index inventory listings by variant ID and ASIN
     const listingsByVariantId = new Map<string, any[]>();
@@ -262,12 +278,14 @@ const allVariantsProductsFromDB = async (query: Record<string, unknown>) => {
     ]);
 
     const ratingsByVariantId = new Map<string, number>();
+    const totalReviewsByVariantId = new Map<string, number>();
     for (const stat of reviewStats) {
         if (stat._id) {
             const avg = typeof stat.averageRating === "number"
                 ? Math.round(stat.averageRating * 10) / 10
                 : 0;
             ratingsByVariantId.set(stat._id.toString(), parseFloat(avg.toFixed(2)));
+            totalReviewsByVariantId.set(stat._id.toString(), stat.totalReviews || 0);
         }
     }
 
@@ -320,9 +338,10 @@ const allVariantsProductsFromDB = async (query: Record<string, unknown>) => {
             selectedListing = lowestPriceListing;
         }
 
-        const price: number | null = selectedListing?.seller?.price ?? null;
+        const price: number | null = selectedListing?.seller?.price ?? variant.price ?? null;
         const vendorId = selectedListing?.seller?.vendor ?? null;
-        const rating = ratingsByVariantId.get(vIdStr) ?? 0;
+        const rating = ratingsByVariantId.get(vIdStr) ?? variant.rating ?? 0;
+        const totalReviews = totalReviewsByVariantId.get(vIdStr) ?? variant.totalReviews ?? 0;
 
         // Extract and separate the populated product info
         const { product, ...variantInfo } = variant;
@@ -335,6 +354,7 @@ const allVariantsProductsFromDB = async (query: Record<string, unknown>) => {
             _id: variant._id,
             price,
             rating,
+            totalReviews,
             isBuyBoxEligible: isEligible,
             vendorId,
         };
@@ -373,7 +393,7 @@ const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<s
     )
         // Note: Configure your search fields here matching Variant fields 
         // or product fields if populated, e.g. ["asin", "sku"] or custom filters
-        .search(["asin", "sku"])
+        .search(["asin", "sku", "product.title", "product.brand", "product.tags", "attributes", "product.features", "product.category", "product.department"])
         .filter()
         .sort()
         .paginate()
@@ -403,6 +423,22 @@ const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<s
     })
         .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
         .lean();
+
+    // Fallback: If any variant has no listing from non-suspended vendors, get any available positive price listing
+    const coveredVariantIds = new Set(inventoryListings.map((l: any) => l.variant?.toString()));
+    const missingVariantIds = variantIds.filter((id: any) => !coveredVariantIds.has(id.toString()));
+    if (missingVariantIds.length > 0) {
+        const fallbackListings = await Inventory.find({
+            variant: { $in: missingVariantIds },
+            isDeleted: { $ne: true },
+            "seller.price": { $gt: 0 },
+        })
+            .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
+            .lean();
+        for (const fb of fallbackListings) {
+            inventoryListings.push(fb);
+        }
+    }
 
     // Index inventory listings by variant ID and ASIN
     const listingsByVariantId = new Map<string, any[]>();
@@ -444,12 +480,14 @@ const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<s
     ]);
 
     const ratingsByVariantId = new Map<string, number>();
+    const totalReviewsByVariantId = new Map<string, number>();
     for (const stat of reviewStats) {
         if (stat._id) {
             const avg = typeof stat.averageRating === "number"
                 ? Math.round(stat.averageRating * 10) / 10
                 : 0;
             ratingsByVariantId.set(stat._id.toString(), parseFloat(avg.toFixed(2)));
+            totalReviewsByVariantId.set(stat._id.toString(), stat.totalReviews || 0);
         }
     }
 
@@ -502,9 +540,10 @@ const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<s
             selectedListing = lowestPriceListing;
         }
 
-        const price: number | null = selectedListing?.seller?.price ?? null;
+        const price: number | null = selectedListing?.seller?.price ?? variant.price ?? null;
         const vendorId = selectedListing?.seller?.vendor ?? null;
-        const rating = ratingsByVariantId.get(vIdStr) ?? 0;
+        const rating = ratingsByVariantId.get(vIdStr) ?? variant.rating ?? 0;
+        const totalReviews = totalReviewsByVariantId.get(vIdStr) ?? variant.totalReviews ?? 0;
 
         // Extract and separate the populated product info
         const { product, ...variantInfo } = variant;
@@ -517,6 +556,7 @@ const allVariantsProductsByDepartmentFromDB = async (id: string, query: Record<s
             _id: variant._id,
             price,
             rating,
+            totalReviews,
             isBuyBoxEligible: isEligible,
             vendorId,
         };
@@ -555,7 +595,7 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
     )
         // Note: Configure your search fields here matching Variant fields 
         // or product fields if populated, e.g. ["asin", "sku"] or custom filters
-        .search(["asin", "sku"])
+        .search(["asin", "sku", "product.title", "product.brand", "product.tags", "attributes", "product.features", "product.category", "product.department"])
         .filter()
         .sort()
         .paginate()
@@ -585,6 +625,22 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
     })
         .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
         .lean();
+
+    // Fallback: If any variant has no listing from non-suspended vendors, get any available positive price listing
+    const coveredVariantIds = new Set(inventoryListings.map((l: any) => l.variant?.toString()));
+    const missingVariantIds = variantIds.filter((id: any) => !coveredVariantIds.has(id.toString()));
+    if (missingVariantIds.length > 0) {
+        const fallbackListings = await Inventory.find({
+            variant: { $in: missingVariantIds },
+            isDeleted: { $ne: true },
+            "seller.price": { $gt: 0 },
+        })
+            .select("variant asin seller.price seller.isBuyBoxWinner seller.vendor")
+            .lean();
+        for (const fb of fallbackListings) {
+            inventoryListings.push(fb);
+        }
+    }
 
     // Index inventory listings by variant ID and ASIN
     const listingsByVariantId = new Map<string, any[]>();
@@ -626,12 +682,14 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
     ]);
 
     const ratingsByVariantId = new Map<string, number>();
+    const totalReviewsByVariantId = new Map<string, number>();
     for (const stat of reviewStats) {
         if (stat._id) {
             const avg = typeof stat.averageRating === "number"
                 ? Math.round(stat.averageRating * 10) / 10
                 : 0;
             ratingsByVariantId.set(stat._id.toString(), parseFloat(avg.toFixed(2)));
+            totalReviewsByVariantId.set(stat._id.toString(), stat.totalReviews || 0);
         }
     }
 
@@ -684,9 +742,10 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
             selectedListing = lowestPriceListing;
         }
 
-        const price: number | null = selectedListing?.seller?.price ?? null;
+        const price: number | null = selectedListing?.seller?.price ?? variant.price ?? null;
         const vendorId = selectedListing?.seller?.vendor ?? null;
-        const rating = ratingsByVariantId.get(vIdStr) ?? 0;
+        const rating = ratingsByVariantId.get(vIdStr) ?? variant.rating ?? 0;
+        const totalReviews = totalReviewsByVariantId.get(vIdStr) ?? variant.totalReviews ?? 0;
 
         // Extract and separate the populated product info
         const { product, ...variantInfo } = variant;
@@ -699,6 +758,7 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
             _id: variant._id,
             price,
             rating,
+            totalReviews,
             isBuyBoxEligible: isEligible,
             vendorId,
         };
@@ -709,9 +769,6 @@ const allVariantsProductsByCategoryFromDB = async (id: string, query: Record<str
         data: flattenedProducts,
     };
 };
-
-
-
 
 
 

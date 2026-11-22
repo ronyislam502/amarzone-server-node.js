@@ -105,7 +105,7 @@ const allReviewsByProductFromDB = async (id: string, query: Record<string, unkno
   const meta = await reviewProductQuery.countTotal();
   const data = await reviewProductQuery.modelQuery;
 
-  const totalRatings = data?.reduce((sum, review) => sum + review.rating, 0);
+  const totalRatings = data?.reduce((sum: number, review: any) => sum + review.rating, 0);
   const averageRating =
     data.length > 0 ? (totalRatings / data.length).toFixed(2) : "0.00";
 

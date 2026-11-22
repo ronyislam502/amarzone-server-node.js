@@ -159,7 +159,7 @@ const getUserDisputesFromDB = async (
     .fields();
 
   const meta = await disputeQuery.countTotal();
-  const data = await disputeQuery.modelQuery
+  const data = await (disputeQuery.modelQuery as any)
     .populate("order")
     .populate("customer", "name email role")
     .populate("vendor", "name email role")

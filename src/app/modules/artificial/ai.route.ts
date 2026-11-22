@@ -32,12 +32,12 @@ router.post(
  */
 router.post(
   "/shopping-assistant",
-  auth(
-    USER_ROLE.CUSTOMER,
-    USER_ROLE.VENDOR,
-    USER_ROLE.ADMIN,
-    USER_ROLE.SUPER_ADMIN
-  ),
+  // auth(
+  //   USER_ROLE.CUSTOMER,
+  //   USER_ROLE.VENDOR,
+  //   USER_ROLE.ADMIN,
+  //   USER_ROLE.SUPER_ADMIN
+  // ),
   trackAiTelemetry,
   sanitizeAiInput,
   validateRequest(AiValidation.shoppingAssistantValidationSchema),
@@ -45,20 +45,7 @@ router.post(
 );
 
 /**
- * 3. AI EXECUTIVE DASHBOARD INSIGHTS
- * POST /api/v1/ai/dashboard-insights
- */
-router.post(
-  "/dashboard-insights",
-  auth(USER_ROLE.VENDOR, USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
-  trackAiTelemetry,
-  sanitizeAiInput,
-  validateRequest(AiValidation.dashboardInsightsValidationSchema),
-  AiControllers.getDashboardInsights
-);
-
-/**
- * 4. FUTURE CAPABILITIES (EXTENSIBLE REST HOOKS)
+ * 3. FUTURE CAPABILITIES (EXTENSIBLE REST HOOKS)
  */
 router.post(
   "/review-moderation",
