@@ -5,17 +5,11 @@ import { AccountHealthControllers } from "./health.controller";
 
 const router = express.Router();
 
+// Retrieve vendor's own account health (calculations run automatically via cron job)
 router.get(
     "/my-health",
     auth(USER_ROLE.VENDOR),
     AccountHealthControllers.getMyHealth
-);
-
-
-router.post(
-    "/:vendorId/recalculate",
-    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
-    AccountHealthControllers.recalculateVendorHealth
 );
 
 export const AccountHealthRoutes = router;

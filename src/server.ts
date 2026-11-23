@@ -6,6 +6,7 @@ import { initializeSocket } from "./app/socket/socket";
 import { initializeOrderExpiryCron } from "./app/cron/orderExpiry.cron";
 import { initializeVendorHealthCron } from "./app/cron/vendorHealth.cron";
 import { initializeOrderStatusCron } from "./app/cron/orderStatus.cron";
+import { initializeRankingCron } from "./app/cron/ranking.cron";
 import "./app/redis/invoice.worker";
 import "./app/redis/shipping.worker";
 
@@ -22,6 +23,7 @@ async function main() {
     initializeOrderExpiryCron();
     initializeVendorHealthCron();
     initializeOrderStatusCron();
+    initializeRankingCron();
   } catch (err) {
     console.log(err);
   }
