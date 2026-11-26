@@ -15,6 +15,49 @@ const getRanking = catchAsync(async (req, res) => {
     });
 });
 
+const bestSellingProductsVariants = catchAsync(async (req, res) => {
+    const result = await RankingServices.bestSellingProductsVariantsFromDB(req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Best selling product variants retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const bestSellingDepartmentProductsVariants = catchAsync(async (req, res) => {
+    const { departmentId, id } = req.params;
+    const targetDeptId = departmentId || id;
+    const result = await RankingServices.bestSellingDepartmentProductsVariantsFrom(targetDeptId, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Best selling department product variants retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const bestSellingCategoryProductsVariants = catchAsync(async (req, res) => {
+    const { categoryId, id } = req.params;
+    const targetCatId = categoryId || id;
+    const result = await RankingServices.bestSellingCategoryProductsVariantsFrom(targetCatId, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Best selling category product variants retrieved successfully",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
 export const RankingControllers = {
     getRanking,
+    bestSellingProductsVariants,
+    bestSellingDepartmentProductsVariants,
+    bestSellingCategoryProductsVariants,
 };

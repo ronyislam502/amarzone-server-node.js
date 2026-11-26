@@ -5,6 +5,7 @@ import { Product } from "../product/product.model";
 import { Category } from "../category/category.model";
 import { Department } from "../department/department.model";
 import { Inventory } from "../inventory/inventory.model";
+import { ProductReview } from "../productReview/productReview.model";
 import { Ranking } from "./ranking.model";
 import { emitBestSellerUpdated, emitCategoryBestSellerUpdated } from "../../socket/socketBestSeller";
 import AppError from "../../errors/AppError";
@@ -394,7 +395,359 @@ const getUnifiedRankingFromDB = async (id: string) => {
     };
 };
 
+/**
+ * Enriches ranking documents with inventory pricing (lowest / Buy Box winner),
+ * review stats (averageRating, totalReviews), and formatted product/variant attributes.
+ */
+const enrichRankingVariants = async (rankings: any[]) => {
+    if (!rankings || rankings.length === 0) {
+        return [];
+    }
+
+    const variantIds = rankings
+        .map((r) => r.variant?._id || r.variant)
+        .filter(Boolean);
+    const variantIdStrings = variantIds.map((id: any) => id.toString());
+    const variantObjectIds = variantIdStrings.map((id: string) => new mongoose.Types.ObjectId(id));
+
+    // 1. Fetch available stock & lowest/buy-box price from Inventory
+    const inventoryListings = await Inventory.find({
+        variant: { $in: variantObjectIds },
+        isDeleted: { $ne: true },
+        "seller.isStock": { $ne: false },
+        "seller.price": { $gt: 0 },
+    })
+        .select("variant asin seller.price seller.isBuyBoxWinner")
+        .lean();
+
+    const listingsByVariantId = new Map<string, any[]>();
+    for (const listing of inventoryListings) {
+        if (listing.variant) {
+            const vKey = listing.variant.toString();
+            if (!listingsByVariantId.has(vKey)) {
+                listingsByVariantId.set(vKey, []);
+            }
+            listingsByVariantId.get(vKey)!.push(listing);
+        }
+    }
+
+    // 2. Fetch rating and review counts from ProductReview
+    const reviewStats = await ProductReview.aggregate([
+        {
+            $match: {
+                variant: { $in: [...variantObjectIds, ...variantIdStrings] },
+                isDeleted: { $ne: true },
+            },
+        },
+        {
+            $group: {
+                _id: "$variant",
+                averageRating: { $avg: "$rating" },
+                totalReviews: { $sum: 1 },
+            },
+        },
+    ]);
+
+    const ratingsMap = new Map<string, { averageRating: number; totalReviews: number }>();
+    for (const stat of reviewStats) {
+        if (stat._id) {
+            ratingsMap.set(stat._id.toString(), {
+                averageRating: Math.round(Number(stat.averageRating || 0) * 10) / 10,
+                totalReviews: stat.totalReviews || 0,
+            });
+        }
+    }
+
+    // 3. Map into enriched variant ranking objects
+    return rankings.map((r: any) => {
+        const variantDoc = r.variant || {};
+        const productDoc = r.product || {};
+        const vIdStr = (variantDoc._id || r.variant)?.toString() || "";
+
+        const listings = listingsByVariantId.get(vIdStr) || [];
+        const buyBoxWinner = listings.find((l: any) => l.seller?.isBuyBoxWinner === true);
+        let lowestPriceListing: any = null;
+        for (const l of listings) {
+            if (!lowestPriceListing || l.seller.price < lowestPriceListing.seller.price) {
+                lowestPriceListing = l;
+            }
+        }
+        const selectedListing = buyBoxWinner || lowestPriceListing;
+        const price = selectedListing?.seller?.price ?? variantDoc.price ?? null;
+
+        const reviewInfo = ratingsMap.get(vIdStr) || {
+            averageRating: variantDoc.rating ?? 0,
+            totalReviews: variantDoc.totalReviews ?? 0,
+        };
+
+        const deptDoc = r.department || productDoc.department || {};
+        const catDoc = r.category || productDoc.category || {};
+
+        return {
+            _id: variantDoc._id || r.variant,
+            variantId: variantDoc._id || r.variant,
+            productId: productDoc._id || r.product,
+            asin: r.asin || variantDoc.asin,
+            sku: variantDoc.sku,
+            title: productDoc.title,
+            brand: productDoc.brand,
+            thumbnail: productDoc.thumbnail || variantDoc.images?.[0] || "",
+            images: variantDoc.images?.length ? variantDoc.images : (productDoc.images || []),
+            attributes: variantDoc.attributes || [],
+            isBuyBoxEligible: variantDoc.isBuyBoxEligible ?? false,
+            price,
+            rating: reviewInfo.averageRating,
+            totalReviews: reviewInfo.totalReviews,
+            department: deptDoc,
+            category: catDoc,
+            departmentName: deptDoc.name || "",
+            categoryName: catDoc.name || "",
+            globalRank: r.globalRank,
+            departmentRank: r.departmentRank,
+            categoryRank: r.categoryRank,
+            salesScore: r.salesScore,
+            totalSalesCount: r.totalSalesCount,
+            recentSalesCount: r.recentSalesCount,
+            isBestSeller: !!r.isBestSeller,
+            calculatedAt: r.calculatedAt,
+            variant: variantDoc,
+            product: productDoc,
+        };
+    });
+};
+
+/**
+ * Global Best-Selling Product Variants API
+ * Retrieves product variants ranked across the entire marketplace.
+ * Supports pagination (page, limit) and optional filtering (department, category, isBestSeller).
+ */
+const bestSellingProductsVariantsFromDB = async (query: Record<string, unknown> = {}) => {
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.max(1, Number(query.limit) || 10);
+    const skip = (page - 1) * limit;
+
+    const filter: Record<string, any> = {
+        globalRank: { $gt: 0 },
+    };
+
+    if (query.department) {
+        filter.department = query.department;
+    }
+    if (query.category) {
+        filter.category = query.category;
+    }
+    if (query.isBestSeller !== undefined) {
+        filter.isBestSeller = query.isBestSeller === "true" || query.isBestSeller === true;
+    }
+
+    let total = await Ranking.countDocuments(filter);
+    if (total === 0) {
+        await recalculateAllBSR();
+        total = await Ranking.countDocuments(filter);
+    }
+
+    const sortOrder: Record<string, any> = {};
+    if (query.sort && typeof query.sort === "string") {
+        const sortField = query.sort.startsWith("-") ? query.sort.substring(1) : query.sort;
+        const sortDir = query.sort.startsWith("-") ? -1 : 1;
+        sortOrder[sortField] = sortDir;
+    } else {
+        sortOrder.globalRank = 1;
+    }
+
+    const rankings = await Ranking.find(filter)
+        .sort(sortOrder)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+            path: "variant",
+            match: { isDeleted: { $ne: true } },
+        })
+        .populate({
+            path: "product",
+            match: { isDeleted: { $ne: true } },
+            populate: [
+                { path: "department", select: "name icon" },
+                { path: "category", select: "name icon" },
+            ],
+        })
+        .populate("department", "name icon")
+        .populate("category", "name icon")
+        .lean();
+
+    const data = await enrichRankingVariants(rankings);
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+            totalPage: Math.ceil(total / limit),
+        },
+        data,
+    };
+};
+
+/**
+ * Department Best-Selling Product Variants API
+ * Retrieves best-selling product variants within a specific Department.
+ * Supports pagination (page, limit) and optional filtering (category, isBestSeller).
+ */
+const bestSellingDepartmentProductsVariantsFrom = async (
+    id: string,
+    query: Record<string, unknown> = {}
+) => {
+    const isDepartment = await Department.findById(id);
+    if (!isDepartment) {
+        throw new AppError(httpStatus.NOT_FOUND, "This department was not found");
+    }
+
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.max(1, Number(query.limit) || 10);
+    const skip = (page - 1) * limit;
+
+    const filter: Record<string, any> = {
+        department: isDepartment._id,
+        departmentRank: { $gt: 0 },
+    };
+
+    if (query.category) {
+        filter.category = query.category;
+    }
+    if (query.isBestSeller !== undefined) {
+        filter.isBestSeller = query.isBestSeller === "true" || query.isBestSeller === true;
+    }
+
+    let total = await Ranking.countDocuments(filter);
+    if (total === 0) {
+        await recalculateAllBSR();
+        total = await Ranking.countDocuments(filter);
+    }
+
+    const sortOrder: Record<string, any> = {};
+    if (query.sort && typeof query.sort === "string") {
+        const sortField = query.sort.startsWith("-") ? query.sort.substring(1) : query.sort;
+        const sortDir = query.sort.startsWith("-") ? -1 : 1;
+        sortOrder[sortField] = sortDir;
+    } else {
+        sortOrder.departmentRank = 1;
+    }
+
+    const rankings = await Ranking.find(filter)
+        .sort(sortOrder)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+            path: "variant",
+            match: { isDeleted: { $ne: true } },
+        })
+        .populate({
+            path: "product",
+            match: { isDeleted: { $ne: true } },
+            populate: [
+                { path: "department", select: "name icon" },
+                { path: "category", select: "name icon" },
+            ],
+        })
+        .populate("department", "name icon")
+        .populate("category", "name icon")
+        .lean();
+
+    const data = await enrichRankingVariants(rankings);
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+            totalPage: Math.ceil(total / limit),
+        },
+        data,
+    };
+};
+
+/**
+ * Category Best-Selling Product Variants API
+ * Retrieves best-selling product variants within a specific Category.
+ * Supports pagination (page, limit) and optional filtering (department, isBestSeller).
+ */
+const bestSellingCategoryProductsVariantsFrom = async (
+    id: string,
+    query: Record<string, unknown> = {}
+) => {
+    const isCategory = await Category.findById(id);
+    if (!isCategory) {
+        throw new AppError(httpStatus.NOT_FOUND, "This category was not found");
+    }
+
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.max(1, Number(query.limit) || 10);
+    const skip = (page - 1) * limit;
+
+    const filter: Record<string, any> = {
+        category: isCategory._id,
+        categoryRank: { $gt: 0 },
+    };
+
+    if (query.department) {
+        filter.department = query.department;
+    }
+    if (query.isBestSeller !== undefined) {
+        filter.isBestSeller = query.isBestSeller === "true" || query.isBestSeller === true;
+    }
+
+    let total = await Ranking.countDocuments(filter);
+    if (total === 0) {
+        await recalculateAllBSR();
+        total = await Ranking.countDocuments(filter);
+    }
+
+    const sortOrder: Record<string, any> = {};
+    if (query.sort && typeof query.sort === "string") {
+        const sortField = query.sort.startsWith("-") ? query.sort.substring(1) : query.sort;
+        const sortDir = query.sort.startsWith("-") ? -1 : 1;
+        sortOrder[sortField] = sortDir;
+    } else {
+        sortOrder.categoryRank = 1;
+    }
+
+    const rankings = await Ranking.find(filter)
+        .sort(sortOrder)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+            path: "variant",
+            match: { isDeleted: { $ne: true } },
+        })
+        .populate({
+            path: "product",
+            match: { isDeleted: { $ne: true } },
+            populate: [
+                { path: "department", select: "name icon" },
+                { path: "category", select: "name icon" },
+            ],
+        })
+        .populate("department", "name icon")
+        .populate("category", "name icon")
+        .lean();
+
+    const data = await enrichRankingVariants(rankings);
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+            totalPage: Math.ceil(total / limit),
+        },
+        data,
+    };
+};
+
 export const RankingServices = {
     recalculateAllBSR,
     getUnifiedRankingFromDB,
+    bestSellingProductsVariantsFromDB,
+    bestSellingDepartmentProductsVariantsFrom,
+    bestSellingCategoryProductsVariantsFrom,
 };
